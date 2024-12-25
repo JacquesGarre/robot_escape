@@ -11,7 +11,7 @@ export default class Elevator {
     }
 
     goUp() {
-        if (this.height > 50) {
+        if (this.height > 45) {
             return true;
         }
         this.height += 0.2
