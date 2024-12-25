@@ -11,6 +11,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 let gameState, container, stats, clock;
 let camera, level, renderer;
 let robotModel;
+let enemyModels = {};
 
 init();
 
@@ -38,6 +39,29 @@ function init() {
     }, undefined, function (e) {
         console.error(e);
     });
+
+    for(const i in gameState.currentLevel.enemies) {
+        let enemy = gameState.currentLevel.enemies[i]
+        loader.load('src/infrastructure/models/Robot.glb', function (gltf) {
+            let model = gltf.scene;
+            const mixer = new THREE.AnimationMixer(model);
+            const actions = {};
+            for (const clip of gltf.animations) {
+                const action = mixer.clipAction(clip);
+                actions[clip.name] = action;
+            }
+            model.name = enemy.name;
+            model.animations = gltf.animations
+            model.userData.mixer = mixer;
+            model.userData.actions = actions;
+            model.userData.currentAction = enemy.animation;
+            model.castShadow = true;
+            enemyModels[i] = model;
+        }, undefined, function (e) {
+            console.error(e);
+        });
+    }
+
  
 
     // Keyboard
@@ -78,23 +102,22 @@ function animate() {
 
     // Level
     level = levelFromGameState(gameState)
-    level.add(robotModel)
 
-    const model = level.getObjectByName(gameState.currentLevel.robot.name);
-    if (model) {
-        model.position.set(
+    if (robotModel) {
+        level.add(robotModel)
+        robotModel.position.set(
             gameState.currentLevel.robot.position.x,
             gameState.currentLevel.robot.position.y,
             gameState.currentLevel.robot.position.z
         );
-        model.rotation.y = gameState.currentLevel.robot.rotation * (Math.PI / 180);
-        const mixer = model.userData.mixer;
-        const actions = model.userData.actions;
+        robotModel.rotation.y = gameState.currentLevel.robot.rotation * (Math.PI / 180);
+        const mixer = robotModel.userData.mixer;
+        const actions = robotModel.userData.actions;
         if (mixer && actions) {
-            if (model.userData.currentAction != gameState.currentLevel.robot.animation) {
-                const currentAction = mixer.existingAction(model.userData.currentAction);
+            if (robotModel.userData.currentAction != gameState.currentLevel.robot.animation) {
+                const currentAction = mixer.existingAction(robotModel.userData.currentAction);
                 currentAction.fadeOut(0.2);
-                model.userData.currentAction = gameState.currentLevel.robot.animation
+                robotModel.userData.currentAction = gameState.currentLevel.robot.animation
                 actions[gameState.currentLevel.robot.animation].reset().fadeIn(0.2).play();
             } else {
                 actions[gameState.currentLevel.robot.animation].play();
@@ -102,6 +125,33 @@ function animate() {
             mixer.update(delta);
         }
     }
+
+    for(const i in gameState.currentLevel.enemies) {
+        let enemyModel = enemyModels[i]
+        if (enemyModel) {
+            level.add(enemyModel)
+            enemyModel.position.set(
+                gameState.currentLevel.enemies[i].position.x,
+                gameState.currentLevel.enemies[i].position.y,
+                gameState.currentLevel.enemies[i].position.z
+            );
+            enemyModel.rotation.y = gameState.currentLevel.enemies[i].rotation * (Math.PI / 180);
+            const mixer = enemyModel.userData.mixer;
+            const actions = enemyModel.userData.actions;
+            if (mixer && actions) {
+                if (enemyModel.userData.currentAction != gameState.currentLevel.enemies[i].animation) {
+                    const currentAction = mixer.existingAction(enemyModel.userData.currentAction);
+                    currentAction.fadeOut(0.2);
+                    enemyModel.userData.currentAction = gameState.currentLevel.enemies[i].animation
+                    actions[gameState.currentLevel.enemies[i].animation].reset().fadeIn(0.2).play();
+                } else {
+                    actions[gameState.currentLevel.enemies[i].animation].play();
+                }
+                mixer.update(delta);
+            }
+        }
+    }
+
 
     const elevator = level.getObjectByName('Elevator')
     let geometry = elevator.geometry

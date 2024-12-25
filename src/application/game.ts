@@ -8,70 +8,61 @@ export default class GameState {
 
     levels = [
         {
-            width: 3,
-            height: 3,
+            width: 5,
+            height: 5,
             tileSize: 5,
             robotX: 0,
             robotZ: 0,
             robotRotation: 'Right',
-            cubes: [],
-            endX: 2,
-            endZ: 2,
+            cubes: [
+                {
+                    x: 2,
+                    y: 0,
+                    z: 2
+                },
+            ],
+            endX: 4,
+            endZ: 4,
+            enemies: [
+                {
+                    x: 1,
+                    y: 0,
+                    z: 1,
+                    rotation: 90,
+                },
+                {
+                    x: 3,
+                    y: 0,
+                    z: 3,
+                    rotation: 0,
+                },
+            ]
         },
         {
             width: 10,
             height: 10,
             tileSize: 5,
-            robotX: 2,
-            robotZ: 1,
+            robotX: 4,
+            robotZ: 4,
             robotRotation: 'Right',
             cubes: [
                 {
-                    x: 2,
+                    x: 6,
                     y: 0,
-                    z: 4
-                },
-                {
-                    x: 3,
-                    y: 0,
-                    z: 4
+                    z: 6
                 },
             ],
-            endX: 3,
-            endZ: 3,
-        },
-        {
-            width: 20,
-            height: 20,
-            tileSize: 5,
-            robotX: 19,
-            robotZ: 19,
-            robotRotation: 'Left',
-            cubes: [
+            endX: 9,
+            endZ: 9,
+            enemies: [
                 {
-                    x: 2,
+                    x: 0,
                     y: 0,
-                    z: 4
+                    z: 4,
+                    rotation: 90,
                 },
-                {
-                    x: 5,
-                    y: 0,
-                    z: 10
-                },
-                {
-                    x: 3,
-                    y: 0,
-                    z: 12
-                },
-                {
-                    x: 7,
-                    y: 0,
-                    z: 14
-                },
-            ],
-            endX: 0,
-            endZ: 0,
-        },
+            ]
+        }
     ]
 
     constructor() {

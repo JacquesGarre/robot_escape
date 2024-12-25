@@ -1,6 +1,7 @@
 import Camera from "../camera/camera";
 import Cube from "../cube/cube";
 import Elevator from "../elevator/elevator";
+import Enemy from "../enemy/enemy";
 import DirectionalLight from "../lights/directional_light";
 import HemisphereLight from "../lights/hemisphere_light";
 import Robot from "../robot/robot";
@@ -16,6 +17,13 @@ interface CubePosition {
     z: number;
 }
 
+interface EnemyInterface {
+    x: number;
+    y: number;
+    z: number;
+    rotation: number;
+}
+
 interface LevelConfig {
     width: number;
     height: number;
@@ -26,6 +34,7 @@ interface LevelConfig {
     cubes: CubePosition[];
     endX: number;
     endZ: number;
+    enemies: EnemyInterface[];
 }
 
 export default class Level {
@@ -46,6 +55,7 @@ export default class Level {
     cubes: Cube[];
     ended: boolean;
     endingAnimationDone: boolean;
+    enemies: {};
 
     constructor(config: LevelConfig) {
         this.tileSize = config.tileSize;
@@ -55,6 +65,7 @@ export default class Level {
         this.gridCenterZ = (this.height * this.tileSize) / 2 - this.tileSize / 2;
         this.elevator = this.initializeElevator(config.endX, config.endZ)
         this.cubes = this.initializeCubes(config.cubes)
+        this.enemies = this.initializeEnemies(config.enemies)
         this.scene = this.initializeScene()
         this.robot = this.initializeRobot(config.robotX, config.robotZ, config.robotRotation);
         this.leftBoundary = -this.gridCenterX - this.robot.radius
@@ -64,6 +75,20 @@ export default class Level {
         this.camera = Camera.fromRobot(this.robot)
         this.ended = false;
         this.endingAnimationDone = false;
+    }
+
+    initializeEnemies(positions: EnemyInterface[]) {
+        let enemies = {};
+        let i = 0;
+        for(const position of positions) {      
+            const positionX = position.x * (this.tileSize) - this.gridCenterX;
+            const positionZ = -position.z * (this.tileSize) + this.gridCenterZ;
+            let enemyPosition = new Position(positionX, 0, positionZ);
+            let enemy = new Enemy(enemyPosition, 'Enemy'+i, position.rotation)
+            enemies[i] = enemy;
+            i++;
+        }
+        return enemies;
     }
 
     initializeElevator(x: number, z: number): Elevator {
