@@ -133,7 +133,7 @@ export default class Enemy {
     }
 
     runTowards(robot: Robot) {
-        if (this.animation == 'Death') {
+        if (this.animation == 'Punch') {
             return;
         }
         this.rotateTowards(robot)
