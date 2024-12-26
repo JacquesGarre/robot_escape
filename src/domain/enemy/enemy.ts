@@ -141,7 +141,7 @@ export default class Enemy {
         const directionX = this.position.x - robot.position.x;
         const directionZ = this.position.z - robot.position.z;
         const distance = Math.sqrt(directionX ** 2 + directionZ ** 2);
-        if (distance < 2) {
+        if (distance < 2 && this.position.y == robot.position.y) {
             this.playAnimationOnce = true;
             this.animation = 'Punch';
             robot.die();
