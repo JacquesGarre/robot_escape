@@ -182,6 +182,60 @@ export default class Level {
     }
 
     collision() {
+        for (const index in this.enemies) {
+            let enemy = this.enemies[index]
+            let enemyLeftBoundary = enemy.position.x - this.robot.radius;
+            let enemyRightBoundary = enemy.position.x + this.robot.radius;
+            let enemyTopBoundary = enemy.position.z - this.robot.radius;
+            let enemyBottomBoundary = enemy.position.z + this.robot.radius;
+            switch (this.robot.direction) {
+                case 'Left':
+                    if (this.robot.position.z <= (enemyBottomBoundary + this.robot.radius)
+                        && this.robot.position.z >= (enemyTopBoundary - this.robot.radius)
+                        && enemyRightBoundary > (this.robot.position.x - this.robot.radius * 2)
+                        && enemyLeftBoundary < (this.robot.position.x - this.robot.radius)
+                    ) {
+                        enemy.hitByRobot(this.robot);
+                        this.robot.break();
+                        return true;
+                    }
+                    break;
+                case 'Right':
+                    if (
+                        this.robot.position.z <= (enemyBottomBoundary + this.robot.radius)
+                        && this.robot.position.z >= (enemyTopBoundary - this.robot.radius)
+                        && enemyLeftBoundary < (this.robot.position.x + this.robot.radius * 2)
+                        && enemyRightBoundary > (this.robot.position.x - this.robot.radius)
+                    ) {
+                        enemy.hitByRobot(this.robot);
+                        this.robot.break();
+                        return true;
+                    }
+                    break;
+                case 'Forward':
+                    if (this.robot.position.x >= (enemyLeftBoundary - this.robot.radius)
+                        && this.robot.position.x <= (enemyRightBoundary + this.robot.radius)
+                        && enemyBottomBoundary > (this.robot.position.z - this.robot.radius * 2)
+                        && enemyTopBoundary < (this.robot.position.z - this.robot.radius)
+                    ) {
+                        enemy.hitByRobot(this.robot);
+                        this.robot.break();
+                        return true;
+                    }
+                    break;
+                case 'Backward':
+                    if (this.robot.position.x >= (enemyLeftBoundary - this.robot.radius)
+                        && this.robot.position.x <= (enemyRightBoundary + this.robot.radius)
+                        && enemyTopBoundary < (this.robot.position.z + this.robot.radius * 2)
+                        && enemyBottomBoundary > (this.robot.position.z - this.robot.radius)
+                    ) {
+                        enemy.hitByRobot(this.robot);
+                        this.robot.break();
+                        return true;
+                    }
+                    break;
+            }
+        }
         for (const cube of this.cubes) {
             let cubeLeftBoundary = cube.position.x - (this.tileSize / 2);
             let cubeRightBoundary = cube.position.x + (this.tileSize / 2);
