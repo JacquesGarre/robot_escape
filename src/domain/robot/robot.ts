@@ -1,6 +1,7 @@
 import { threshold } from "three/src/nodes/TSL.js";
 import Position from "../shared/position";
 import { initialize } from "esbuild";
+import Noise from "../noise/noise";
 
 export default class Robot {
 
@@ -137,14 +138,25 @@ export default class Robot {
         this.rotation = 90
     }
 
-    break() {
+    bumpIntoWall(): Noise {
         if (this.animation == 'Death') {
-            return;
+            let noisePosition = new Position(
+                this.position.x,
+                this.position.y,
+                this.position.z
+            )
+            return new Noise(noisePosition)
         }
         this.animation = 'Death';    
         setTimeout(() => {
             this.animation = 'Idle';
         }, 900);    
+        let noisePosition = new Position(
+            this.position.x,
+            this.position.y,
+            this.position.z
+        )
+        return new Noise(noisePosition)
     }
 
     die() {

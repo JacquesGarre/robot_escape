@@ -24,6 +24,7 @@ interface EnemyInterface {
     z: number;
     rotation: number;
     sightDistance: number;
+    hearingDistance: number;
     speed: number;
 }
 
@@ -37,7 +38,7 @@ interface LevelConfig {
     cubes: CubePosition[];
     endX: number;
     endZ: number;
-    enemies: EnemyInterface[];  
+    enemies: EnemyInterface[];
 }
 
 export default class Level {
@@ -87,15 +88,16 @@ export default class Level {
     initializeEnemies(enemiesConfig: EnemyInterface[], cubes: Cube[]) {
         let enemies = {};
         let i = 0;
-        for(const enemyConfig of enemiesConfig) {      
+        for (const enemyConfig of enemiesConfig) {
             const positionX = enemyConfig.x * (this.tileSize) - this.gridCenterX;
             const positionZ = -enemyConfig.z * (this.tileSize) + this.gridCenterZ;
             let enemyPosition = new Position(positionX, 0, positionZ);
             let enemy = new Enemy(
-                enemyPosition, 
-                'Enemy'+i, 
-                enemyConfig.rotation, 
+                enemyPosition,
+                'Enemy' + i,
+                enemyConfig.rotation,
                 enemyConfig.sightDistance,
+                enemyConfig.hearingDistance,
                 enemyConfig.speed,
                 cubes,
                 this.elevator,
@@ -112,7 +114,7 @@ export default class Level {
             0,
             -z * (this.tileSize) + this.gridCenterZ,
         )
-        return new Elevator(position, 0,this.tileSize)
+        return new Elevator(position, 0, this.tileSize)
     }
 
     initializeCubes(cubePositions: CubePosition[], tileSize: number) {
@@ -274,7 +276,13 @@ export default class Level {
                         && cubeRightBoundary > (this.robot.position.x - this.robot.radius * 1.5)
                         && cubeLeftBoundary < (this.robot.position.x - this.robot.radius)
                     ) {
-                        this.robot.break();
+                        let noise = this.robot.bumpIntoWall();
+                        for (const index in this.enemies) {
+                            let enemy = this.enemies[index]
+                            if (enemy.canHear(noise)) {
+                                enemy.inspectNoise(noise)
+                            }
+                        }
                         return true;
                     }
                     break;
@@ -285,7 +293,13 @@ export default class Level {
                         && cubeLeftBoundary < (this.robot.position.x + this.robot.radius * 1.5)
                         && cubeRightBoundary > (this.robot.position.x - this.robot.radius)
                     ) {
-                        this.robot.break();
+                        let noise = this.robot.bumpIntoWall();
+                        for (const index in this.enemies) {
+                            let enemy = this.enemies[index]
+                            if (enemy.canHear(noise)) {
+                                enemy.inspectNoise(noise)
+                            }
+                        }
                         return true;
                     }
                     break;
@@ -295,7 +309,13 @@ export default class Level {
                         && cubeBottomBoundary > (this.robot.position.z - this.robot.radius * 1.5)
                         && cubeTopBoundary < (this.robot.position.z - this.robot.radius)
                     ) {
-                        this.robot.break();
+                        let noise = this.robot.bumpIntoWall();
+                        for (const index in this.enemies) {
+                            let enemy = this.enemies[index]
+                            if (enemy.canHear(noise)) {
+                                enemy.inspectNoise(noise)
+                            }
+                        }
                         return true;
                     }
                     break;
@@ -305,26 +325,56 @@ export default class Level {
                         && cubeTopBoundary < (this.robot.position.z + this.robot.radius * 1.5)
                         && cubeBottomBoundary > (this.robot.position.z - this.robot.radius)
                     ) {
-                        this.robot.break();
+                        let noise = this.robot.bumpIntoWall();
+                        for (const index in this.enemies) {
+                            let enemy = this.enemies[index]
+                            if (enemy.canHear(noise)) {
+                                enemy.inspectNoise(noise)
+                            }
+                        }
                         return true;
                     }
                     break;
             }
         }
         if (this.robot.direction == 'Forward' && this.topBoundary > this.robot.position.z) {
-            this.robot.break();
+            let noise = this.robot.bumpIntoWall();
+            for (const index in this.enemies) {
+                let enemy = this.enemies[index]
+                if (enemy.canHear(noise)) {
+                    enemy.inspectNoise(noise)
+                }
+            }
             return true;
         }
         if (this.robot.direction == 'Backward' && this.bottomBoundary < this.robot.position.z) {
-            this.robot.break();
+            let noise = this.robot.bumpIntoWall();
+            for (const index in this.enemies) {
+                let enemy = this.enemies[index]
+                if (enemy.canHear(noise)) {
+                    enemy.inspectNoise(noise)
+                }
+            }
             return true;
         }
         if (this.robot.direction == 'Left' && this.leftBoundary > this.robot.position.x) {
-            this.robot.break();
+            let noise = this.robot.bumpIntoWall();
+            for (const index in this.enemies) {
+                let enemy = this.enemies[index]
+                if (enemy.canHear(noise)) {
+                    enemy.inspectNoise(noise)
+                }
+            }
             return true;
         }
         if (this.robot.direction == 'Right' && this.rightBoundary < this.robot.position.x) {
-            this.robot.break();
+            let noise = this.robot.bumpIntoWall();
+            for (const index in this.enemies) {
+                let enemy = this.enemies[index]
+                if (enemy.canHear(noise)) {
+                    enemy.inspectNoise(noise)
+                }
+            }
             return true;
         }
         return false;

@@ -1,5 +1,6 @@
 import Cube from "../cube/cube";
 import Elevator from "../elevator/elevator";
+import Noise from "../noise/noise";
 import Robot from "../robot/robot";
 import Position from "../shared/position";
 
@@ -11,7 +12,9 @@ export default class Enemy {
     rotation: number;
     playAnimationOnce = false;
     sightDistance: number;
+    hearingDistance: number;
     runningAfter: Robot;
+    walkingAfter: Position;
     speed: number;
     cubes: Cube[];
     elevator: Elevator;
@@ -21,6 +24,7 @@ export default class Enemy {
         name: string, 
         rotation: number, 
         sightDistance: number,
+        hearingDistance: number, 
         speed: number,
         cubes: Cube[],
         elevator: Elevator,
@@ -30,27 +34,44 @@ export default class Enemy {
         this.animation = 'Idle';
         this.rotation = rotation;
         this.sightDistance = sightDistance
+        this.hearingDistance = hearingDistance
         this.speed = speed;
         this.cubes = cubes;
         this.elevator = elevator;
     }
 
     hitByRobot(robot: Robot) {
-        this.rotateTowards(robot);
+        this.rotateTowards(robot.position);
         this.punch();
     }
 
-    rotateTowards(robot: Robot) {
+    rotateTowards(position: Position) {
         const x1 = this.position.x;
         const z1 = this.position.z;
-        const x2 = robot.position.x;
-        const z2 = robot.position.z;
+        const x2 = position.x;
+        const z2 = position.z;
         const deltaX = x2 - x1;
         const deltaZ = z2 - z1;
         let angleRadians = Math.atan2(deltaX, deltaZ);
         let angleDegrees = (angleRadians * (180 / Math.PI)) + 360 % 360;
         this.rotation = angleDegrees
     }
+
+    canHear(noise: Noise) {
+        const x1 = this.position.x;
+        const z1 = this.position.z;
+        const x2 = noise.position.x;
+        const z2 = noise.position.z;
+        const deltaX = x2 - x1;
+        const deltaZ = z2 - z1;
+        const currentDistance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+        const canHear = currentDistance <= this.hearingDistance 
+        if(canHear) {
+            console.log(`${this.name} can hear that noise!`)
+        }
+        return canHear
+    }
+
 
     canSee(robot: Robot, cubes: Cube[]) {
         const x1 = this.position.x;
@@ -145,11 +166,54 @@ export default class Enemy {
         }, 700); 
     }
 
+    inspectNoise(noise: Noise) {
+        if (this.runningAfter) {
+            return;
+        }
+        this.animation = 'Jump';    
+        setTimeout(() => {
+            this.animation = 'Walking';
+            this.walkingAfter = noise.position;
+        }, 700); 
+
+    }
+
+    walkTowards(position: Position) {
+        if (this.animation == 'Punch') {
+            return;
+        }
+        this.rotateTowards(position) 
+        const directionX = this.position.x - position.x;
+        const directionZ = this.position.z - position.z;
+        const distance = Math.sqrt(directionX ** 2 + directionZ ** 2);
+        if (distance < 2 && this.position.y == position.y) {
+            this.animation = 'Dance';
+            return;
+        }
+        let normalizedX = directionX / distance;
+        let normalizedZ = directionZ / distance;
+        for (const cube of this.cubes) {
+            if (this.isPathObstructed(cube.position, cube.width, normalizedX, normalizedZ)) {
+                const detour = this.calculateDetour(cube.position, normalizedX, normalizedZ);
+                normalizedX = detour.x;
+                normalizedZ = detour.z;
+                break
+            }
+        }
+        if (this.isPathObstructed(this.elevator.position, this.elevator.width, normalizedX, normalizedZ)) {
+            const detour = this.calculateDetour(this.elevator.position, normalizedX, normalizedZ);
+            normalizedX = detour.x;
+            normalizedZ = detour.z;
+        }
+        this.position.x -= normalizedX * this.speed;
+        this.position.z -= normalizedZ * this.speed;
+    }
+
     runTowards(robot: Robot) {
         if (this.animation == 'Punch') {
             return;
         }
-        this.rotateTowards(robot) 
+        this.rotateTowards(robot.position) 
         const directionX = this.position.x - robot.position.x;
         const directionZ = this.position.z - robot.position.z;
         const distance = Math.sqrt(directionX ** 2 + directionZ ** 2);
@@ -207,8 +271,14 @@ export default class Enemy {
 
     animate() {
         if(this.runningAfter) {
-            this.runTowards(this.runningAfter)  
+            this.runTowards(this.runningAfter) 
+            return; 
         }
+        if(this.walkingAfter) {
+            this.walkTowards(this.walkingAfter)  
+            return;
+        }
+
     }
 
 }
