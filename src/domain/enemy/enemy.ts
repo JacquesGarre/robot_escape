@@ -10,6 +10,7 @@ export default class Enemy {
     rotation: number;
     playAnimationOnce = false;
     sightDistance: number;
+    runningAfter: Robot;
 
     constructor(position: Position, name: string, rotation: number, sightDistance: number) {
         this.name = name;
@@ -124,7 +125,38 @@ export default class Enemy {
     }
 
     catch(robot: Robot) {
-        
+        this.animation = 'Jump';    
+        setTimeout(() => {
+            this.animation = 'Running';
+            this.runningAfter = robot;
+        }, 700); 
+    }
+
+    runTowards(robot: Robot) {
+        if (this.animation == 'Death') {
+            return;
+        }
+        this.rotateTowards(robot)
+        const speed = 0.3; // Adjust this for the enemy's running speed
+        const directionX = this.position.x - robot.position.x;
+        const directionZ = this.position.z - robot.position.z;
+        const distance = Math.sqrt(directionX ** 2 + directionZ ** 2);
+        if (distance < 2) {
+            this.playAnimationOnce = true;
+            this.animation = 'Punch';
+            robot.die();
+            return;
+        }
+        const normalizedX = directionX / distance;
+        const normalizedZ = directionZ / distance;
+        this.position.x -= normalizedX * speed;
+        this.position.z -= normalizedZ * speed;
+    }
+
+    animate() {
+        if(this.runningAfter) {
+            this.runTowards(this.runningAfter)  
+        }
     }
 
 }

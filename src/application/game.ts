@@ -103,6 +103,11 @@ export default class GameState {
     }
 
     animate(delta: number) {
+        for(const index in this.currentLevel.enemies) {
+            let enemy = this.currentLevel.enemies[index]
+            enemy.animate()
+        }
+
         if (this.currentLevel.gameover) {
             this.animateGameOver();
             return;
