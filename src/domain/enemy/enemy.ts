@@ -11,13 +11,21 @@ export default class Enemy {
     playAnimationOnce = false;
     sightDistance: number;
     runningAfter: Robot;
+    speed: number;
 
-    constructor(position: Position, name: string, rotation: number, sightDistance: number) {
+    constructor(
+        position: Position, 
+        name: string, 
+        rotation: number, 
+        sightDistance: number,
+        speed: number,
+    ) {
         this.name = name;
         this.position = position;
         this.animation = 'Idle';
         this.rotation = rotation;
         this.sightDistance = sightDistance
+        this.speed = speed;
     }
 
     hitByRobot(robot: Robot) {
@@ -136,8 +144,7 @@ export default class Enemy {
         if (this.animation == 'Punch') {
             return;
         }
-        this.rotateTowards(robot)
-        const speed = 0.3; // Adjust this for the enemy's running speed
+        this.rotateTowards(robot) 
         const directionX = this.position.x - robot.position.x;
         const directionZ = this.position.z - robot.position.z;
         const distance = Math.sqrt(directionX ** 2 + directionZ ** 2);
@@ -149,8 +156,8 @@ export default class Enemy {
         }
         const normalizedX = directionX / distance;
         const normalizedZ = directionZ / distance;
-        this.position.x -= normalizedX * speed;
-        this.position.z -= normalizedZ * speed;
+        this.position.x -= normalizedX * this.speed;
+        this.position.z -= normalizedZ * this.speed;
     }
 
     animate() {

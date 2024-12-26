@@ -39,7 +39,8 @@ export default class GameState {
                     y: 0,
                     z: 4,
                     rotation: -90,
-                    sightDistance: 20 // 20*10 = 2metres
+                    sightDistance: 20, // 20*10 = 2metres
+                    speed: 0.3
                 },
                 // {
                 //     x: 2,
@@ -72,7 +73,8 @@ export default class GameState {
                     y: 0,
                     z: 4,
                     rotation: 90,
-                    sightDistance: 100
+                    sightDistance: 100,
+                    speed: 0.3
                 },
             ]
         }

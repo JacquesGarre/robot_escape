@@ -24,6 +24,7 @@ interface EnemyInterface {
     z: number;
     rotation: number;
     sightDistance: number;
+    speed: number;
 }
 
 interface LevelConfig {
@@ -94,7 +95,8 @@ export default class Level {
                 enemyPosition, 
                 'Enemy'+i, 
                 enemyConfig.rotation, 
-                enemyConfig.sightDistance
+                enemyConfig.sightDistance,
+                enemyConfig.speed
             )
             enemies[i] = enemy;
             i++;
