@@ -68,7 +68,7 @@ export default class Level {
         this.gridCenterX = (this.width * this.tileSize) / 2 - this.tileSize / 2;
         this.gridCenterZ = (this.height * this.tileSize) / 2 - this.tileSize / 2;
         this.elevator = this.initializeElevator(config.endX, config.endZ)
-        this.cubes = this.initializeCubes(config.cubes)
+        this.cubes = this.initializeCubes(config.cubes, this.tileSize)
         this.enemies = this.initializeEnemies(config.enemies)
         this.scene = this.initializeScene()
         this.robot = this.initializeRobot(config.robotX, config.robotZ, config.robotRotation);
@@ -111,7 +111,7 @@ export default class Level {
         return new Elevator(position, 0)
     }
 
-    initializeCubes(cubePositions: CubePosition[]) {
+    initializeCubes(cubePositions: CubePosition[], tileSize: number) {
         let cubes: Cube[] = [];
         for (const cubePosition of cubePositions) {
             let position = new Position(
@@ -119,7 +119,7 @@ export default class Level {
                 cubePosition.y + this.tileSize / 2,
                 -cubePosition.z * (this.tileSize) + this.gridCenterZ,
             )
-            let cube = new Cube(position)
+            let cube = new Cube(position, tileSize)
             cubes.push(cube);
         }
         return cubes;
@@ -201,7 +201,7 @@ export default class Level {
             let enemyBottomBoundary = enemy.position.z + this.robot.radius;
 
             // eye sight
-            enemy.canSee(this.robot)
+            enemy.canSee(this.robot, this.cubes)
 
 
             // collisions

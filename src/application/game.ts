@@ -14,7 +14,23 @@ export default class GameState {
             robotX: 0,
             robotZ: 0,
             robotRotation: 'Right',
-            cubes: [],
+            cubes: [
+                {
+                    x: 3,
+                    y: 0,
+                    z: 3
+                },
+                {
+                    x: 4,
+                    y: 0,
+                    z: 3
+                },
+                {
+                    x: 5,
+                    y: 0,
+                    z: 3
+                },
+            ],
             endX: 9,
             endZ: 9,
             enemies: [
@@ -22,7 +38,7 @@ export default class GameState {
                     x: 4,
                     y: 0,
                     z: 4,
-                    rotation: 90,
+                    rotation: 0,
                     sightDistance: 20 // 20*10 = 2metres
                 },
                 // {
