@@ -49,28 +49,30 @@ function init() {
         console.error(e);
     });
 
-    for(const i in gameState.currentLevel.enemies) {
-        let enemy = gameState.currentLevel.enemies[i]
+    for (let i = 0; i <= 20; i++) {
         loader.load('src/infrastructure/models/Robot.glb', function (gltf) {
-            let model = gltf.scene;
+            const model = gltf.scene;
             const mixer = new THREE.AnimationMixer(model);
             const actions = {};
             for (const clip of gltf.animations) {
                 const action = mixer.clipAction(clip);
                 actions[clip.name] = action;
             }
-            model.name = enemy.name;
-            model.animations = gltf.animations
+            model.name = `Enemy${i}`;
+            model.animations = gltf.animations;
             model.userData.mixer = mixer;
             model.userData.actions = actions;
-            model.userData.currentAction = enemy.animation;
+            model.userData.currentAction = 'Idle';
             model.castShadow = true;
             enemyModels[i] = model;
-        }, undefined, function (e) {
-            console.error(e);
+        }, undefined, function (error) {
+            console.error(`Failed to load model for Enemy${i}:`, error);
         });
     }
 
+    
+
+    
 
     // Keyboard
     window.addEventListener('keydown', gameState.onKeyDown.bind(gameState));

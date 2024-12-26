@@ -66,9 +66,6 @@ export default class Enemy {
         const deltaZ = z2 - z1;
         const currentDistance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
         const canHear = currentDistance <= this.hearingDistance 
-        if(canHear) {
-            console.log(`${this.name} can hear that noise!`)
-        }
         return canHear
     }
 
@@ -255,8 +252,8 @@ export default class Enemy {
         const cubeMaxZ = position.z + width / 2 + 2;
         const enemyX = this.position.x;
         const enemyZ = this.position.z;
-        const targetX = enemyX - directionX * 1;
-        const targetZ = enemyZ - directionZ * 1;
+        const targetX = enemyX - directionX * 0.5;
+        const targetZ = enemyZ - directionZ * 0.5;
         return targetX >= cubeMinX && targetX <= cubeMaxX && targetZ >= cubeMinZ && targetZ <= cubeMaxZ;
     }
 
