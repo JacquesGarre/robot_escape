@@ -201,8 +201,9 @@ export default class Level {
             let enemyBottomBoundary = enemy.position.z + this.robot.radius;
 
             // eye sight
-            enemy.canSee(this.robot, this.cubes)
-
+            if (enemy.canSee(this.robot, this.cubes)) {
+                enemy.catch(this.robot)
+            }
 
             // collisions
             switch (this.robot.direction) {

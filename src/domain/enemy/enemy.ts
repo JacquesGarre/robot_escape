@@ -123,4 +123,8 @@ export default class Enemy {
         }, 700);    
     }
 
+    catch(robot: Robot) {
+        
+    }
+
 }
