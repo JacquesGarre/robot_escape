@@ -157,10 +157,50 @@ export default class Enemy {
             robot.die();
             return;
         }
-        const normalizedX = directionX / distance;
-        const normalizedZ = directionZ / distance;
+        let normalizedX = directionX / distance;
+        let normalizedZ = directionZ / distance;
+
+
+        // Check for obstacles in the path
+        for (const cube of this.cubes) {
+            if (this.isPathObstructed(cube, normalizedX, normalizedZ)) {
+                const detour = this.calculateDetour(cube, normalizedX, normalizedZ);
+                normalizedX = detour.x;
+                normalizedZ = detour.z;
+                break; // Only avoid the first obstructing cube
+            }
+        }
+
+        // Move the enemy
         this.position.x -= normalizedX * this.speed;
         this.position.z -= normalizedZ * this.speed;
+    }
+
+
+    isPathObstructed(cube: Cube, directionX: number, directionZ: number): boolean {
+        const cubeMinX = cube.position.x - cube.width / 2 - 2;
+        const cubeMaxX = cube.position.x + cube.width / 2 + 2;
+        const cubeMinZ = cube.position.z - cube.width / 2 - 2;
+        const cubeMaxZ = cube.position.z + cube.width / 2 + 2;
+        const enemyX = this.position.x;
+        const enemyZ = this.position.z;
+        const targetX = enemyX - directionX * 1;
+        const targetZ = enemyZ - directionZ * 1;
+        return targetX >= cubeMinX && targetX <= cubeMaxX && targetZ >= cubeMinZ && targetZ <= cubeMaxZ;
+    }
+
+    calculateDetour(cube: Cube, directionX: number, directionZ: number): { x: number; z: number } {
+        const cubeCenterX = cube.position.x;
+        const cubeCenterZ = cube.position.z;
+        const perpX = -(cubeCenterZ - this.position.z);
+        const perpZ = cubeCenterX - this.position.x;
+        const perpLength = Math.sqrt(perpX ** 2 + perpZ ** 2);
+        const normalizedPerpX = perpX / perpLength;
+        const normalizedPerpZ = perpZ / perpLength;
+        const detourX = directionX + normalizedPerpX * 100; 
+        const detourZ = directionZ + normalizedPerpZ * 100;
+        const detourLength = Math.sqrt(detourX ** 2 + detourZ ** 2);
+        return { x: detourX / detourLength, z: detourZ / detourLength };
     }
 
     animate() {
