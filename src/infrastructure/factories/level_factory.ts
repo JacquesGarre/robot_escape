@@ -85,6 +85,8 @@ export default function levelFromGameState(gameState: GameState): THREE.Scene {
     elevator.castShadow = true;
     elevator.name = 'Elevator'
     scene.add(elevator);
+
+    // text
     
     return scene;
 }

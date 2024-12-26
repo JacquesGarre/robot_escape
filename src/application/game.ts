@@ -91,13 +91,7 @@ export default class GameState {
 
     animate(delta: number) {
         if (this.currentLevel.gameover) {
-            let that = this;
-            setTimeout(function(){
-                if (!that.gameover) {
-                    that.gameover = true;
-                    that.animateGameOver();
-                }
-            }, 800)
+            this.animateGameOver();
             return;
         }
         if (this.currentLevel.endingAnimationDone) {
@@ -128,8 +122,7 @@ export default class GameState {
     }
 
     animateGameOver() {
-
-        console.log("Game over")
+        this.currentLevel.camera.zoomIn()
     }
 
 }

@@ -6,18 +6,27 @@ import levelFromGameState from './src/infrastructure/factories/level_factory';
 import cameraFromGameState from './src/infrastructure/factories/camera_factory';
 import GameState from './src/application/game';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 let gameState, container, stats, clock;
 let camera, level, renderer;
 let robotModel;
 let enemyModels = {};
+let textMesh;
+let fontLoaded;
 
 init();
 
 function init() {
     
     gameState = new GameState();
+
+    // load font
+    const fontLoader = new FontLoader();
+    fontLoader.load('https://threejs.org/examples/fonts/gentilis_bold.typeface.json', function (font) {
+        fontLoaded = font
+    });
 
     // load robot model
     const loader = new GLTFLoader();
@@ -62,7 +71,6 @@ function init() {
         });
     }
 
- 
 
     // Keyboard
     window.addEventListener('keydown', gameState.onKeyDown.bind(gameState));
@@ -160,16 +168,37 @@ function animate() {
         }
     }
 
+    if(fontLoaded && gameState.currentLevel.text){
+        const material = new THREE.MeshBasicMaterial({ 
+            color: gameState.currentLevel.text.color 
+        });
+        const geometry = new TextGeometry(gameState.currentLevel.text.content, {
+            font: fontLoaded,
+            size: 2,
+            depth: 0.3,
+        });
+        textMesh = new THREE.Mesh(geometry, material);
+        textMesh.position.set(
+            gameState.currentLevel.text.position.x - 7,
+            gameState.currentLevel.text.position.y + 15,
+            gameState.currentLevel.text.position.z + 15,
+        );
+        textMesh.rotateX(270 * (Math.PI / 180))
+        level.add(textMesh)
+    }
+
+
 
     const elevator = level.getObjectByName('Elevator')
-    let geometry = elevator.geometry
+    let elevatorGeometry = elevator.geometry
     elevator.geometry.dispose();
     let newHeight = gameState.currentLevel.elevator.height
-    elevator.geometry = new THREE.BoxGeometry(geometry.parameters.width, newHeight, geometry.parameters.depth);
+    elevator.geometry = new THREE.BoxGeometry(elevatorGeometry.parameters.width, newHeight, elevatorGeometry.parameters.depth);
     elevator.position.y = gameState.currentLevel.elevator.position.y + newHeight / 2;
 
     camera = cameraFromGameState(gameState)
     gameState.animate(delta);
+
     renderer.render(level, camera);
     stats.update();
 }

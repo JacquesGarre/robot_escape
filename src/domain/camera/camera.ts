@@ -29,4 +29,10 @@ export default class Camera {
 		return new Camera(position, direction);
 	}
 
+	zoomIn() {
+		if (this.position.z >= 30) {
+			this.position.z -= 0.5
+		}
+	}
+
 }

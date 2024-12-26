@@ -10,6 +10,7 @@ import Grid from "../scene/grid";
 import Ground from "../scene/ground";
 import Scene from "../scene/scene";
 import Position from "../shared/position";
+import Text from "../text/text";
 
 interface CubePosition {
     x: number;
@@ -34,7 +35,7 @@ interface LevelConfig {
     cubes: CubePosition[];
     endX: number;
     endZ: number;
-    enemies: EnemyInterface[];
+    enemies: EnemyInterface[];  
 }
 
 export default class Level {
@@ -57,6 +58,7 @@ export default class Level {
     endingAnimationDone: boolean;
     enemies: {};
     gameover: boolean;
+    text: Text;
 
     constructor(config: LevelConfig) {
         this.tileSize = config.tileSize;
@@ -78,6 +80,7 @@ export default class Level {
         this.endingAnimationDone = false;
         this.gameover = false;
     }
+
 
     initializeEnemies(positions: EnemyInterface[]) {
         let enemies = {};
@@ -338,6 +341,12 @@ export default class Level {
 
     gameOver() {
         this.gameover = true;
+        let textPosition = new Position(
+            this.robot.position.x,
+            this.robot.position.y,
+            this.robot.position.z,
+        )
+        this.text = new Text(textPosition, "Game over!", 0xff0000)
     }
 
 }
