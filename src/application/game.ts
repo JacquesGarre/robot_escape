@@ -18,10 +18,10 @@ export default class GameState {
                 {
                     x: 3,
                     y: 0,
-                    z: 3
+                    z: 5
                 },
                 {
-                    x: 4,
+                    x: 3,
                     y: 0,
                     z: 3
                 },
@@ -38,7 +38,7 @@ export default class GameState {
                     x: 4,
                     y: 0,
                     z: 4,
-                    rotation: 0,
+                    rotation: -90,
                     sightDistance: 20 // 20*10 = 2metres
                 },
                 // {
