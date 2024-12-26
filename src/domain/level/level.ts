@@ -23,6 +23,7 @@ interface EnemyInterface {
     y: number;
     z: number;
     rotation: number;
+    sightDistance: number;
 }
 
 interface LevelConfig {
@@ -82,14 +83,19 @@ export default class Level {
     }
 
 
-    initializeEnemies(positions: EnemyInterface[]) {
+    initializeEnemies(enemiesConfig: EnemyInterface[]) {
         let enemies = {};
         let i = 0;
-        for(const position of positions) {      
-            const positionX = position.x * (this.tileSize) - this.gridCenterX;
-            const positionZ = -position.z * (this.tileSize) + this.gridCenterZ;
+        for(const enemyConfig of enemiesConfig) {      
+            const positionX = enemyConfig.x * (this.tileSize) - this.gridCenterX;
+            const positionZ = -enemyConfig.z * (this.tileSize) + this.gridCenterZ;
             let enemyPosition = new Position(positionX, 0, positionZ);
-            let enemy = new Enemy(enemyPosition, 'Enemy'+i, position.rotation)
+            let enemy = new Enemy(
+                enemyPosition, 
+                'Enemy'+i, 
+                enemyConfig.rotation, 
+                enemyConfig.sightDistance
+            )
             enemies[i] = enemy;
             i++;
         }
@@ -193,6 +199,12 @@ export default class Level {
             let enemyRightBoundary = enemy.position.x + this.robot.radius;
             let enemyTopBoundary = enemy.position.z - this.robot.radius;
             let enemyBottomBoundary = enemy.position.z + this.robot.radius;
+
+            // eye sight
+            enemy.canSee(this.robot)
+
+
+            // collisions
             switch (this.robot.direction) {
                 case 'Left':
                     if (this.robot.position.z <= (enemyBottomBoundary + this.robot.radius)

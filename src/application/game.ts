@@ -8,34 +8,30 @@ export default class GameState {
     gameover = false;
     levels = [
         {
-            width: 5,
-            height: 5,
+            width: 10,
+            height: 10,
             tileSize: 5,
             robotX: 0,
             robotZ: 0,
             robotRotation: 'Right',
-            cubes: [
-                {
-                    x: 2,
-                    y: 0,
-                    z: 2
-                },
-            ],
-            endX: 4,
-            endZ: 4,
+            cubes: [],
+            endX: 9,
+            endZ: 9,
             enemies: [
                 {
-                    x: 1,
+                    x: 4,
                     y: 0,
-                    z: 1,
+                    z: 4,
                     rotation: 90,
+                    sightDistance: 20 // 20*10 = 2metres
                 },
-                {
-                    x: 3,
-                    y: 0,
-                    z: 3,
-                    rotation: 0,
-                },
+                // {
+                //     x: 2,
+                //     y: 0,
+                //     z: 5,
+                //     rotation: 180,
+                //     sightDistance: 100
+                // },
             ]
         },
         {
@@ -60,6 +56,7 @@ export default class GameState {
                     y: 0,
                     z: 4,
                     rotation: 90,
+                    sightDistance: 100
                 },
             ]
         }
