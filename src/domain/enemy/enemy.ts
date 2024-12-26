@@ -159,19 +159,14 @@ export default class Enemy {
         }
         let normalizedX = directionX / distance;
         let normalizedZ = directionZ / distance;
-
-
-        // Check for obstacles in the path
         for (const cube of this.cubes) {
             if (this.isPathObstructed(cube, normalizedX, normalizedZ)) {
                 const detour = this.calculateDetour(cube, normalizedX, normalizedZ);
                 normalizedX = detour.x;
                 normalizedZ = detour.z;
-                break; // Only avoid the first obstructing cube
+                break
             }
         }
-
-        // Move the enemy
         this.position.x -= normalizedX * this.speed;
         this.position.z -= normalizedZ * this.speed;
     }
