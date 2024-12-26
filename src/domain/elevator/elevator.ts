@@ -4,10 +4,12 @@ export default class Elevator {
 
     position: Position
     height: number
+    width: number
 
-    constructor(position: Position, height: number) {
+    constructor(position: Position, height: number, width: number) {
         this.position = position
         this.height = height
+        this.width = width
     }
 
     goUp() {

@@ -1,4 +1,5 @@
 import Cube from "../cube/cube";
+import Elevator from "../elevator/elevator";
 import Robot from "../robot/robot";
 import Position from "../shared/position";
 
@@ -13,6 +14,7 @@ export default class Enemy {
     runningAfter: Robot;
     speed: number;
     cubes: Cube[];
+    elevator: Elevator;
 
     constructor(
         position: Position, 
@@ -20,7 +22,8 @@ export default class Enemy {
         rotation: number, 
         sightDistance: number,
         speed: number,
-        cubes: Cube[]
+        cubes: Cube[],
+        elevator: Elevator,
     ) {
         this.name = name;
         this.position = position;
@@ -29,6 +32,7 @@ export default class Enemy {
         this.sightDistance = sightDistance
         this.speed = speed;
         this.cubes = cubes;
+        this.elevator = elevator;
     }
 
     hitByRobot(robot: Robot) {
@@ -59,22 +63,20 @@ export default class Enemy {
         const couldSee = currentDistance <= this.sightDistance && this.withinEyeSightCone(robot)
         if (couldSee) {
             for (const cube of cubes) {
-                if (this.isObstructed(x1, z1, x2, z2, cube)) {
-                    console.log(`${this.name} could see, but is obstructed by a cube!`);
+                if (this.isObstructed(x1, z1, x2, z2, cube.position, cube.width)) {
                     return false;
                 }
             }
-            console.log(`${this.name} can see me!`);
             return true;
         }
         return false
     }
 
-    isObstructed(x1: number, z1: number, x2: number, z2: number, cube: Cube): boolean {
-        const cubeMinX = cube.position.x - cube.width / 2;
-        const cubeMaxX = cube.position.x + cube.width / 2;
-        const cubeMinZ = cube.position.z - cube.width / 2;
-        const cubeMaxZ = cube.position.z + cube.width / 2;
+    isObstructed(x1: number, z1: number, x2: number, z2: number, position: Position, width: number): boolean {
+        const cubeMinX = position.x - width / 2;
+        const cubeMaxX = position.x + width / 2;
+        const cubeMinZ = position.z - width / 2;
+        const cubeMaxZ = position.z + width / 2;
         return this.lineIntersectsAABB(x1, z1, x2, z2, cubeMinX, cubeMaxX, cubeMinZ, cubeMaxZ);
     }
 
@@ -160,23 +162,28 @@ export default class Enemy {
         let normalizedX = directionX / distance;
         let normalizedZ = directionZ / distance;
         for (const cube of this.cubes) {
-            if (this.isPathObstructed(cube, normalizedX, normalizedZ)) {
-                const detour = this.calculateDetour(cube, normalizedX, normalizedZ);
+            if (this.isPathObstructed(cube.position, cube.width, normalizedX, normalizedZ)) {
+                const detour = this.calculateDetour(cube.position, normalizedX, normalizedZ);
                 normalizedX = detour.x;
                 normalizedZ = detour.z;
                 break
             }
+        }
+        if (this.isPathObstructed(this.elevator.position, this.elevator.width, normalizedX, normalizedZ)) {
+            const detour = this.calculateDetour(this.elevator.position, normalizedX, normalizedZ);
+            normalizedX = detour.x;
+            normalizedZ = detour.z;
         }
         this.position.x -= normalizedX * this.speed;
         this.position.z -= normalizedZ * this.speed;
     }
 
 
-    isPathObstructed(cube: Cube, directionX: number, directionZ: number): boolean {
-        const cubeMinX = cube.position.x - cube.width / 2 - 2;
-        const cubeMaxX = cube.position.x + cube.width / 2 + 2;
-        const cubeMinZ = cube.position.z - cube.width / 2 - 2;
-        const cubeMaxZ = cube.position.z + cube.width / 2 + 2;
+    isPathObstructed(position: Position, width: number, directionX: number, directionZ: number): boolean {
+        const cubeMinX = position.x - width / 2 - 2;
+        const cubeMaxX = position.x + width / 2 + 2;
+        const cubeMinZ = position.z - width / 2 - 2;
+        const cubeMaxZ = position.z + width / 2 + 2;
         const enemyX = this.position.x;
         const enemyZ = this.position.z;
         const targetX = enemyX - directionX * 1;
@@ -184,9 +191,9 @@ export default class Enemy {
         return targetX >= cubeMinX && targetX <= cubeMaxX && targetZ >= cubeMinZ && targetZ <= cubeMaxZ;
     }
 
-    calculateDetour(cube: Cube, directionX: number, directionZ: number): { x: number; z: number } {
-        const cubeCenterX = cube.position.x;
-        const cubeCenterZ = cube.position.z;
+    calculateDetour(position: Position, directionX: number, directionZ: number): { x: number; z: number } {
+        const cubeCenterX = position.x;
+        const cubeCenterZ = position.z;
         const perpX = -(cubeCenterZ - this.position.z);
         const perpZ = cubeCenterX - this.position.x;
         const perpLength = Math.sqrt(perpX ** 2 + perpZ ** 2);

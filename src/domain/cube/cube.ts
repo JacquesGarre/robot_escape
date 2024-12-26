@@ -9,7 +9,4 @@ export default class Cube {
         this.position = position;
         this.width = width;
     }
-
-
-
 }

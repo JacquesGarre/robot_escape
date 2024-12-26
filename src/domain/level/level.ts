@@ -97,7 +97,8 @@ export default class Level {
                 enemyConfig.rotation, 
                 enemyConfig.sightDistance,
                 enemyConfig.speed,
-                cubes
+                cubes,
+                this.elevator,
             )
             enemies[i] = enemy;
             i++;
@@ -111,7 +112,7 @@ export default class Level {
             0,
             -z * (this.tileSize) + this.gridCenterZ,
         )
-        return new Elevator(position, 0)
+        return new Elevator(position, 0,this.tileSize)
     }
 
     initializeCubes(cubePositions: CubePosition[], tileSize: number) {
