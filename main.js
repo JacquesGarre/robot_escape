@@ -114,14 +114,18 @@ function animate() {
         const mixer = robotModel.userData.mixer;
         const actions = robotModel.userData.actions;
         if (mixer && actions) {
+            const newAction = actions[gameState.currentLevel.robot.animation];
             if (robotModel.userData.currentAction != gameState.currentLevel.robot.animation) {
                 const currentAction = mixer.existingAction(robotModel.userData.currentAction);
                 currentAction.fadeOut(0.2);
                 robotModel.userData.currentAction = gameState.currentLevel.robot.animation
-                actions[gameState.currentLevel.robot.animation].reset().fadeIn(0.2).play();
-            } else {
-                actions[gameState.currentLevel.robot.animation].play();
+                newAction.reset().fadeIn(0.2);
             }
+            if (gameState.currentLevel.robot.playAnimationOnce) {
+                newAction.setLoop(THREE.LoopOnce, 1);
+                newAction.clampWhenFinished = true;
+            }
+            newAction.play();
             mixer.update(delta);
         }
     }
@@ -139,14 +143,18 @@ function animate() {
             const mixer = enemyModel.userData.mixer;
             const actions = enemyModel.userData.actions;
             if (mixer && actions) {
+                const newAction = actions[gameState.currentLevel.enemies[i].animation]
                 if (enemyModel.userData.currentAction != gameState.currentLevel.enemies[i].animation) {
                     const currentAction = mixer.existingAction(enemyModel.userData.currentAction);
                     currentAction.fadeOut(0.2);
                     enemyModel.userData.currentAction = gameState.currentLevel.enemies[i].animation
-                    actions[gameState.currentLevel.enemies[i].animation].reset().fadeIn(0.2).play();
-                } else {
-                    actions[gameState.currentLevel.enemies[i].animation].play();
+                    newAction.reset().fadeIn(0.2);
+                } 
+                if (gameState.currentLevel.enemies[i].playAnimationOnce) {
+                    newAction.setLoop(THREE.LoopOnce, 1);
+                    newAction.clampWhenFinished = true;
                 }
+                newAction.play();
                 mixer.update(delta);
             }
         }

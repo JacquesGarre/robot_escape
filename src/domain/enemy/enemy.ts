@@ -7,6 +7,7 @@ export default class Enemy {
     position: Position;
     animation: string;
     rotation: number;
+    playAnimationOnce = false;
 
     constructor(position: Position, name: string, rotation: number) {
         this.name = name;
@@ -17,6 +18,7 @@ export default class Enemy {
 
     hitByRobot(robot: Robot) {
         this.rotateTowards(robot);
+        this.punch();
     }
 
     rotateTowards(robot: Robot) {
@@ -29,6 +31,16 @@ export default class Enemy {
         let angleRadians = Math.atan2(deltaX, deltaZ);
         let angleDegrees = (angleRadians * (180 / Math.PI)) + 360 % 360;
         this.rotation = angleDegrees
+    }
+
+    punch() {
+        if (this.animation == 'Punch') {
+            return;
+        }
+        this.animation = 'Punch';    
+        setTimeout(() => {
+            this.animation = 'Idle';
+        }, 700);    
     }
 
 }

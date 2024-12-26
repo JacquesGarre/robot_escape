@@ -56,6 +56,7 @@ export default class Level {
     ended: boolean;
     endingAnimationDone: boolean;
     enemies: {};
+    gameover: boolean;
 
     constructor(config: LevelConfig) {
         this.tileSize = config.tileSize;
@@ -75,6 +76,7 @@ export default class Level {
         this.camera = Camera.fromRobot(this.robot)
         this.ended = false;
         this.endingAnimationDone = false;
+        this.gameover = false;
     }
 
     initializeEnemies(positions: EnemyInterface[]) {
@@ -196,7 +198,8 @@ export default class Level {
                         && enemyLeftBoundary < (this.robot.position.x - this.robot.radius)
                     ) {
                         enemy.hitByRobot(this.robot);
-                        this.robot.break();
+                        this.robot.die();
+                        this.gameOver();
                         return true;
                     }
                     break;
@@ -208,7 +211,8 @@ export default class Level {
                         && enemyRightBoundary > (this.robot.position.x - this.robot.radius)
                     ) {
                         enemy.hitByRobot(this.robot);
-                        this.robot.break();
+                        this.robot.die();
+                        this.gameOver();
                         return true;
                     }
                     break;
@@ -219,7 +223,8 @@ export default class Level {
                         && enemyTopBoundary < (this.robot.position.z - this.robot.radius)
                     ) {
                         enemy.hitByRobot(this.robot);
-                        this.robot.break();
+                        this.robot.die();
+                        this.gameOver();
                         return true;
                     }
                     break;
@@ -230,7 +235,8 @@ export default class Level {
                         && enemyBottomBoundary > (this.robot.position.z - this.robot.radius)
                     ) {
                         enemy.hitByRobot(this.robot);
-                        this.robot.break();
+                        this.robot.die();
+                        this.gameOver();
                         return true;
                     }
                     break;
@@ -323,10 +329,15 @@ export default class Level {
     animateEnd() {
         let reachedTop = this.elevator.goUp()
         this.robot.position.y = this.elevator.height
-        this.robot.dance()
+        this.robot.rotateBackward();
+        this.robot.wave();
         if (reachedTop) {
             this.endingAnimationDone = true;
         }
+    }
+
+    gameOver() {
+        this.gameover = true;
     }
 
 }

@@ -5,7 +5,7 @@ export default class GameState {
     currentLevel: Level
     currentLevelKey: number;
     keyPressed: { [key: string]: boolean };
-
+    gameover = false;
     levels = [
         {
             width: 5,
@@ -90,6 +90,16 @@ export default class GameState {
     }
 
     animate(delta: number) {
+        if (this.currentLevel.gameover) {
+            let that = this;
+            setTimeout(function(){
+                if (!that.gameover) {
+                    that.gameover = true;
+                    that.animateGameOver();
+                }
+            }, 800)
+            return;
+        }
         if (this.currentLevel.endingAnimationDone) {
             this.nextLevel();
             return;
@@ -115,6 +125,11 @@ export default class GameState {
             return;
         }
         this.currentLevel.robot.idle();
+    }
+
+    animateGameOver() {
+
+        console.log("Game over")
     }
 
 }

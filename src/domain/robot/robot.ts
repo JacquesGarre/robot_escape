@@ -11,6 +11,7 @@ export default class Robot {
     speed: number;
     radius: number;
     direction: string;
+    playAnimationOnce = false;
 
     constructor(
         name: string, 
@@ -55,6 +56,20 @@ export default class Robot {
             return;
         }
         this.animation = 'Dance'
+    }
+
+    jump() {
+        if (this.animation == 'Death') {
+            return;
+        }
+        this.animation = 'Jump'
+    }
+
+    wave() {
+        if (this.animation == 'Death') {
+            return;
+        }
+        this.animation = 'Wave'
     }
 
     moveForward(delta: number) {
@@ -130,6 +145,14 @@ export default class Robot {
         setTimeout(() => {
             this.animation = 'Idle';
         }, 900);    
+    }
+
+    die() {
+        if (this.animation == 'Death') {
+            return;
+        }
+        this.playAnimationOnce = true;
+        this.animation = 'Death';    
     }
 
 }
