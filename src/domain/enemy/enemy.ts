@@ -44,6 +44,9 @@ export default class Enemy {
         const deltaZ = z2 - z1;
         const currentDistance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
         const canSee = currentDistance <= this.sightDistance && this.withinEyeSightCone(robot)
+        if (canSee) {
+            console.log(`${this.name} can see me!`)
+        }
         return canSee
     }
 
