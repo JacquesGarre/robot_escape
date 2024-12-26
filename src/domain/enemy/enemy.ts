@@ -161,9 +161,14 @@ export default class Enemy {
     catch(robot: Robot) {
         this.animation = 'Jump';    
         setTimeout(() => {
-            this.animation = 'Running';
+            if (this.speed > 0) {
+                this.animation = 'Running';
+            } else {
+                this.animation = 'Idle';
+            }
             this.runningAfter = robot;
         }, 700); 
+      
     }
 
     inspectNoise(noise: Noise) {
@@ -205,8 +210,8 @@ export default class Enemy {
             normalizedX = detour.x;
             normalizedZ = detour.z;
         }
-        this.position.x -= normalizedX * this.speed;
-        this.position.z -= normalizedZ * this.speed;
+        this.position.x -= normalizedX * 0.1;
+        this.position.z -= normalizedZ * 0.1;
     }
 
     runTowards(robot: Robot) {
