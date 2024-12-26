@@ -70,7 +70,7 @@ export default class Level {
         this.gridCenterZ = (this.height * this.tileSize) / 2 - this.tileSize / 2;
         this.elevator = this.initializeElevator(config.endX, config.endZ)
         this.cubes = this.initializeCubes(config.cubes, this.tileSize)
-        this.enemies = this.initializeEnemies(config.enemies)
+        this.enemies = this.initializeEnemies(config.enemies, this.cubes)
         this.scene = this.initializeScene()
         this.robot = this.initializeRobot(config.robotX, config.robotZ, config.robotRotation);
         this.leftBoundary = -this.gridCenterX - this.robot.radius
@@ -84,7 +84,7 @@ export default class Level {
     }
 
 
-    initializeEnemies(enemiesConfig: EnemyInterface[]) {
+    initializeEnemies(enemiesConfig: EnemyInterface[], cubes: Cube[]) {
         let enemies = {};
         let i = 0;
         for(const enemyConfig of enemiesConfig) {      
@@ -96,7 +96,8 @@ export default class Level {
                 'Enemy'+i, 
                 enemyConfig.rotation, 
                 enemyConfig.sightDistance,
-                enemyConfig.speed
+                enemyConfig.speed,
+                cubes
             )
             enemies[i] = enemy;
             i++;

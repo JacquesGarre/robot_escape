@@ -12,6 +12,7 @@ export default class Enemy {
     sightDistance: number;
     runningAfter: Robot;
     speed: number;
+    cubes: Cube[];
 
     constructor(
         position: Position, 
@@ -19,6 +20,7 @@ export default class Enemy {
         rotation: number, 
         sightDistance: number,
         speed: number,
+        cubes: Cube[]
     ) {
         this.name = name;
         this.position = position;
@@ -26,6 +28,7 @@ export default class Enemy {
         this.rotation = rotation;
         this.sightDistance = sightDistance
         this.speed = speed;
+        this.cubes = cubes;
     }
 
     hitByRobot(robot: Robot) {
