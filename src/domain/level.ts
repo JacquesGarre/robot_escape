@@ -3,6 +3,7 @@ import Box from "./box";
 import Camera from "./camera";
 import Controls from "./controls";
 import Elevator from "./elevator";
+import { Enemy } from "./enemy";
 import LevelConfig from "./interface/level_config";
 import Robot from "./robot";
 
@@ -18,6 +19,7 @@ export default class Level {
     elevator: Elevator;
     boundaries: Boundaries;
     finished: boolean;
+    enemies: Enemy[] = [];
 
     constructor(config: LevelConfig) {  
         this.index = config.index;      
@@ -38,6 +40,11 @@ export default class Level {
             zMin: 0, 
             zMax: this.size * Level.TILESIZE, 
         })
+        let enemiesConfig = config.enemies ?? [];
+        for(const enemyConfig of enemiesConfig) {
+            let enemy = new Enemy(enemyConfig);
+            this.enemies.push(enemy)
+        }
     }
 
     animate(controls: Controls) {

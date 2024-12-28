@@ -13,13 +13,19 @@ let level1 = new Level({
     ],
     robot: {
         x: 0,
-        y: 0,
         z: 0,
     },
     elevator: {
         x: 1,
         z: 1
-    }
+    },
+    enemies: [
+        {
+            index: 0,
+            x: 2,
+            z: 2
+        }
+    ]
 })
 let level2 = new Level({
     index: 1,

@@ -14,6 +14,7 @@ export default class WebBrowserGame {
     stats: Stats;
     clock: THREE.Clock;
     robotModel: RobotModel | null = null;
+    enemyModels: {} = {}
 
     private constructor(game: Game) {
         this.game = game;
@@ -46,6 +47,22 @@ export default class WebBrowserGame {
                 console.error(e);
             }
         );
+        for(const level of this.game.levels) {
+            for(const enemy of level.enemies) {
+                loader.load(
+                    RobotModel.MODEL_FILE, 
+                    (gltf) => {
+                        let enemyModelIndex = `${level.index}-${enemy.index}`
+                        this.enemyModels[enemyModelIndex] = RobotModel.fromGltf(gltf);
+                    }, 
+                    undefined, 
+                    (e) => {
+                        console.error(e);
+                    }
+                );
+            }
+        }
+
     }
 
     animate() {
@@ -53,6 +70,7 @@ export default class WebBrowserGame {
         let scene = WebBrowserScene.fromGame(
             this.game,
             this.robotModel,
+            this.enemyModels,
             this.clock.getDelta()
         )
         let camera = WebBrowserCamera.fromCamera(this.game.currentLevel().camera)

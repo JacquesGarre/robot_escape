@@ -15,6 +15,7 @@ export default class WebBrowserScene extends THREE.Scene {
     private constructor(
         game: Game, 
         robotModel: RobotModel | null, 
+        enemyModels: {},
         delta: number
     ) {
         super();
@@ -29,14 +30,16 @@ export default class WebBrowserScene extends THREE.Scene {
         this.addBoxes();
         this.addRobot(robotModel, delta);
         this.addElevator();
+        this.addEnemies(enemyModels, delta);
     }
 
     static fromGame(
         game: Game, 
         robotModel: RobotModel | null, 
+        enemyModels: {}, 
         delta: number
     ): WebBrowserScene {
-        return new WebBrowserScene(game, robotModel, delta);
+        return new WebBrowserScene(game, robotModel, enemyModels, delta);
     }
 
     addLights() {
@@ -230,6 +233,20 @@ export default class WebBrowserScene extends THREE.Scene {
         mixer.update(delta);
         model.userData.currentAction = robot.animation;
         this.add(model);
+    }
+
+    addEnemies(
+        enemyModels: {}, 
+        delta: number
+    ) {
+        for(const enemy of this.level.enemies) {
+            let key = `${this.level.index}-${enemy.index}`
+            let enemyModel = enemyModels[key]
+            if (!enemyModel) {
+                continue;
+            }
+            this.addRobotModel(enemy, enemyModel, delta);
+        }
     }
 
 }   
