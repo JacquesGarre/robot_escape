@@ -34,8 +34,8 @@ export default class WebBrowserLevel extends THREE.Scene {
     addMesh() {
         const mesh = new THREE.Mesh(
             new THREE.PlaneGeometry(
-                this.level.size * this.level.tileSize, 
-                this.level.size * this.level.tileSize, 
+                this.level.size * Level.TILESIZE, 
+                this.level.size * Level.TILESIZE, 
             ), 
             new THREE.MeshStandardMaterial({ 
                 color: 0xcbcbcb, 
@@ -43,22 +43,22 @@ export default class WebBrowserLevel extends THREE.Scene {
             })
         );
         mesh.rotation.x = - Math.PI / 2;
-        mesh.position.x = -(this.level.size/2 - 1) * this.level.tileSize;
-        mesh.position.z = (this.level.size/2 - 1) * this.level.tileSize;
+        mesh.position.x = -(this.level.size/2 - 1) * Level.TILESIZE;
+        mesh.position.z = (this.level.size/2 - 1) * Level.TILESIZE;
         this.add(mesh);
     }
 
     addGrid() {
         const grid = new THREE.GridHelper(
-            this.level.size * this.level.tileSize, 
+            this.level.size * Level.TILESIZE, 
             this.level.size,  
             0x000000, 
             0x000000,
         );
         grid.material.opacity = 0.2;
         grid.material.transparent = true;
-        grid.position.x = -(this.level.size/2 - 1) * this.level.tileSize;
-        grid.position.z = (this.level.size/2 - 1) * this.level.tileSize;
+        grid.position.x = -(this.level.size/2 - 1) * Level.TILESIZE;
+        grid.position.z = (this.level.size/2 - 1) * Level.TILESIZE;
         this.add(grid);
     }
 

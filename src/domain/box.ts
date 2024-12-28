@@ -11,7 +11,7 @@ export default class Box extends LevelObject {
         super({
             x: config.x,
             z: config.z,
-            width: Level.DEFAULT_TILESIZE
+            width: Level.TILESIZE
         })
         this.x = config.x;
         this.z = config.z;
