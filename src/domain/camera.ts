@@ -14,8 +14,8 @@ export default class Camera {
     static default(): Camera {
         let position = new Coordinates(
             0, 
-            60, 
-            0,
+            30, 
+            -30,
         );
         let direction = new Coordinates(
             0,  

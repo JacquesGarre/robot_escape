@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import Level from '../domain/level';
+import Box from '../domain/box';
+import LevelObject from '../domain/level_object';
 
 export default class WebBrowserLevel extends THREE.Scene {
 
@@ -13,6 +15,7 @@ export default class WebBrowserLevel extends THREE.Scene {
         this.addLights();
         this.addMesh();
         this.addGrid();
+        this.addBoxes();
     }
 
     static fromLevel(level: Level): WebBrowserLevel {
@@ -40,6 +43,8 @@ export default class WebBrowserLevel extends THREE.Scene {
             })
         );
         mesh.rotation.x = - Math.PI / 2;
+        mesh.position.x = -(this.level.size/2 - 1) * this.level.tileSize;
+        mesh.position.z = (this.level.size/2 - 1) * this.level.tileSize;
         this.add(mesh);
     }
 
@@ -52,7 +57,26 @@ export default class WebBrowserLevel extends THREE.Scene {
         );
         grid.material.opacity = 0.2;
         grid.material.transparent = true;
+        grid.position.x = -(this.level.size/2 - 1) * this.level.tileSize;
+        grid.position.z = (this.level.size/2 - 1) * this.level.tileSize;
         this.add(grid);
+    }
+
+    addBoxes() {
+        for(const box of this.level.boxes) {
+            this.addLevelObject(box)
+        }
+    }
+
+    addLevelObject(object: LevelObject) {
+        const geometry = new THREE.BoxGeometry(object.width, object.height, object.depth);
+        const material = new THREE.MeshStandardMaterial({ color: 0x808080 });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.x = object.center.x
+        mesh.position.y = object.center.y
+        mesh.position.z = object.center.z
+        mesh.castShadow = true;
+        this.add(mesh);
     }
 
 }   
