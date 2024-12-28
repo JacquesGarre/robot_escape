@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import Level from '../domain/level';
 
-export default class ThreeLevel extends THREE.Scene {
+export default class WebBrowserLevel extends THREE.Scene {
 
     level: Level;
 
-    constructor(level: Level) {
+    private constructor(level: Level) {
         super();
         this.level = level;
         this.background = new THREE.Color(0xe0e0e0);
@@ -13,6 +13,10 @@ export default class ThreeLevel extends THREE.Scene {
         this.addLights();
         this.addMesh();
         this.addGrid();
+    }
+
+    static fromLevel(level: Level): WebBrowserLevel {
+        return new WebBrowserLevel(level);
     }
 
     addLights() {

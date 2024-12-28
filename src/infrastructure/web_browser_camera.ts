@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import Camera from '../domain/camera';
 
-export default class ThreeCamera extends THREE.PerspectiveCamera {
+export default class WebBrowserCamera extends THREE.PerspectiveCamera {
 
-    constructor(camera: Camera) {
+    private constructor(camera: Camera) {
         super(
             50, 
             window.innerWidth / window.innerHeight, 
@@ -20,6 +20,10 @@ export default class ThreeCamera extends THREE.PerspectiveCamera {
             camera.direction.y,
             camera.direction.z
         );
+    }
+
+    static fromCamera(camera: Camera): WebBrowserCamera {
+        return new WebBrowserCamera(camera);
     }
 
 }
