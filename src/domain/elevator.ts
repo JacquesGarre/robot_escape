@@ -12,7 +12,7 @@ export default class Elevator extends LevelObject {
             x: config.x,
             z: config.z,
             width: Level.TILESIZE,
-            height: 3
+            height: 0
         })
         this.x = config.x;
         this.z = config.z;
