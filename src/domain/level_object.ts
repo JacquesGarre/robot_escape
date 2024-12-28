@@ -11,98 +11,92 @@ export default class LevelObject {
     rotation: number;
 
     constructor(config: LevelObjectConfig) {
+        const TILESIZE = Level.TILESIZE;
+
         this.width = config.width;
-        this.height = config.height ?? config.width;
-        this.depth = config.depth ?? config.width;
-        let centerX = -config.x * this.width + Level.TILESIZE/2
-        let centerY = (config.y ?? 0) + this.height/2
-        let centerZ = config.z * this.depth - Level.TILESIZE/2
-        this.center = new Coordinates(centerX, centerY, centerZ)
+        this.height = (config.height ?? config.width);
+        this.depth = (config.depth ?? config.width);
+
+        this.center = new Coordinates(
+            config.x * TILESIZE + TILESIZE / 2,
+            ((config.y ?? 0) + this.height / 2),
+            config.z * TILESIZE + TILESIZE / 2
+        );
+
         this.rotation = config.rotation ?? 0;
     }
 
     boundaries() {
-        const xMin = this.center.x - this.width / 2;
-        const xMax = this.center.x + this.width / 2;
-        const zMin = this.center.z - this.depth / 2;
-        const zMax = this.center.z + this.depth / 2;
         return {
-            xMin: xMin, 
-            xMax: xMax, 
-            zMin: zMin, 
-            zMax: zMax, 
-        }
+            xMin: this.center.x - this.width / 2,
+            xMax: this.center.x + this.width / 2,
+            zMin: this.center.z - this.depth / 2,
+            zMax: this.center.z + this.depth / 2,
+        };
     }
 
-    canMoveUp(otherObjects: LevelObject[], distance: number) {
+    canMove(direction: "up" | "down" | "right" | "left", level: Level, distance: number): boolean {
         const boundaries = this.boundaries();
-        for (const otherObject of otherObjects) {
-            const otherObjectBoundaries = otherObject.boundaries()
-            const isIntersecting =
-                (
-                    (boundaries.xMin > otherObjectBoundaries.xMin && boundaries.xMin < otherObjectBoundaries.xMax) ||
-                    (boundaries.xMax > otherObjectBoundaries.xMin && boundaries.xMax < otherObjectBoundaries.xMax)
-                ) 
-                && (boundaries.zMax+distance) > otherObjectBoundaries.zMin
-                && boundaries.zMax <  otherObjectBoundaries.zMax
-            if (isIntersecting) {
+        const levelBoundaries = level.boundaries();
+        const newBoundaries = { ...boundaries };
+        switch (direction) {
+            case "up":
+                if ((newBoundaries.zMax + distance) > levelBoundaries.zMax) return false;
+                break;
+            case "down":
+                if ((newBoundaries.zMin - distance) < levelBoundaries.zMin) return false;
+                break;
+            case "right":
+                if ((newBoundaries.xMax + distance) > levelBoundaries.xMax) return false;
+                break;
+            case "left":
+                if ((newBoundaries.xMin - distance) < levelBoundaries.xMin) return false;
+                break;
+        }
+        for (const box of level.boxes) {
+            const boxBoundaries = box.boundaries();
+            if (this.isColliding(newBoundaries, boxBoundaries, direction)) {
                 return false;
             }
         }
+
         return true;
     }
 
-    canMoveDown(otherObjects: LevelObject[], distance: number) {
-        const boundaries = this.boundaries();
-        for (const otherObject of otherObjects) {
-            const otherObjectBoundaries = otherObject.boundaries()
-            const isIntersecting =
-                (
-                    (boundaries.xMin > otherObjectBoundaries.xMin && boundaries.xMin < otherObjectBoundaries.xMax) ||
-                    (boundaries.xMax > otherObjectBoundaries.xMin && boundaries.xMax < otherObjectBoundaries.xMax)
-                ) 
-                && (boundaries.zMin-distance) < otherObjectBoundaries.zMax
-                && boundaries.zMin > otherObjectBoundaries.zMin
-            if (isIntersecting) {
-                return false;
-            }
+    private isColliding(
+        obj1: { xMin: number; xMax: number; zMin: number; zMax: number },
+        obj2: { xMin: number; xMax: number; zMin: number; zMax: number },
+        direction: string
+    ): boolean {
+        const overlapsInX = obj1.xMax > obj2.xMin && obj1.xMin < obj2.xMax;
+        const overlapsInZ = obj1.zMax > obj2.zMin && obj1.zMin < obj2.zMax;
+
+        if (direction === "up") {
+            return overlapsInX && obj1.zMax > obj2.zMin && obj1.zMax <= obj2.zMax;
+        } else if (direction === "down") {
+            return overlapsInX && obj1.zMin < obj2.zMax && obj1.zMin >= obj2.zMin;
+        } else if (direction === "right") {
+            return overlapsInZ && obj1.xMax > obj2.xMin && obj1.xMax <= obj2.xMax;
+        } else if (direction === "left") {
+            return overlapsInZ && obj1.xMin < obj2.xMax && obj1.xMin >= obj2.xMin;
         }
-        return true;
+
+        return false;
     }
 
-    canMoveRight(otherObjects: LevelObject[], distance: number) {
-        const boundaries = this.boundaries();
-        for (const otherObject of otherObjects) {
-            const otherObjectBoundaries = otherObject.boundaries()
-            const isIntersecting =
-                (
-                    (boundaries.zMin > otherObjectBoundaries.zMin && boundaries.zMin < otherObjectBoundaries.zMax) ||
-                    (boundaries.zMax > otherObjectBoundaries.zMin && boundaries.zMax < otherObjectBoundaries.zMax)
-                ) 
-                && (boundaries.xMin-distance) < otherObjectBoundaries.xMax
-                && boundaries.xMin > otherObjectBoundaries.xMin
-            if (isIntersecting) {
-                return false;
-            }
-        }
-        return true;
+    canMoveUp(level: Level, distance: number): boolean {
+        return this.canMove("up", level, distance);
     }
 
-    canMoveLeft(otherObjects: LevelObject[], distance: number) {
-        const boundaries = this.boundaries();
-        for (const otherObject of otherObjects) {
-            const otherObjectBoundaries = otherObject.boundaries()
-            const isIntersecting =
-                (
-                    (boundaries.zMin > otherObjectBoundaries.zMin && boundaries.zMin < otherObjectBoundaries.zMax) ||
-                    (boundaries.zMax > otherObjectBoundaries.zMin && boundaries.zMax < otherObjectBoundaries.zMax)
-                ) 
-                && (boundaries.xMax+distance) > otherObjectBoundaries.xMin
-                && boundaries.xMin < otherObjectBoundaries.xMax
-            if (isIntersecting) {
-                return false;
-            }
-        }
-        return true;
+    canMoveDown(level: Level, distance: number): boolean {
+        return this.canMove("down", level, distance);
+    }
+
+    canMoveRight(level: Level, distance: number): boolean {
+        return this.canMove("right", level, distance);
+    }
+
+    canMoveLeft(level: Level, distance: number): boolean {
+        return this.canMove("left", level, distance);
     }
 }

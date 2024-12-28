@@ -43,8 +43,8 @@ export default class WebBrowserLevel extends THREE.Scene {
             })
         );
         mesh.rotation.x = - Math.PI / 2;
-        mesh.position.x = -(this.level.size/2 - 1) * Level.TILESIZE;
-        mesh.position.z = (this.level.size/2 - 1) * Level.TILESIZE;
+        mesh.position.x = -(this.level.size/2) * Level.TILESIZE;
+        mesh.position.z = this.level.size/2 * Level.TILESIZE;
         this.add(mesh);
     }
 
@@ -57,8 +57,8 @@ export default class WebBrowserLevel extends THREE.Scene {
         );
         grid.material.opacity = 0.2;
         grid.material.transparent = true;
-        grid.position.x = -(this.level.size/2 - 1) * Level.TILESIZE;
-        grid.position.z = (this.level.size/2 - 1) * Level.TILESIZE;
+        grid.position.x = -(this.level.size/2) * Level.TILESIZE;
+        grid.position.z = this.level.size/2 * Level.TILESIZE;
         this.add(grid);
     }
 
@@ -72,7 +72,7 @@ export default class WebBrowserLevel extends THREE.Scene {
         const geometry = new THREE.BoxGeometry(object.width, object.height, object.depth);
         const material = new THREE.MeshStandardMaterial({ color: 0x808080 });
         const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.x = object.center.x
+        mesh.position.x = -object.center.x
         mesh.position.y = object.center.y
         mesh.position.z = object.center.z
         mesh.rotation.y = object.rotation * (Math.PI / 180);

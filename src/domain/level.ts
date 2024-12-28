@@ -13,7 +13,7 @@ export default class Level {
     boxes: Box[] = [];
     robot: Robot;
 
-    constructor(config: LevelConfig) {
+    constructor(config: LevelConfig) {        
         this.size = config.size;
         let boxesConfig = config.boxes ?? [];
         for(const boxConfig of boxesConfig) {
@@ -28,9 +28,19 @@ export default class Level {
         this.robot.animate(
             delta, 
             controls, 
-            this.boxes
+            this
         );
         this.camera.follow(this.robot);
+    }
+
+    boundaries() {
+        return {
+            xMin: 0, 
+            xMax: this.size * Level.TILESIZE, 
+            zMin: 0, 
+            zMax: this.size * Level.TILESIZE, 
+        }
+        
     }
 
 }

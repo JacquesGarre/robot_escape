@@ -11,12 +11,12 @@ export default class WebBrowserCamera extends THREE.PerspectiveCamera {
             200
         );
         this.position.set(
-            camera.position.x, 
+            -camera.position.x, 
             camera.position.y, 
             camera.position.z
         );
         this.lookAt(
-            camera.direction.x,
+            -camera.direction.x,
             camera.direction.y,
             camera.direction.z
         );
