@@ -1,6 +1,7 @@
 import Coordinates from "./coordinates";
 import LevelObjectConfig from "./interface/level_object_config";
 import Level from "./level";
+import Utils from "./utils";
 
 export default class LevelObject {
 
@@ -16,20 +17,19 @@ export default class LevelObject {
         this.height = (config.height ?? config.width);
         this.depth = (config.depth ?? config.width);
         this.center = new Coordinates(
-            config.x * TILESIZE + TILESIZE / 2,
-            ((config.y ?? 0) + this.height / 2),
-            config.z * TILESIZE + TILESIZE / 2
+            Utils.round(config.x * TILESIZE + TILESIZE / 2),
+            Utils.round(((config.y ?? 0) + this.height / 2)),
+            Utils.round(config.z * TILESIZE + TILESIZE / 2)
         );
-
         this.rotation = config.rotation ?? 0;
     }
 
     boundaries() {
         return {
-            xMin: this.center.x - this.width / 2,
-            xMax: this.center.x + this.width / 2,
-            zMin: this.center.z - this.depth / 2,
-            zMax: this.center.z + this.depth / 2,
+            xMin: Utils.round(this.center.x - this.width / 2),
+            xMax: Utils.round(this.center.x + this.width / 2),
+            zMin: Utils.round(this.center.z - this.depth / 2),
+            zMax: Utils.round(this.center.z + this.depth / 2),
         };
     }
 
@@ -53,29 +53,29 @@ export default class LevelObject {
         }
         for (const box of level.boxes) {
             const boxBoundaries = box.boundaries();
-            if (this.isColliding(newBoundaries, boxBoundaries, direction)) {
+            if (this.isColliding(newBoundaries, boxBoundaries, direction, distance)) {
                 return false;
             }
         }
-
         return true;
     }
 
     private isColliding(
         obj1: { xMin: number; xMax: number; zMin: number; zMax: number },
         obj2: { xMin: number; xMax: number; zMin: number; zMax: number },
-        direction: string
+        direction: string,
+        distance: number
     ): boolean {
         const overlapsInX = obj1.xMax > obj2.xMin && obj1.xMin < obj2.xMax;
         const overlapsInZ = obj1.zMax > obj2.zMin && obj1.zMin < obj2.zMax;
         if (direction === "up") {
-            return overlapsInX && obj1.zMax >= obj2.zMin && obj1.zMax < obj2.zMax;
+            return overlapsInX && (obj1.zMax+distance) > obj2.zMin && obj1.zMax < obj2.zMax;
         } else if (direction === "down") {
-            return overlapsInX && obj1.zMin <= obj2.zMax && obj1.zMin > obj2.zMin;
+            return overlapsInX && (obj1.zMin-distance) < obj2.zMax && obj1.zMin > obj2.zMin;
         } else if (direction === "right") {
-            return overlapsInZ && obj1.xMax >= obj2.xMin && obj1.xMax < obj2.xMax;
+            return overlapsInZ && (obj1.xMax+distance) > obj2.xMin && obj1.xMax < obj2.xMax;
         } else if (direction === "left") {
-            return overlapsInZ && obj1.xMin <= obj2.xMax && obj1.xMin > obj2.xMin;
+            return overlapsInZ && (obj1.xMin-distance) < obj2.xMax && obj1.xMin > obj2.xMin;
         }
         return false;
     }
