@@ -6,6 +6,8 @@ export default class Robot extends LevelObject {
 
     static ROBOT_SIZE = 2.5;
     static ROBOT_HEIGHT = 4;
+    static ROTATION_SPEED = 300;
+    static RUNNING_SPEED = 20;
 
     x: number;
     y: number;
@@ -25,20 +27,40 @@ export default class Robot extends LevelObject {
     }
 
     animate(delta: number, controls: Controls) {
-        this.rotate(delta, controls)
+        this.rotate(controls)
         this.run(delta, controls)
     }
 
-    rotate(delta: number, controls: Controls) {
-
-    }
-
-    walk(delta: number, controls: Controls) {
-
-    }
-
     run(delta: number, controls: Controls) {
-
+        if (controls.up) {
+            this.center.z += delta * Robot.RUNNING_SPEED
+        }   
+        if (controls.down) {
+            this.center.z -= delta * Robot.RUNNING_SPEED
+        }   
+        if (controls.left) {
+            this.center.x += delta * Robot.RUNNING_SPEED
+        }   
+        if (controls.right) {
+            this.center.x -= delta * Robot.RUNNING_SPEED
+        }  
     }
+
+    rotate(controls: Controls) {
+        if (controls.up) {
+            this.rotation = 0
+        }   
+        if (controls.down) {
+            this.rotation = 180
+        }   
+        if (controls.left) {
+            this.rotation = 90
+        }   
+        if (controls.right) {
+            this.rotation = 270
+        }  
+    }
+
+
 
 }
