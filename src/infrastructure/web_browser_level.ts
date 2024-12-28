@@ -64,13 +64,13 @@ export default class WebBrowserLevel extends THREE.Scene {
 
     addBoxes() {
         for(const box of this.level.boxes) {
-            this.addLevelObject(box)
+            this.addLevelObject(box, 0x808080)
         }
     }
 
-    addLevelObject(object: LevelObject) {
+    addLevelObject(object: LevelObject, color: number) {
         const geometry = new THREE.BoxGeometry(object.width, object.height, object.depth);
-        const material = new THREE.MeshStandardMaterial({ color: 0x808080 });
+        const material = new THREE.MeshStandardMaterial({ color: color });
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.x = -object.center.x
         mesh.position.y = object.center.y
@@ -81,7 +81,7 @@ export default class WebBrowserLevel extends THREE.Scene {
     }
 
     addRobot() {
-        this.addLevelObject(this.level.robot)
+        this.addLevelObject(this.level.robot, 0x000000)
     }
 
 }   
