@@ -7,7 +7,7 @@ export default class Robot extends LevelObject {
     static ROBOT_SIZE = 2.5;
     static ROBOT_HEIGHT = 4;
     static ROTATION_SPEED = 300;
-    static RUNNING_SPEED = 20;
+    static RUNNING_SPEED = 10;
 
     x: number;
     y: number;
