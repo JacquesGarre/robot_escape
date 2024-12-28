@@ -15,8 +15,7 @@ export default class Camera {
     static fromRobot(robot: Robot): Camera {
         let position = new Coordinates(0, 0, 0);
         let direction = new Coordinates(0, 0, 0);
-        let camera = new Camera({position,             direction
-        });
+        let camera = new Camera({position, direction });
         camera.follow(robot);
         return camera;
     }

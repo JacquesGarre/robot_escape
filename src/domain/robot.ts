@@ -1,4 +1,6 @@
+import Boundaries from "./boundaries";
 import Controls from "./controls";
+import Elevator from "./elevator";
 import RobotConfig from "./interface/robot_config";
 import Level from "./level";
 import LevelObject from "./level_object";
@@ -6,7 +8,7 @@ import Utils from "./utils";
 
 export default class Robot extends LevelObject {
 
-    static ROBOT_SIZE = 4;
+    static ROBOT_SIZE = 2.5;
     static ROBOT_HEIGHT = 4;
     static SPEED = 2;
 
@@ -51,40 +53,29 @@ export default class Robot extends LevelObject {
     rotate(controls: Controls) {
         if (controls.up) {
             this.rotation = 0
-            // if (controls.right) {
-            //     this.rotation += 45
-            // }   
-            // if (controls.left) {
-            //     this.rotation -= 45
-            // }   
         }   
         if (controls.down) {
             this.rotation = 180
-            // if (controls.right) {
-            //     this.rotation += 45
-            // }   
-            // if (controls.left) {
-            //     this.rotation -= 45
-            // }  
         }   
         if (controls.left) {
-            this.rotation = 90
-            // if (controls.up) {
-            //     this.rotation -= 45
-            // }   
-            // if (controls.down) {
-            //     this.rotation += 45
-            // }   
+            this.rotation = 90  
         }   
         if (controls.right) {
             this.rotation = 270
-            // if (controls.up) {
-            //     this.rotation -= 45
-            // }   
-            // if (controls.down) {
-            //     this.rotation += 45
-            // }   
         }  
+    }
+
+    isOnElevator(elevator: Elevator): boolean {
+        const edges = this.edges()
+        const boundaries = elevator.edges();
+        return edges.xMin >= boundaries.xMin
+            && edges.xMax <= boundaries.xMax
+            && edges.zMin >= boundaries.zMin
+            && edges.zMax <= boundaries.zMax;
+    }
+
+    setBoundaries(boundaries: Boundaries) {
+        this.boundaries = boundaries
     }
 
 }

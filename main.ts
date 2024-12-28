@@ -20,10 +20,11 @@ let level1 = new Level({
         z: 0,
     },
     elevator: {
-        x: 5,
-        z: 5
+        x: 0,
+        z: 1
     }
 })
+
 let game = new Game({
     levels: [
         level1

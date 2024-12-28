@@ -1,3 +1,4 @@
+import Boundaries from "./boundaries";
 import Box from "./box";
 import Camera from "./camera";
 import Controls from "./controls";
@@ -14,6 +15,7 @@ export default class Level {
     boxes: Box[] = [];
     robot: Robot;
     elevator: Elevator;
+    boundaries: Boundaries;
 
     constructor(config: LevelConfig) {        
         this.size = config.size;
@@ -25,24 +27,23 @@ export default class Level {
         this.robot = new Robot(config.robot);
         this.camera = Camera.fromRobot(this.robot);
         this.elevator = new Elevator(config.elevator);
+        this.boundaries = new Boundaries({
+            xMin: 0, 
+            xMax: this.size * Level.TILESIZE,
+            yMin: 0,
+            yMax: 0, 
+            zMin: 0, 
+            zMax: this.size * Level.TILESIZE, 
+        })
     }
 
     animate(controls: Controls) {
-        this.robot.animate(
-            controls, 
-            this
-        );
+        this.robot.animate(controls, this);
         this.camera.follow(this.robot);
-    }
-
-    boundaries() {
-        return {
-            xMin: 0, 
-            xMax: this.size * Level.TILESIZE, 
-            zMin: 0, 
-            zMax: this.size * Level.TILESIZE, 
+        if (this.robot.isOnElevator(this.elevator)) {
+            this.elevator.goUp(this.robot);
+            this.robot.setBoundaries(this.elevator.edges())
         }
-        
     }
 
 }

@@ -1,3 +1,4 @@
+import Boundaries from "./boundaries";
 import Coordinates from "./coordinates";
 import LevelObjectConfig from "./interface/level_object_config";
 import Level from "./level";
@@ -10,6 +11,7 @@ export default class LevelObject {
     height: number;
     depth: number;
     rotation: number;
+    boundaries?: Boundaries | undefined;
 
     constructor(config: LevelObjectConfig) {
         this.width = config.width;
@@ -23,62 +25,69 @@ export default class LevelObject {
         this.rotation = config.rotation ?? 0;
     }
 
-    boundaries() {
+    setHeight(newHeight: number) {
+        this.center.y = newHeight / 2;
+        this.height = newHeight;
+    }
+
+    edges() {
         return {
             xMin: Utils.round(this.center.x - this.width / 2),
             xMax: Utils.round(this.center.x + this.width / 2),
             yMin: Utils.round(this.center.y - this.height / 2),
-            yMax: this.height,
+            yMax: Utils.round(this.height),
             zMin: Utils.round(this.center.z - this.depth / 2),
             zMax: Utils.round(this.center.z + this.depth / 2),
         };
     }
 
     canMove(direction: "up" | "down" | "right" | "left", level: Level, distance: number): boolean {
-        if (this.isOutOfBounds(direction, level, distance)) {
+        if (this.boundaries && this.willBeOutOfBounds(this.boundaries, direction, distance)) {
+            return false;
+        }
+        if (this.willBeOutOfBounds(level.boundaries, direction, distance)) {
             return false;
         }
         for (const box of level.boxes) {
-            if (this.isCollidingWith(box, direction, distance)) {
+            if (this.willCollideWith(box, direction, distance)) {
                 return false;
             }
         }
-        if (this.isCollidingWith(level.elevator, direction, distance)) {
+        if (this.willCollideWith(level.elevator, direction, distance)) {
             return false;
         }
         return true;
     }
 
-    private isOutOfBounds(direction: "up" | "down" | "right" | "left", level: Level, distance: number): boolean {
-        const boundaries = this.boundaries();
-        const levelBoundaries = level.boundaries();
+    private willBeOutOfBounds(boundaries: Boundaries, direction: string, distance: number): boolean {
+        const edges = this.edges();
         switch (direction) {
             case "up":
-                if ((boundaries.zMax + distance) > levelBoundaries.zMax) return true;
+                if ((edges.zMax + distance) > boundaries.zMax) return true;
                 break;
             case "down":
-                if ((boundaries.zMin - distance) < levelBoundaries.zMin) return true;
+                if ((edges.zMin - distance) < boundaries.zMin) return true;
                 break;
             case "right":
-                if ((boundaries.xMax + distance) > levelBoundaries.xMax) return true;
+                if ((edges.xMax + distance) > boundaries.xMax) return true;
                 break;
             case "left":
-                if ((boundaries.xMin - distance) < levelBoundaries.xMin) return true;
+                if ((edges.xMin - distance) < boundaries.xMin) return true;
                 break;
         }
         return false;
     }
 
-    private isCollidingWith(
+    private willCollideWith(
         otherObject: LevelObject,
         direction: string,
         distance: number
     ): boolean {
-        const obj1 = this.boundaries();
-        const obj2 = otherObject.boundaries();
+        const obj1 = this.edges();
+        const obj2 = otherObject.edges();
         const overlapsInX = obj1.xMax > obj2.xMin && obj1.xMin < obj2.xMax;
+        const overlapsInY = obj1.yMax > obj2.yMin && obj1.yMin < obj2.yMax;
         const overlapsInZ = obj1.zMax > obj2.zMin && obj1.zMin < obj2.zMax;
-        const overlapsInY = obj1.yMin < obj2.yMax;
         if (direction === "up") {
             return overlapsInY && overlapsInX && (obj1.zMax+distance) > obj2.zMin && obj1.zMax < obj2.zMax;
         } else if (direction === "down") {
