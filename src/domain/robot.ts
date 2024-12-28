@@ -61,6 +61,4 @@ export default class Robot extends LevelObject {
         }  
     }
 
-
-
 }
