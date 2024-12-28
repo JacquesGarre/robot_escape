@@ -16,6 +16,7 @@ export default class WebBrowserLevel extends THREE.Scene {
         this.addGrid();
         this.addBoxes();
         this.addRobot();
+        this.addElevator();
     }
 
     static fromLevel(level: Level): WebBrowserLevel {
@@ -82,6 +83,10 @@ export default class WebBrowserLevel extends THREE.Scene {
 
     addRobot() {
         this.addLevelObject(this.level.robot, 0x000000)
+    }
+
+    addElevator() {
+        this.addLevelObject(this.level.elevator, 0x000000)
     }
 
 }   

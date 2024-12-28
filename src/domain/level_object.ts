@@ -28,36 +28,44 @@ export default class LevelObject {
         return {
             xMin: Utils.round(this.center.x - this.width / 2),
             xMax: Utils.round(this.center.x + this.width / 2),
+            yMin: Utils.round(this.center.y + this.height / 2),
+            yMax: Utils.round(this.center.y + this.height / 2),
             zMin: Utils.round(this.center.z - this.depth / 2),
             zMax: Utils.round(this.center.z + this.depth / 2),
         };
     }
 
     canMove(direction: "up" | "down" | "right" | "left", level: Level, distance: number): boolean {
-        const boundaries = this.boundaries();
-        const levelBoundaries = level.boundaries();
-        const newBoundaries = { ...boundaries };
-        switch (direction) {
-            case "up":
-                if ((newBoundaries.zMax + distance) > levelBoundaries.zMax) return false;
-                break;
-            case "down":
-                if ((newBoundaries.zMin - distance) < levelBoundaries.zMin) return false;
-                break;
-            case "right":
-                if ((newBoundaries.xMax + distance) > levelBoundaries.xMax) return false;
-                break;
-            case "left":
-                if ((newBoundaries.xMin - distance) < levelBoundaries.xMin) return false;
-                break;
+        if (this.isOutOfBounds(direction, level, distance)) {
+            return false;
         }
         for (const box of level.boxes) {
             const boxBoundaries = box.boundaries();
-            if (this.isColliding(newBoundaries, boxBoundaries, direction, distance)) {
+            if (this.isColliding(this.boundaries(), boxBoundaries, direction, distance)) {
                 return false;
             }
         }
         return true;
+    }
+
+    private isOutOfBounds(direction: "up" | "down" | "right" | "left", level: Level, distance: number): boolean {
+        const boundaries = this.boundaries();
+        const levelBoundaries = level.boundaries();
+        switch (direction) {
+            case "up":
+                if ((boundaries.zMax + distance) > levelBoundaries.zMax) return true;
+                break;
+            case "down":
+                if ((boundaries.zMin - distance) < levelBoundaries.zMin) return true;
+                break;
+            case "right":
+                if ((boundaries.xMax + distance) > levelBoundaries.xMax) return true;
+                break;
+            case "left":
+                if ((boundaries.xMin - distance) < levelBoundaries.xMin) return true;
+                break;
+        }
+        return false;
     }
 
     private isColliding(

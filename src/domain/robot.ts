@@ -51,39 +51,39 @@ export default class Robot extends LevelObject {
     rotate(controls: Controls) {
         if (controls.up) {
             this.rotation = 0
-            if (controls.right) {
-                this.rotation += 45
-            }   
-            if (controls.left) {
-                this.rotation -= 45
-            }   
+            // if (controls.right) {
+            //     this.rotation += 45
+            // }   
+            // if (controls.left) {
+            //     this.rotation -= 45
+            // }   
         }   
         if (controls.down) {
             this.rotation = 180
-            if (controls.right) {
-                this.rotation += 45
-            }   
-            if (controls.left) {
-                this.rotation -= 45
-            }  
+            // if (controls.right) {
+            //     this.rotation += 45
+            // }   
+            // if (controls.left) {
+            //     this.rotation -= 45
+            // }  
         }   
         if (controls.left) {
             this.rotation = 90
-            if (controls.up) {
-                this.rotation -= 45
-            }   
-            if (controls.down) {
-                this.rotation += 45
-            }   
+            // if (controls.up) {
+            //     this.rotation -= 45
+            // }   
+            // if (controls.down) {
+            //     this.rotation += 45
+            // }   
         }   
         if (controls.right) {
             this.rotation = 270
-            if (controls.up) {
-                this.rotation -= 45
-            }   
-            if (controls.down) {
-                this.rotation += 45
-            }   
+            // if (controls.up) {
+            //     this.rotation -= 45
+            // }   
+            // if (controls.down) {
+            //     this.rotation += 45
+            // }   
         }  
     }
 

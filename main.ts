@@ -18,6 +18,10 @@ let level1 = new Level({
         x: 0,
         y: 0,
         z: 0,
+    },
+    elevator: {
+        x: 5,
+        z: 5
     }
 })
 let game = new Game({

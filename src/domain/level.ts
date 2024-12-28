@@ -1,6 +1,7 @@
 import Box from "./box";
 import Camera from "./camera";
 import Controls from "./controls";
+import Elevator from "./elevator";
 import LevelConfig from "./interface/level_config";
 import Robot from "./robot";
 
@@ -12,6 +13,7 @@ export default class Level {
     camera: Camera;
     boxes: Box[] = [];
     robot: Robot;
+    elevator: Elevator;
 
     constructor(config: LevelConfig) {        
         this.size = config.size;
@@ -22,6 +24,7 @@ export default class Level {
         }
         this.robot = new Robot(config.robot);
         this.camera = Camera.fromRobot(this.robot);
+        this.elevator = new Elevator(config.elevator);
     }
 
     animate(controls: Controls) {
