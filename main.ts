@@ -8,6 +8,10 @@ let level1 = new Level({
         {
             x:2,
             z:2
+        },
+        {
+            x:3,
+            z:3
         }
     ]
 })
