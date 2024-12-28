@@ -4,17 +4,19 @@ import Elevator from "./elevator";
 import RobotConfig from "./interface/robot_config";
 import Level from "./level";
 import LevelObject from "./level_object";
+import RobotState from "./robot_state";
 import Utils from "./utils";
 
 export default class Robot extends LevelObject {
 
     static ROBOT_SIZE = 2.5;
     static ROBOT_HEIGHT = 5;
-    static SPEED = 3;
+    static SPEED = 2.5;
 
     x: number;
     y: number;
     z: number;
+    animation: string;
 
     constructor(config: RobotConfig) {
         super({
@@ -27,11 +29,17 @@ export default class Robot extends LevelObject {
         })
         this.x = config.x;
         this.z = config.z;
+        this.animation = RobotState.IDLE
     }
 
     animate(controls: Controls, level: Level) {
         this.rotate(controls)
-        this.move(controls, level)
+        if (controls.arePressed()) {
+            this.move(controls, level)
+            this.animation = RobotState.RUNNING
+        } else {
+            this.animation = RobotState.IDLE
+        }
     }
 
     move(controls: Controls, level: Level) {
@@ -53,15 +61,39 @@ export default class Robot extends LevelObject {
     rotate(controls: Controls) {
         if (controls.up) {
             this.rotation = 0
+            if (controls.right) {
+                this.rotation = 315
+            }
+            if (controls.left) {
+                this.rotation = 45
+            }
         }   
         if (controls.down) {
             this.rotation = 180
+            if (controls.right) {
+                this.rotation = 225
+            }
+            if (controls.left) {
+                this.rotation = 135
+            }
         }   
         if (controls.left) {
             this.rotation = 90  
+            if (controls.up) {
+                this.rotation = 45
+            }
+            if (controls.down) {
+                this.rotation = 135
+            }
         }   
         if (controls.right) {
             this.rotation = 270
+            if (controls.up) {
+                this.rotation = 315
+            }
+            if (controls.down) {
+                this.rotation = 225
+            }
         }  
     }
 

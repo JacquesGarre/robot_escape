@@ -2,12 +2,17 @@ import * as THREE from 'three';
 import Level from '../domain/level';
 import LevelObject from '../domain/level_object';
 import RobotModel from './robot_model';
+import Robot from '../domain/robot';
 
 export default class WebBrowserScene extends THREE.Scene {
 
     level: Level;
 
-    private constructor(level: Level, robotModel: RobotModel | null) {
+    private constructor(
+        level: Level, 
+        robotModel: RobotModel | null, 
+        delta: number
+    ) {
         super();
         this.level = level;
         this.background = new THREE.Color(0xe0e0e0);
@@ -16,12 +21,16 @@ export default class WebBrowserScene extends THREE.Scene {
         this.addMesh();
         this.addGrid();
         this.addBoxes();
-        this.addRobot(robotModel);
+        this.addRobot(robotModel, delta);
         this.addElevator();
     }
 
-    static fromLevel(level: Level, robotModel: RobotModel | null): WebBrowserScene {
-        return new WebBrowserScene(level, robotModel);
+    static fromLevel(
+        level: Level, 
+        robotModel: RobotModel | null, 
+        delta: number
+    ): WebBrowserScene {
+        return new WebBrowserScene(level, robotModel, delta);
     }
 
     addLights() {
@@ -86,9 +95,12 @@ export default class WebBrowserScene extends THREE.Scene {
         this.add(mesh);
     }
 
-    addRobot(robotModel: RobotModel | null) {
+    addRobot(
+        robotModel: RobotModel | null, 
+        delta: number
+    ) {
         if (robotModel) {
-            this.addRobotModel(robotModel);
+            this.addRobotModel(this.level.robot, robotModel, delta);
         } else {
             this.addLevelObject(this.level.robot, 0x000000, 0.1)
         }
@@ -98,14 +110,30 @@ export default class WebBrowserScene extends THREE.Scene {
         this.addLevelObject(this.level.elevator, 0x000000, 1)
     }
 
-    addRobotModel(robotModel: RobotModel) {
-        robotModel.model.position.set(
-            -this.level.robot.center.x,
-            this.level.robot.center.y - this.level.robot.height/2,
-            this.level.robot.center.z
+    addRobotModel(
+        robot: Robot, 
+        robotModel: RobotModel, 
+        delta: number
+    ) {
+        const mixer = robotModel.model.userData.mixer;
+        const model = robotModel.model;
+        const actions = model.userData.actions;
+        model.position.set(
+            -robot.center.x,
+            robot.center.y - robot.height/2,
+            robot.center.z
         );
-        robotModel.model.rotation.y = this.level.robot.rotation * (Math.PI / 180);
-        this.add(robotModel.model);
+        model.rotation.y = robot.rotation * (Math.PI / 180);
+        const action = actions[robot.animation];
+        if (model.userData.currentAction && model.userData.currentAction != robot.animation) {
+            const currentAction = actions[model.userData.currentAction]
+            currentAction.fadeOut(0.2);
+            action.reset().fadeIn(0.2);
+        }        
+        action.play();
+        mixer.update(delta);
+        model.userData.currentAction = robot.animation;
+        this.add(model);
     }
 
 }   

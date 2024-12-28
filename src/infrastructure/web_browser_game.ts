@@ -12,11 +12,13 @@ export default class WebBrowserGame {
     game: Game;
     renderer: WebBrowserRenderer;
     stats: Stats;
+    clock: THREE.Clock;
     robotModel: RobotModel | null = null;
 
     private constructor(game: Game) {
         this.game = game;
         this.stats = new Stats();
+        this.clock = new THREE.Clock()
         this.animate = this.animate.bind(this);
         this.renderer = WebBrowserRenderer.withAnimationLoop(this.animate);
     }
@@ -50,7 +52,8 @@ export default class WebBrowserGame {
         this.game.animate();
         let scene = WebBrowserScene.fromLevel(
             this.game.currentLevel(),
-            this.robotModel
+            this.robotModel,
+            this.clock.getDelta()
         )
         let camera = WebBrowserCamera.fromCamera(this.game.currentLevel().camera)
         this.renderer.render(scene, camera);

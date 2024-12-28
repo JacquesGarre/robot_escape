@@ -12,6 +12,10 @@ export default class Controls {
         this.right = false;
     }
 
+    arePressed() {
+        return this.up || this.down || this.left || this.right;
+    }
+
     pressUp() {
         this.up = true;
     }
