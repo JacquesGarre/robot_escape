@@ -160,15 +160,15 @@ export const level7 = {
     endX: 3,
     endZ: 8,
     enemies: [
-        {
-            x: 3,
-            y: 0,
-            z: 5,
-            rotation: 0,
-            sightDistance: 0,
-            hearingDistance: 30,
-            speed: 0,
-        },
+        // {
+        //     x: 3,
+        //     y: 0,
+        //     z: 5,
+        //     rotation: 0,
+        //     sightDistance: 0,
+        //     hearingDistance: 30,
+        //     speed: 0,
+        // },
         {
             x: 3,
             y: 0,

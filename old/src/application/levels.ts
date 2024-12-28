@@ -7,11 +7,12 @@ import { level6 } from "./levels/level6";
 import { level7 } from "./levels/level7";
 
 export const levels = [
-    level7,
+    level7, // to test
     level1,
     level2,
     level3,
     level4,
     level5,
     level6,
+    
 ]
