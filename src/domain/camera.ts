@@ -1,5 +1,6 @@
 import Coordinates from "./coordinates"
 import CameraConfig from "./interface/camera_config";
+import Robot from "./robot";
 
 export default class Camera {
 
@@ -11,21 +12,21 @@ export default class Camera {
         this.direction = config.direction;
     }
 
-    static default(): Camera {
-        let position = new Coordinates(
-            0, 
-            30, 
-            -30,
-        );
-        let direction = new Coordinates(
-            0,  
-            0, 
-            0
-        );
-        return new Camera({
-            position, 
-            direction
-        });
+    static fromRobot(robot: Robot): Camera {
+        let position = new Coordinates(0, 0, 0);
+        let direction = new Coordinates(0, 0, 0);
+        let camera = new Camera({position, direction});
+        camera.follow(robot);
+        return camera;
+    }
+    
+    follow(robot: Robot) {
+        this.position.x = robot.center.x;
+        this.position.y = robot.center.y + 40;
+        this.position.z = robot.center.z - 30;
+        this.direction.x = robot.center.x;
+        this.direction.y = robot.center.y + 10;
+        this.direction.z = robot.center.z;
     }
 
 }
