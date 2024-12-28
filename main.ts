@@ -4,19 +4,11 @@ import WebBrowserGame from "./src/infrastructure/web_browser_game";
 import LevelConfig from "./src/domain/interface/level_config";
 
 let level1Config: LevelConfig = {
-    size: 4,
+    size: 6,
     boxes: [
         {
-            x:0,
-            z:0,
-        },
-        {
-            x:1,
-            z:1
-        },
-        {
-            x:0,
-            z:3
+            x:2,
+            z:2
         }
     ]
 }

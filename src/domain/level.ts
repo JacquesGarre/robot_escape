@@ -17,10 +17,10 @@ export default class Level {
         this.size = config?.size ?? Level.DEFAULT_SIZE;
         this.tileSize = config?.tileSize ?? Level.DEFAULT_TILESIZE;
         this.camera = config?.camera ?? Camera.default();
-        this.initializeBoxes(config?.boxes);
+        this.addBoxes(config?.boxes);
     }
 
-    initializeBoxes(boxesConfig: BoxConfig[] | undefined) {
+    addBoxes(boxesConfig: BoxConfig[] | undefined) {
         if (!boxesConfig) {
             return;
         }
