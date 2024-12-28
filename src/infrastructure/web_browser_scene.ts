@@ -87,9 +87,10 @@ export default class WebBrowserScene extends THREE.Scene {
     }
 
     addRobot(robotModel: RobotModel | null) {
-        // FOR debug : this.addLevelObject(this.level.robot, 0x000000, 0.1)
         if (robotModel) {
             this.addRobotModel(robotModel);
+        } else {
+            this.addLevelObject(this.level.robot, 0x000000, 0.1)
         }
     }
 
