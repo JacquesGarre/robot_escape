@@ -5,6 +5,7 @@ import Controls from "./controls";
 import Elevator from "./elevator";
 import LevelConfig from "./interface/level_config";
 import Robot from "./robot";
+import RobotState from "./robot_state";
 
 export default class Level {
 
@@ -43,6 +44,7 @@ export default class Level {
         if (this.robot.isOnElevator(this.elevator)) {
             this.robot.setBoundaries(this.elevator.edges())
             this.elevator.goUp(this.robot);
+            this.robot.sayGoodByeToLevel()
         }
     }
 
