@@ -3,15 +3,12 @@ import Level from "./src/domain/level";
 import WebBrowserGame from "./src/infrastructure/web_browser_game";
 
 let level1 = new Level({
+    index: 0,
     size: 6,
     boxes: [
         {
-            x:2,
-            z:1
-        },
-        {
-            x:3,
-            z:3
+            x: 5,
+            z: 3,
         }
     ],
     robot: {
@@ -20,14 +17,62 @@ let level1 = new Level({
         z: 0,
     },
     elevator: {
-        x: 5,
-        z: 5
+        x: 1,
+        z: 1
+    }
+})
+let level2 = new Level({
+    index: 1,
+    size: 10,
+    boxes: [
+        {
+            x: 3,
+            z: 3,
+        },
+        {
+            x: 7,
+            z: 6,
+        }
+    ],
+    robot: {
+        x: 1,
+        y: 0,
+        z: 1,
+    },
+    elevator: {
+        x: 8,
+        z: 8
+    }
+})
+let level3 = new Level({
+    index: 2,
+    size: 9,
+    boxes: [
+        {
+            x: 3,
+            z: 3,
+        },
+        {
+            x: 0,
+            z: 0,
+        }
+    ],
+    robot: {
+        x: 8,
+        y: 0,
+        z: 8,
+    },
+    elevator: {
+        x: 0,
+        z: 0
     }
 })
 
 let game = new Game({
     levels: [
-        level1
+        level1,
+        level2,
+        level3
     ]
 });
 

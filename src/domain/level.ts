@@ -5,20 +5,22 @@ import Controls from "./controls";
 import Elevator from "./elevator";
 import LevelConfig from "./interface/level_config";
 import Robot from "./robot";
-import RobotState from "./robot_state";
 
 export default class Level {
 
     static TILESIZE = 5;
 
+    index: number;
     size: number;
     camera: Camera;
     boxes: Box[] = [];
     robot: Robot;
     elevator: Elevator;
     boundaries: Boundaries;
+    finished: boolean;
 
-    constructor(config: LevelConfig) {        
+    constructor(config: LevelConfig) {  
+        this.index = config.index;      
         this.size = config.size;
         let boxesConfig = config.boxes ?? [];
         for(const boxConfig of boxesConfig) {
@@ -44,7 +46,9 @@ export default class Level {
         if (this.robot.isOnElevator(this.elevator)) {
             this.robot.setBoundaries(this.elevator.edges())
             this.elevator.goUp(this.robot);
-            this.robot.sayGoodByeToLevel()
+            if (this.elevator.hasReachedTop()) {
+                this.finished = true;
+            }
         }
     }
 

@@ -24,6 +24,13 @@ export default class Game {
         return levels;
     }
 
+    previousLevel(): Level | undefined {
+        if ((this.currentLevelIndex-1) < 0 || (this.currentLevelIndex-1) >= this.levels.length) {
+            return;
+        }
+        return this.levels[this.currentLevelIndex-1];
+    }
+
     currentLevel(): Level {
         if (this.currentLevelIndex < 0 || this.currentLevelIndex >= this.levels.length) {
             throw new LevelNotFoundError(`Level index ${this.currentLevelIndex} does not exist`);
@@ -31,8 +38,23 @@ export default class Game {
         return this.levels[this.currentLevelIndex];
     }
 
+    nextLevel(): Level | undefined {
+        if ((this.currentLevelIndex+1) < 0 || (this.currentLevelIndex+1) >= this.levels.length) {
+            return;
+        }
+        return this.levels[this.currentLevelIndex+1];
+    }
+
+    startNextLevel() {
+        this.currentLevelIndex += 1;
+    }
+
     animate() {
-        this.currentLevel().animate(this.controls);
+        let currentLevel = this.currentLevel();
+        currentLevel.animate(this.controls);
+        if (currentLevel.finished) {
+            this.startNextLevel();
+        }
     }
 
 }

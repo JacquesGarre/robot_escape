@@ -17,7 +17,6 @@ export default class Robot extends LevelObject {
     y: number;
     z: number;
     animation: string;
-    disabled: boolean;
 
     constructor(config: RobotConfig) {
         super({
@@ -30,7 +29,6 @@ export default class Robot extends LevelObject {
         })
         this.x = config.x;
         this.z = config.z;
-        this.disabled = false;
         this.animation = RobotState.IDLE
     }
 
@@ -45,9 +43,6 @@ export default class Robot extends LevelObject {
     }
 
     move(controls: Controls, level: Level) {
-        if (this.disabled) {
-            return;
-        }
         let distance = Utils.round(0.1 * Robot.SPEED)
         if (controls.up && this.canMoveUp(level, distance)) {
             this.center.z += distance
@@ -113,12 +108,6 @@ export default class Robot extends LevelObject {
 
     setBoundaries(boundaries: Boundaries) {
         this.boundaries = boundaries
-    }
-
-    sayGoodByeToLevel() {
-        this.animation = RobotState.WAVING;
-        this.disabled = true;
-        this.rotation = 180;
     }
 
 }

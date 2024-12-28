@@ -50,8 +50,8 @@ export default class WebBrowserGame {
 
     animate() {
         this.game.animate();
-        let scene = WebBrowserScene.fromLevel(
-            this.game.currentLevel(),
+        let scene = WebBrowserScene.fromGame(
+            this.game,
             this.robotModel,
             this.clock.getDelta()
         )

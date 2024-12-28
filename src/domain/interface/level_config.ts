@@ -3,6 +3,7 @@ import ElevatorConfig from "./elevator_config";
 import RobotConfig from "./robot_config";
 
 export default interface LevelConfig {
+    index: number;
     size: number;
     boxes?: BoxConfig[] | undefined;
     robot: RobotConfig;

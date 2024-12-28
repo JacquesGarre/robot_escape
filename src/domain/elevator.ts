@@ -29,4 +29,8 @@ export default class Elevator extends LevelObject {
         robot.center.y += Elevator.SPEED
         this.setHeight(this.height + Elevator.SPEED)
     }
+
+    hasReachedTop() {
+        return this.height >= Elevator.MAX_HEIGHT;
+    }
 }
