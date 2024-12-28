@@ -53,8 +53,8 @@ let level3 = new Level({
             z: 3,
         },
         {
-            x: 0,
-            z: 0,
+            x: 6,
+            z: 6,
         }
     ],
     robot: {
@@ -67,12 +67,36 @@ let level3 = new Level({
         z: 0
     }
 })
+let level4 = new Level({
+    index: 3,
+    size: 7,
+    boxes: [
+        {
+            x: 3,
+            z: 3,
+        },
+        {
+            x: 1,
+            z: 1,
+        }
+    ],
+    robot: {
+        x: 0,
+        y: 0,
+        z: 0,
+    },
+    elevator: {
+        x: 6,
+        z: 6
+    }
+})
 
 let game = new Game({
     levels: [
         level1,
         level2,
-        level3
+        level3,
+        level4
     ]
 });
 
