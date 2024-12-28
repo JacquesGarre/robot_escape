@@ -13,7 +13,12 @@ let level1 = new Level({
             x:3,
             z:3
         }
-    ]
+    ],
+    robot: {
+        x: 0,
+        y: 0,
+        z: 0,
+    }
 })
 let game = new Game({
     levels: [

@@ -1,5 +1,6 @@
 import Coordinates from "./coordinates";
 import LevelObjectConfig from "./interface/level_object_config";
+import Level from "./level";
 
 export default class LevelObject {
 
@@ -12,9 +13,9 @@ export default class LevelObject {
         this.width = config.width;
         this.height = config.height ?? config.width;
         this.depth = config.depth ?? config.width;
-        let centerX = -config.x * this.width + this.width/2
+        let centerX = -config.x * this.width + Level.DEFAULT_TILESIZE/2
         let centerY = (config.y ?? 0) + this.height/2
-        let centerZ = config.z * this.depth - this.depth/2
+        let centerZ = config.z * this.depth - Level.DEFAULT_TILESIZE/2
         this.center = new Coordinates(centerX, centerY, centerZ)
     }
 

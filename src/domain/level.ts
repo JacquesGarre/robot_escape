@@ -2,6 +2,8 @@ import Box from "./box";
 import Camera from "./camera";
 import BoxConfig from "./interface/box_config";
 import LevelConfig from "./interface/level_config";
+import RobotConfig from "./interface/robot_config";
+import Robot from "./robot";
 
 export default class Level {
 
@@ -12,12 +14,14 @@ export default class Level {
     tileSize: number;
     camera: Camera;
     boxes: Box[] = [];
+    robot: Robot;
 
-    constructor(config: LevelConfig | undefined) {
-        this.size = config?.size ?? Level.DEFAULT_SIZE;
-        this.tileSize = config?.tileSize ?? Level.DEFAULT_TILESIZE;
-        this.camera = config?.camera ?? Camera.default();
-        this.addBoxes(config?.boxes);
+    constructor(config: LevelConfig) {
+        this.size = config.size ?? Level.DEFAULT_SIZE;
+        this.tileSize = config.tileSize ?? Level.DEFAULT_TILESIZE;
+        this.camera = config.camera ?? Camera.default();
+        this.addBoxes(config.boxes);
+        this.addRobot(config.robot);
     }
 
     addBoxes(boxesConfig: BoxConfig[] | undefined) {
@@ -27,6 +31,10 @@ export default class Level {
         for(const boxConfig of boxesConfig) {
             this.boxes.push(new Box(boxConfig));
         }
+    }
+
+    addRobot(robotConfig: RobotConfig) {
+        this.robot = new Robot(robotConfig);
     }
 
 
