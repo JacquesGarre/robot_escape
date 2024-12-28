@@ -3,8 +3,13 @@ import Level from "./src/domain/level";
 import WebBrowserGame from "./src/infrastructure/web_browser_game";
 
 let level1 = new Level()
-let levels = [level1];
-let game = new Game({levels});
+let levels = [
+    level1
+];
+let gameConfig = {
+    levels: levels
+}
+let game = new Game(gameConfig);
 
 let browserGame = WebBrowserGame.fromGame(game);
 let container = document.createElement('div');
