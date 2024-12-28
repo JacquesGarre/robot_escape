@@ -9,8 +9,8 @@ import Utils from "./utils";
 export default class Robot extends LevelObject {
 
     static ROBOT_SIZE = 2.5;
-    static ROBOT_HEIGHT = 4;
-    static SPEED = 2;
+    static ROBOT_HEIGHT = 5;
+    static SPEED = 3;
 
     x: number;
     y: number;

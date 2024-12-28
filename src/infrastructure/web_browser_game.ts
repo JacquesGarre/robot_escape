@@ -2,14 +2,17 @@ import * as THREE from 'three';
 import Game from "../domain/game";
 import Stats from 'three/addons/libs/stats.module.js';
 import WebBrowserRenderer from './web_browser_renderer';
-import WebBrowserLevel from './web_browser_level';
+import WebBrowserScene from './web_browser_scene';
 import WebBrowserCamera from './web_browser_camera';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import RobotModel from './robot_model';
 
 export default class WebBrowserGame {
 
     game: Game;
     renderer: WebBrowserRenderer;
     stats: Stats;
+    robotModel: RobotModel | null = null;
 
     private constructor(game: Game) {
         this.game = game;
@@ -20,6 +23,7 @@ export default class WebBrowserGame {
 
     static start(game: Game) {
         let webBrowserGame = new WebBrowserGame(game);
+        webBrowserGame.loadAssets();
         window.addEventListener('keydown', webBrowserGame.onKeyDown.bind(webBrowserGame));
         window.addEventListener('keyup', webBrowserGame.onKeyUp.bind(webBrowserGame));
         let container = document.createElement('div');
@@ -28,11 +32,28 @@ export default class WebBrowserGame {
         container.appendChild(webBrowserGame.stats.dom);
     }
 
+    loadAssets() {
+        const loader = new GLTFLoader();
+        loader.load(
+            RobotModel.MODEL_FILE, 
+            (gltf) => {
+                this.robotModel = RobotModel.fromGltf(gltf);
+            }, 
+            undefined, 
+            (e) => {
+                console.error(e);
+            }
+        );
+    }
+
     animate() {
         this.game.animate();
-        let level = WebBrowserLevel.fromLevel(this.game.currentLevel())
+        let scene = WebBrowserScene.fromLevel(
+            this.game.currentLevel(),
+            this.robotModel
+        )
         let camera = WebBrowserCamera.fromCamera(this.game.currentLevel().camera)
-        this.renderer.render(level, camera);
+        this.renderer.render(scene, camera);
         this.stats.update();
     }
 

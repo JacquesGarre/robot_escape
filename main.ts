@@ -20,8 +20,8 @@ let level1 = new Level({
         z: 0,
     },
     elevator: {
-        x: 0,
-        z: 1
+        x: 5,
+        z: 5
     }
 })
 

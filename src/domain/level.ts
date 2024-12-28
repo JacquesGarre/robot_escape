@@ -41,8 +41,8 @@ export default class Level {
         this.robot.animate(controls, this);
         this.camera.follow(this.robot);
         if (this.robot.isOnElevator(this.elevator)) {
-            this.elevator.goUp(this.robot);
             this.robot.setBoundaries(this.elevator.edges())
+            this.elevator.goUp(this.robot);
         }
     }
 
