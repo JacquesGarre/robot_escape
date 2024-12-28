@@ -1,3 +1,4 @@
+import Controls from "./controls";
 import LevelNotFoundError from "./errors/level_not_found_error";
 import GameConfig from "./interface/game_config";
 import LevelConfig from "./interface/level_config";
@@ -7,10 +8,12 @@ export default class Game {
 
     levels: Level[]
     currentLevelIndex: number;
+    controls: Controls;
 
     constructor(config: GameConfig) {
         this.currentLevelIndex = 0;
         this.levels = this.initializeLevels(config.levels);
+        this.controls = new Controls();
     }
 
     initializeLevels(levelsConfig: LevelConfig[]): Level[] {
@@ -29,7 +32,10 @@ export default class Game {
     }
 
     animate(delta: number) {
-        //console.log("Game is running")
+        this.currentLevel().animate(
+            delta, 
+            this.controls
+        );
     }
 
 }

@@ -8,6 +8,7 @@ export default class LevelObject {
     width: number;
     height: number;
     depth: number;
+    rotation: number;
 
     constructor(config: LevelObjectConfig) {
         this.width = config.width;
@@ -17,6 +18,7 @@ export default class LevelObject {
         let centerY = (config.y ?? 0) + this.height/2
         let centerZ = config.z * this.depth - Level.DEFAULT_TILESIZE/2
         this.center = new Coordinates(centerX, centerY, centerZ)
+        this.rotation = config.rotation ?? 0;
     }
 
 }

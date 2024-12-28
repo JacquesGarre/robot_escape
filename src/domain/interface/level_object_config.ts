@@ -5,4 +5,5 @@ export default interface LevelObjectConfig {
     width: number;
     height?: number | undefined;
     depth?: number | undefined;
+    rotation?: number | undefined;
 }

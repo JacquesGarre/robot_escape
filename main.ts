@@ -26,8 +26,5 @@ let game = new Game({
     ]
 });
 
-let browserGame = WebBrowserGame.fromGame(game);
-let container = document.createElement('div');
-document.body.appendChild(container);
-container.appendChild(browserGame.renderer.domElement);
-container.appendChild(browserGame.stats.dom);
+
+WebBrowserGame.start(game);

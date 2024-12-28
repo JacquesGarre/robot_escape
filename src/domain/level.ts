@@ -1,5 +1,6 @@
 import Box from "./box";
 import Camera from "./camera";
+import Controls from "./controls";
 import BoxConfig from "./interface/box_config";
 import LevelConfig from "./interface/level_config";
 import RobotConfig from "./interface/robot_config";
@@ -35,6 +36,11 @@ export default class Level {
 
     addRobot(robotConfig: RobotConfig) {
         this.robot = new Robot(robotConfig);
+    }
+
+    animate(delta: number, controls: Controls) {
+        this.robot.animate(delta, controls);
+
     }
 
 

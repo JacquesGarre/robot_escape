@@ -20,8 +20,14 @@ export default class WebBrowserGame {
         this.renderer = WebBrowserRenderer.withAnimationLoop(this.animate);
     }
 
-    static fromGame(game: Game): WebBrowserGame {
-        return new WebBrowserGame(game);
+    static start(game: Game) {
+        let webBrowserGame = new WebBrowserGame(game);
+        window.addEventListener('keydown', webBrowserGame.onKeyDown.bind(webBrowserGame));
+        window.addEventListener('keyup', webBrowserGame.onKeyUp.bind(webBrowserGame));
+        let container = document.createElement('div');
+        document.body.appendChild(container);
+        container.appendChild(webBrowserGame.renderer.domElement);
+        container.appendChild(webBrowserGame.stats.dom);
     }
 
     animate() {
@@ -31,6 +37,40 @@ export default class WebBrowserGame {
         let camera = WebBrowserCamera.fromCamera(this.game.currentLevel().camera)
         this.renderer.render(level, camera);
         this.stats.update();
+    }
+
+    onKeyDown(event: KeyboardEvent) {
+        switch(event.code) {
+            case "ArrowUp":
+                this.game.controls.pressUp();
+            break;
+            case "ArrowDown":
+                this.game.controls.pressDown();
+            break;
+            case "ArrowLeft":
+                this.game.controls.pressLeft();
+            break;
+            case "ArrowRight":
+                this.game.controls.pressRight();
+            break;
+        }
+    }
+
+    onKeyUp(event: KeyboardEvent) {
+        switch(event.code) {
+            case "ArrowUp":
+                this.game.controls.releaseUp();
+            break;
+            case "ArrowDown":
+                this.game.controls.releaseDown();
+            break;
+            case "ArrowLeft":
+                this.game.controls.releaseLeft();
+            break;
+            case "ArrowRight":
+                this.game.controls.releaseRight();
+            break;
+        }
     }
 
 }
