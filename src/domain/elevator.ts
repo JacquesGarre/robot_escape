@@ -9,7 +9,7 @@ export default class Elevator extends LevelObject {
     z: number;
 
     static SPEED = 0.2;
-    static MAX_HEIGHT = 50;
+    static MAX_HEIGHT = 10;
 
     constructor(config: ElevatorConfig) {
         super({
