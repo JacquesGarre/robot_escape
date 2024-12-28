@@ -12,11 +12,9 @@ export default class LevelObject {
 
     constructor(config: LevelObjectConfig) {
         const TILESIZE = Level.TILESIZE;
-
         this.width = config.width;
         this.height = (config.height ?? config.width);
         this.depth = (config.depth ?? config.width);
-
         this.center = new Coordinates(
             config.x * TILESIZE + TILESIZE / 2,
             ((config.y ?? 0) + this.height / 2),
@@ -70,17 +68,15 @@ export default class LevelObject {
     ): boolean {
         const overlapsInX = obj1.xMax > obj2.xMin && obj1.xMin < obj2.xMax;
         const overlapsInZ = obj1.zMax > obj2.zMin && obj1.zMin < obj2.zMax;
-
         if (direction === "up") {
-            return overlapsInX && obj1.zMax > obj2.zMin && obj1.zMax <= obj2.zMax;
+            return overlapsInX && obj1.zMax >= obj2.zMin && obj1.zMax < obj2.zMax;
         } else if (direction === "down") {
-            return overlapsInX && obj1.zMin < obj2.zMax && obj1.zMin >= obj2.zMin;
+            return overlapsInX && obj1.zMin <= obj2.zMax && obj1.zMin > obj2.zMin;
         } else if (direction === "right") {
-            return overlapsInZ && obj1.xMax > obj2.xMin && obj1.xMax <= obj2.xMax;
+            return overlapsInZ && obj1.xMax >= obj2.xMin && obj1.xMax < obj2.xMax;
         } else if (direction === "left") {
-            return overlapsInZ && obj1.xMin < obj2.xMax && obj1.xMin >= obj2.xMin;
+            return overlapsInZ && obj1.xMin <= obj2.xMax && obj1.xMin > obj2.xMin;
         }
-
         return false;
     }
 

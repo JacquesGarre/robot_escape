@@ -31,11 +31,8 @@ export default class Game {
         return this.levels[this.currentLevelIndex];
     }
 
-    animate(delta: number) {
-        this.currentLevel().animate(
-            delta, 
-            this.controls
-        );
+    animate() {
+        this.currentLevel().animate(this.controls);
     }
 
 }

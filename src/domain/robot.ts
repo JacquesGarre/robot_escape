@@ -2,12 +2,13 @@ import Controls from "./controls";
 import RobotConfig from "./interface/robot_config";
 import Level from "./level";
 import LevelObject from "./level_object";
+import Utils from "./utils";
 
 export default class Robot extends LevelObject {
 
     static ROBOT_SIZE = 5;
     static ROBOT_HEIGHT = 5;
-    static SPEED = 25;
+    static SPEED = 2;
 
     x: number;
     y: number;
@@ -26,24 +27,24 @@ export default class Robot extends LevelObject {
         this.z = config.z;
     }
 
-    animate(delta: number, controls: Controls, level: Level) {
+    animate(controls: Controls, level: Level) {
         this.rotate(controls)
-        this.move(delta, controls, level)
+        this.move(controls, level)
     }
 
-    move(delta: number, controls: Controls, level: Level) {
-        let distance = delta * Robot.SPEED
+    move(controls: Controls, level: Level) {
+        let distance = 0.1 * Robot.SPEED
         if (controls.up && this.canMoveUp(level, distance)) {
-            this.center.z += distance
+            this.center.z = Utils.round(this.center.z + distance)
         }   
         if (controls.down && this.canMoveDown(level, distance)) {
-            this.center.z -= distance
+            this.center.z = Utils.round(this.center.z - distance)
         }   
         if (controls.left && this.canMoveLeft(level, distance)) {
-            this.center.x -= distance
+            this.center.x = Utils.round(this.center.x - distance)
         }   
         if (controls.right && this.canMoveRight(level, distance)) {
-            this.center.x += distance
+            this.center.x = Utils.round(this.center.x + distance)
         }  
     }
 

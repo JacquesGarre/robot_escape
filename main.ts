@@ -7,7 +7,7 @@ let level1 = new Level({
     boxes: [
         {
             x:2,
-            z:2
+            z:1
         },
         {
             x:3,

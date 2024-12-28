@@ -24,9 +24,8 @@ export default class Level {
         this.camera = Camera.fromRobot(this.robot);
     }
 
-    animate(delta: number, controls: Controls) {
+    animate(controls: Controls) {
         this.robot.animate(
-            delta, 
             controls, 
             this
         );
