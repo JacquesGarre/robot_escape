@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import Level from '../domain/level';
-import Box from '../domain/box';
 import LevelObject from '../domain/level_object';
 
 export default class WebBrowserLevel extends THREE.Scene {
