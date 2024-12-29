@@ -33,7 +33,7 @@ export class Enemy extends LevelObject {
         this.index = config.index;
         this.x = config.x;
         this.z = config.z;
-        this.eyeSight = Enemy.DEFAULT_EYESIGHT;
+        this.eyeSight = config.eyeSight ?? Enemy.DEFAULT_EYESIGHT;
         this.animation = RobotState.IDLE;
         this.animationLoop = true;
     }
@@ -46,7 +46,7 @@ export class Enemy extends LevelObject {
         const deltaX = x2 - x1;
         const deltaZ = z2 - z1;
         let angleRadians = Math.atan2(deltaX, deltaZ);
-        let angleDegrees = Utils.toRadians(angleRadians);
+        let angleDegrees = Utils.toDegrees(angleRadians);
         this.rotation = -angleDegrees
     }
 
@@ -99,7 +99,7 @@ export class Enemy extends LevelObject {
         const couldSee = currentDistance <= this.eyeSight && this.hasInEyeSightCone(robot)
         if (couldSee) {
             for (const box of level.boxes) {
-                if (Utils.isObstructed(x1, z1, x2, z2, box.center.x, box.center.y, box.width)) {
+                if (Utils.isObstructed(x1, z1, x2, z2, box.center.x, box.center.z, box.width)) {
                     return false;
                 }
             }

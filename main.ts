@@ -4,15 +4,23 @@ import WebBrowserGame from "./src/infrastructure/web_browser_game";
 
 let level1 = new Level({
     index: 0,
-    size: 6,
+    size: 10,
     boxes: [
         {
             x: 5,
-            z: 3,
+            z: 4,
+        },
+        {
+            x: 4,
+            z: 4,
+        },
+        {
+            x: 3,
+            z: 4,
         }
     ],
     robot: {
-        x: 0,
+        x: 4,
         z: 0,
     },
     elevator: {
@@ -22,8 +30,8 @@ let level1 = new Level({
     enemies: [
         {
             index: 0,
-            x: 2,
-            z: 2,
+            x: 4,
+            z: 5,
             rotation: 270,
         }
     ]

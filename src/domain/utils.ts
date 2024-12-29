@@ -8,6 +8,10 @@ export default class Utils {
         return angle * (Math.PI / 180);
     }
 
+    static toDegrees(angle: number): number {
+        return angle * (180 / Math.PI);
+    }
+
     static lineIntersectsAABB(
         x1: number, z1: number,
         x2: number, z2: number,
