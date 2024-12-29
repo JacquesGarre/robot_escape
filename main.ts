@@ -23,7 +23,8 @@ let level1 = new Level({
         {
             index: 0,
             x: 2,
-            z: 2
+            z: 2,
+            rotation: 270,
         }
     ]
 })

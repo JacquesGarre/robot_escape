@@ -3,6 +3,7 @@ import LevelObject from "./level_object";
 import LevelObjectType from "./level_object_type";
 import Robot from "./robot";
 import RobotState from "./robot_state";
+import Utils from "./utils";
 
 export class Enemy extends LevelObject {
 
@@ -11,9 +12,12 @@ export class Enemy extends LevelObject {
     y: number;
     z: number;
     animation: RobotState;
-    animationLoop: boolean
+    animationLoop: boolean;
+    eyeSight: number;
 
     static SPEED = 2.5;
+    static DEFAULT_EYESIGHT = 10;
+    static DEFAULT_EYESIGHT_ANGLE = 60;
 
     constructor(config: EnemyConfig) {
         super({
@@ -28,6 +32,7 @@ export class Enemy extends LevelObject {
         this.index = config.index;
         this.x = config.x;
         this.z = config.z;
+        this.eyeSight = Enemy.DEFAULT_EYESIGHT;
         this.animation = RobotState.IDLE
     }
 
@@ -39,7 +44,7 @@ export class Enemy extends LevelObject {
         const deltaX = x2 - x1;
         const deltaZ = z2 - z1;
         let angleRadians = Math.atan2(deltaX, deltaZ);
-        let angleDegrees = (angleRadians * (180 / Math.PI));
+        let angleDegrees = Utils.toRadians(angleRadians);
         this.rotation = -angleDegrees
     }
 
@@ -59,6 +64,26 @@ export class Enemy extends LevelObject {
             this.animation = RobotState.IDLE
             this.animationLoop = true;
         }, 800)
+    }
+
+    hasInEyeSightCone(robot: Robot) {
+        const x1 = this.center.x;
+        const z1 = this.center.z;
+        const x2 = robot.center.x;
+        const z2 = robot.center.z;
+        const angleThreshold = Enemy.DEFAULT_EYESIGHT_ANGLE;
+        const rotationRad = Utils.toRadians(-this.rotation);
+        const directionX = Math.sin(rotationRad);
+        const directionZ = Math.cos(rotationRad); 
+        const vectorToOtherX = x2 - x1;
+        const vectorToOtherZ = z2 - z1;
+        const vectorToOtherLength = Math.sqrt(vectorToOtherX ** 2 + vectorToOtherZ ** 2);
+        const normalizedVectorToOtherX = vectorToOtherX / vectorToOtherLength;
+        const normalizedVectorToOtherZ = vectorToOtherZ / vectorToOtherLength;
+        const dotProduct = directionX * normalizedVectorToOtherX + directionZ * normalizedVectorToOtherZ;
+        const thresholdCos = Math.cos(Utils.toRadians(angleThreshold));
+        const isInEyeSightCone = dotProduct >= thresholdCos;
+        return isInEyeSightCone;
     }
 
 }

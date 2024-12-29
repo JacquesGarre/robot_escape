@@ -57,6 +57,12 @@ export default class Level {
                 this.finished = true;
             }
         }
+        for(const enemy of this.enemies) {
+            if (enemy.hasInEyeSightCone(this.robot)) {
+                console.log(`Enemy ${enemy.index} can see me!`)
+            }
+        }
+
     }
 
 }
