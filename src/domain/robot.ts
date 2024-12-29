@@ -7,6 +7,7 @@ import RobotConfig from "./interface/robot_config";
 import Level from "./level";
 import LevelObject from "./level_object";
 import LevelObjectType from "./level_object_type";
+import Noise from "./noise";
 import RobotState from "./robot_state";
 import Utils from "./utils";
 
@@ -49,7 +50,7 @@ export default class Robot extends LevelObject {
             let direction = controls.direction()
             let object = this.willCollideWithLevelObject(direction, level, distance);
             if (object) {
-                this.bumpInto(object)
+                this.bumpInto(object, level)
             } else {
                 this.move(controls, level, distance)
             }
@@ -58,7 +59,7 @@ export default class Robot extends LevelObject {
         }
     }
 
-    bumpInto(object: Box | Enemy | Elevator) {
+    bumpInto(object: Box | Enemy | Elevator, level: Level) {
         switch(object.type) {
             case LevelObjectType.ENEMY:
                 let enemy: Enemy = object as Enemy;
@@ -68,8 +69,21 @@ export default class Robot extends LevelObject {
             break;
             case LevelObjectType.BOX:
                 this.brokenAnimation()
+                let noise = this.makeNoise();
+                for(const enemy of level.enemies) {
+                    if (enemy.canHear(noise)) {
+                        enemy.jumpAnimation()
+                        setTimeout(() => {
+                            enemy.setTarget(noise, RobotState.WALKING)
+                        }, 700)
+                    }
+                }
             break;
         }
+    }
+
+    makeNoise(): Noise {
+        return new Noise(this.center.x, this.center.z);
     }
 
     deathAnimation() {

@@ -5,7 +5,8 @@ enum RobotState {
     WAVING = 'Wave',
     DEATH = 'Death',
     JUMP = 'Jump',
-    PUNCH = 'Punch'
+    PUNCH = 'Punch',
+    DANCING = 'Dance',
 }
 
 export default RobotState;

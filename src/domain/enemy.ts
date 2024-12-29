@@ -3,6 +3,7 @@ import PathNode from "./interface/path_node";
 import Level from "./level";
 import LevelObject from "./level_object";
 import LevelObjectType from "./level_object_type";
+import Noise from "./noise";
 import Robot from "./robot";
 import RobotState from "./robot_state";
 import Utils from "./utils";
@@ -18,9 +19,11 @@ export class Enemy extends LevelObject {
     eyeSight: number;
     earSight: number;
     target: LevelObject | null;
+    goingToTargetAnimation: RobotState = RobotState.RUNNING;
     path: PathNode[] | null;
 
-    static SPEED = 3;
+    static RUNNING_SPEED = 3;
+    static WALKING_SPEED = 1;
     static DEFAULT_EYESIGHT = 20;
     static DEFAULT_EYESIGHT_ANGLE = 60;
     static DEFAULT_EARSIGHT = 20;
@@ -39,6 +42,7 @@ export class Enemy extends LevelObject {
         this.x = config.x;
         this.z = config.z;
         this.eyeSight = config.eyeSight ?? Enemy.DEFAULT_EYESIGHT;
+        this.earSight = config.earSight ?? Enemy.DEFAULT_EARSIGHT;
         this.animation = RobotState.IDLE;
         this.animationLoop = true;
         this.target = null;
@@ -120,8 +124,21 @@ export class Enemy extends LevelObject {
         return false
     }
 
-    setTarget(object: LevelObject) {
+    canHear(noise: Noise) {
+        const x1 = this.center.x;
+        const z1 = this.center.z;
+        const x2 = noise.center.x;
+        const z2 = noise.center.z;
+        const deltaX = x2 - x1;
+        const deltaZ = z2 - z1;
+        const currentDistance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+        const canHear = currentDistance <= this.earSight
+        return canHear
+    }
+
+    setTarget(object: LevelObject, goingToTargetAnimation: RobotState) {
         this.target = object;
+        this.goingToTargetAnimation = goingToTargetAnimation;
     }
 
     animate(level: Level) {
@@ -129,12 +146,12 @@ export class Enemy extends LevelObject {
             this.goToTarget(this.target, level);
         }
         if (this.canSee(level.robot, level)) {
-            this.setTarget(level.robot)
+            this.setTarget(level.robot, RobotState.RUNNING)
         }
     }
 
     goToTarget(object: LevelObject, level: Level) {
-        this.runningAnimation();
+        this.goToTargetAnimation();
         this.rotateTowards(object)
         let grid = level.gridRepresentation()
         const start = {
@@ -149,11 +166,25 @@ export class Enemy extends LevelObject {
         this.followPath(object, level)
     }
 
+    goToTargetAnimation() {
+        this.animation = this.goingToTargetAnimation;
+        this.animationLoop = true;
+    }
+
+    goToTargetSpeed() {
+        const speed = this.goingToTargetAnimation == RobotState.RUNNING 
+            ? Enemy.RUNNING_SPEED
+            : Enemy.WALKING_SPEED;
+
+        return Utils.round(0.1 * speed)
+    }
+
     followPath(object: LevelObject, level: Level) {
         if (!this.path) {
             return;
         }
-        const speed = Utils.round(0.1 * Enemy.SPEED)
+        const speed = this.goToTargetSpeed()
+        console.log(this.path.length)
         if (this.path.length > 0) {
             const target = this.path[0];
             const targetX = Utils.round(target.x * Level.TILESIZE + (Level.TILESIZE / 2))
@@ -191,27 +222,36 @@ export class Enemy extends LevelObject {
             
             const distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
             if(!this.willCollideWith(level.elevator, direction, distance)) {
+                console.log("DOES NOT COLLIDE WITH ELEVATOR")
                 if(!this.willCollideWith(object, direction, distance)) {
                     const directionX = deltaX / distance;
                     const directionZ = deltaZ / distance;
                     this.center.x += directionX * speed;
                     this.center.z += directionZ * speed;
                 } else {
-                    this.doActionOnTarget(object)
+                    this.doActionOnTarget(object, level)
                 }
             }
 
         }
     }
 
-    doActionOnTarget(object: LevelObject) {
+    doActionOnTarget(object: LevelObject, level: Level) {
         switch(object.type) {
             case LevelObjectType.ROBOT:
                 let robot: Robot = object as Robot;
-                robot.bumpInto(this)
+                robot.bumpInto(this, level)
             break;
-
+            case LevelObjectType.NOISE:
+                console.log("DOING ACTION")
+                this.danceAnimation();
+            break;
         }
+    }
+
+    danceAnimation() {
+        this.animation = RobotState.DANCING;
+        this.animationLoop = false;
     }
 
 }

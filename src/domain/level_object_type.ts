@@ -2,7 +2,8 @@ enum LevelObjectType {
     BOX = 'Box',
     ROBOT = 'Robot',
     ENEMY = 'Enemy',
-    ELEVATOR = 'Elevator'
+    ELEVATOR = 'Elevator',
+    NOISE = 'Noise'
 }
 
 export default LevelObjectType;

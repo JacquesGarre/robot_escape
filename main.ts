@@ -7,17 +7,9 @@ let level1 = new Level({
     size: 10,
     boxes: [
         {
-            x: 5,
-            z: 4,
-        },
-        {
             x: 4,
             z: 4,
         },
-        {
-            x: 3,
-            z: 4,
-        }
     ],
     robot: {
         x: 4,
