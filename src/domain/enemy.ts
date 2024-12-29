@@ -21,9 +21,11 @@ export class Enemy extends LevelObject {
     target: LevelObject | null;
     goingToTargetAnimation: RobotState = RobotState.RUNNING;
     path: PathNode[] | null;
+    walkingSpeed: number;
+    runningSpeed: number;
 
-    static RUNNING_SPEED = 3;
-    static WALKING_SPEED = 1;
+    static DEFAULT_RUNNING_SPEED = 3;
+    static DEFAULT_WALKING_SPEED = 1;
     static DEFAULT_EYESIGHT = 20;
     static DEFAULT_EYESIGHT_ANGLE = 60;
     static DEFAULT_EARSIGHT = 20;
@@ -47,6 +49,8 @@ export class Enemy extends LevelObject {
         this.animationLoop = true;
         this.target = null;
         this.path = null;
+        this.walkingSpeed = config.walkingSpeed ?? Enemy.DEFAULT_WALKING_SPEED;
+        this.runningSpeed = config.runningSpeed ?? Enemy.DEFAULT_RUNNING_SPEED;
     }
 
     rotateTowards(object: LevelObject) {
@@ -173,8 +177,8 @@ export class Enemy extends LevelObject {
 
     goToTargetSpeed() {
         const speed = this.goingToTargetAnimation == RobotState.RUNNING 
-            ? Enemy.RUNNING_SPEED
-            : Enemy.WALKING_SPEED;
+            ? this.runningSpeed
+            : this.walkingSpeed;
 
         return Utils.round(0.1 * speed)
     }

@@ -6,4 +6,6 @@ export default interface EnemyConfig {
     rotation?: number | undefined;
     eyeSight?: number | undefined; 
     earSight?: number | undefined;
+    walkingSpeed?: number | undefined;
+    runningSpeed?: number | undefined;
 }
