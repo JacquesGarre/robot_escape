@@ -1,5 +1,6 @@
 import EnemyConfig from "./interface/enemy_config";
 import LevelObject from "./level_object";
+import LevelObjectType from "./level_object_type";
 import Robot from "./robot";
 import RobotState from "./robot_state";
 
@@ -22,6 +23,7 @@ export class Enemy extends LevelObject {
             height: Robot.ROBOT_HEIGHT,
             rotation: config.rotation
         })
+        this.type = LevelObjectType.ENEMY
         this.index = config.index;
         this.x = config.x;
         this.z = config.z;

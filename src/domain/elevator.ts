@@ -1,6 +1,7 @@
 import ElevatorConfig from "./interface/elevator_config";
 import Level from "./level";
 import LevelObject from "./level_object";
+import LevelObjectType from "./level_object_type";
 import Robot from "./robot";
 
 export default class Elevator extends LevelObject {
@@ -18,6 +19,7 @@ export default class Elevator extends LevelObject {
             width: Level.TILESIZE,
             height: 0
         })
+        this.type = LevelObjectType.ELEVATOR
         this.x = config.x;
         this.z = config.z;
     }

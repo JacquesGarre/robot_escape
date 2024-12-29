@@ -2,6 +2,7 @@ import Boundaries from "./boundaries";
 import Coordinates from "./coordinates";
 import LevelObjectConfig from "./interface/level_object_config";
 import Level from "./level";
+import LevelObjectType from "./level_object_type";
 import Utils from "./utils";
 
 export default class LevelObject {
@@ -11,6 +12,7 @@ export default class LevelObject {
     height: number;
     depth: number;
     rotation: number;
+    type: LevelObjectType;
     boundaries?: Boundaries | undefined;
 
     constructor(config: LevelObjectConfig) {
@@ -57,7 +59,10 @@ export default class LevelObject {
         return true;
     }
     
-    willCollideWithLevelObject(direction: string, level: Level, distance: number): LevelObject | null {
+    willCollideWithLevelObject(direction: string | null, level: Level, distance: number): LevelObject | null {
+        if (!direction) {
+            return null;
+        }
         for (const box of level.boxes) {
             if (this.willCollideWith(box, direction, distance)) {
                 return box;

@@ -3,6 +3,7 @@ enum RobotState {
     RUNNING = 'Running',
     WALKING = 'Walking',
     WAVING = 'Wave',
+    DEATH = 'Death',
 }
 
 export default RobotState;

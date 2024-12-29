@@ -4,6 +4,7 @@ import Elevator from "./elevator";
 import RobotConfig from "./interface/robot_config";
 import Level from "./level";
 import LevelObject from "./level_object";
+import LevelObjectType from "./level_object_type";
 import RobotState from "./robot_state";
 import Utils from "./utils";
 
@@ -27,6 +28,7 @@ export default class Robot extends LevelObject {
             height: Robot.ROBOT_HEIGHT,
             rotation: config.rotation
         })
+        this.type = LevelObjectType.ROBOT
         this.x = config.x;
         this.z = config.z;
         this.idleAnimation()
@@ -37,11 +39,30 @@ export default class Robot extends LevelObject {
         if (controls.arePressed()) {
             let distance = Utils.round(0.1 * Robot.SPEED)
             let direction = controls.direction()
-            this.move(controls, level, distance)
-            this.runningAnimation()
+            let object = this.willCollideWithLevelObject(direction, level, distance);
+            if (object) {
+                this.bumpInto(object)
+            } else {
+                this.move(controls, level, distance)
+            }
         } else {
             this.idleAnimation()
         }
+    }
+
+    bumpInto(object: LevelObject) {
+        switch(object.type) {
+            case LevelObjectType.ENEMY:
+                this.brokenAnimation()
+            break;
+            case LevelObjectType.BOX:
+                this.brokenAnimation()
+            break;
+        }
+    }
+
+    brokenAnimation() {
+        this.animation = RobotState.DEATH
     }
 
     idleAnimation() {
@@ -64,7 +85,8 @@ export default class Robot extends LevelObject {
         }  
         if (controls.left && this.canMoveLeft(level, distance)) {
             this.center.x -= distance
-        }   
+        }  
+        this.runningAnimation()
     }
 
     rotate(controls: Controls) {
