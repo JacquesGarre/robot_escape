@@ -78,7 +78,7 @@ export default class LevelObject {
         return false;
     }
 
-    private willCollideWith(
+    willCollideWith(
         otherObject: LevelObject,
         direction: string,
         distance: number

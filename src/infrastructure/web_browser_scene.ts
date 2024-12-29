@@ -5,6 +5,7 @@ import RobotModel from './robot_model';
 import Robot from '../domain/robot';
 import Game from '../domain/game';
 import Elevator from '../domain/elevator';
+import { Enemy } from '../domain/enemy';
 
 export default class WebBrowserScene extends THREE.Scene {
 
@@ -245,8 +246,34 @@ export default class WebBrowserScene extends THREE.Scene {
             if (!enemyModel) {
                 continue;
             }
-            this.addRobotModel(enemy, enemyModel, delta);
+            this.addEnemyModel(enemy, enemyModel, delta);
         }
+    }
+
+    addEnemyModel(
+        enemy: Enemy, 
+        robotModel: RobotModel, 
+        delta: number
+    ) {
+        const mixer = robotModel.model.userData.mixer;
+        const model = robotModel.model;
+        const actions = model.userData.actions;
+        model.position.set(
+            -enemy.center.x,
+            enemy.center.y - enemy.height/2,
+            enemy.center.z
+        );
+        model.rotation.y = enemy.rotation * (Math.PI / 180);
+        const action = actions[enemy.animation];
+        if (model.userData.currentAction && model.userData.currentAction != enemy.animation) {
+            const currentAction = actions[model.userData.currentAction]
+            currentAction.fadeOut(0.2);
+            action.reset().fadeIn(0.2);
+        }        
+        action.play();
+        mixer.update(delta);
+        model.userData.currentAction = enemy.animation;
+        this.add(model);
     }
 
 }   

@@ -29,17 +29,25 @@ export default class Robot extends LevelObject {
         })
         this.x = config.x;
         this.z = config.z;
-        this.animation = RobotState.IDLE
+        this.idleAnimation()
     }
 
     animate(controls: Controls, level: Level) {
         this.rotate(controls)
         if (controls.arePressed()) {
             this.move(controls, level)
-            this.animation = RobotState.RUNNING
+            this.runningAnimation()
         } else {
-            this.animation = RobotState.IDLE
+            this.idleAnimation()
         }
+    }
+
+    idleAnimation() {
+        this.animation = RobotState.IDLE
+    }
+
+    runningAnimation() {
+        this.animation = RobotState.RUNNING
     }
 
     move(controls: Controls, level: Level) {
