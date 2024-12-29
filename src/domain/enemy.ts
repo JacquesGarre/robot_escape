@@ -20,7 +20,7 @@ export class Enemy extends LevelObject {
     target: LevelObject | null;
     path: PathNode[] | null;
 
-    static SPEED = 0.1;
+    static SPEED = 2.5;
     static DEFAULT_EYESIGHT = 10;
     static DEFAULT_EYESIGHT_ANGLE = 60;
 
@@ -152,6 +152,7 @@ export class Enemy extends LevelObject {
         if (!this.path) {
             return;
         }
+        const speed = Utils.round(0.1 * Enemy.SPEED)
         if (this.path.length > 0) {
             const target = this.path[0];
             const targetX = Utils.round(target.x * Level.TILESIZE + (Level.TILESIZE / 2))
@@ -166,8 +167,8 @@ export class Enemy extends LevelObject {
             const directionX = deltaX / distance;
             const directionZ = deltaZ / distance;
             
-            this.center.x += directionX * Enemy.SPEED;
-            this.center.z += directionZ * Enemy.SPEED;
+            this.center.x += directionX * speed;
+            this.center.z += directionZ * speed;
         } else {
             const targetX = object.center.x
             const targetZ =  object.center.z
@@ -190,8 +191,8 @@ export class Enemy extends LevelObject {
             if(!this.willCollideWith(object, direction, distance)) {
                 const directionX = deltaX / distance;
                 const directionZ = deltaZ / distance;
-                this.center.x += directionX * Enemy.SPEED;
-                this.center.z += directionZ * Enemy.SPEED;
+                this.center.x += directionX * speed;
+                this.center.z += directionZ * speed;
             } else {
                 this.reachTarget(object)
             }

@@ -21,6 +21,7 @@ export default class Robot extends LevelObject {
     z: number;
     animation: string;
     animationLoop: boolean;
+    isDead: boolean;
 
     constructor(config: RobotConfig) {
         super({
@@ -35,9 +36,13 @@ export default class Robot extends LevelObject {
         this.x = config.x;
         this.z = config.z;
         this.idleAnimation()
+        this.isDead = false;
     }
 
     animate(controls: Controls, level: Level) {
+        if (this.isDead) {
+            return;
+        }
         this.rotate(controls)
         if (controls.arePressed()) {
             let distance = Utils.round(0.1 * Robot.SPEED)
@@ -59,12 +64,18 @@ export default class Robot extends LevelObject {
                 let enemy: Enemy = object as Enemy;
                 enemy.rotateTowards(this)
                 enemy.punchAnimation()
-                this.brokenAnimation()
+                this.deathAnimation()
             break;
             case LevelObjectType.BOX:
                 this.brokenAnimation()
             break;
         }
+    }
+
+    deathAnimation() {
+        this.isDead = true;
+        this.animation = RobotState.DEATH
+        this.animationLoop = false;
     }
 
     brokenAnimation() {
