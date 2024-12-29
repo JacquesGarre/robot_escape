@@ -184,7 +184,6 @@ export class Enemy extends LevelObject {
             return;
         }
         const speed = this.goToTargetSpeed()
-        console.log(this.path.length)
         if (this.path.length > 0) {
             const target = this.path[0];
             const targetX = Utils.round(target.x * Level.TILESIZE + (Level.TILESIZE / 2))
