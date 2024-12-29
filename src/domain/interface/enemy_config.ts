@@ -4,5 +4,6 @@ export default interface EnemyConfig {
     y?: number | undefined;
     z: number;
     rotation?: number | undefined;
-    eyeSight?: number | undefined;
+    eyeSight?: number | undefined; 
+    earSight?: number | undefined;
 }

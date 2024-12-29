@@ -1,6 +1,5 @@
-import Box from "./box";
-import Elevator from "./elevator";
 import EnemyConfig from "./interface/enemy_config";
+import PathNode from "./interface/path_node";
 import Level from "./level";
 import LevelObject from "./level_object";
 import LevelObjectType from "./level_object_type";
@@ -17,12 +16,14 @@ export class Enemy extends LevelObject {
     animation: RobotState;
     animationLoop: boolean;
     eyeSight: number;
+    earSight: number;
     target: LevelObject | null;
     path: PathNode[] | null;
 
     static SPEED = 3;
-    static DEFAULT_EYESIGHT = 10;
+    static DEFAULT_EYESIGHT = 20;
     static DEFAULT_EYESIGHT_ANGLE = 60;
+    static DEFAULT_EARSIGHT = 20;
 
     constructor(config: EnemyConfig) {
         super({
@@ -145,10 +146,10 @@ export class Enemy extends LevelObject {
             z: Math.floor(object.center.z / Level.TILESIZE),
         };
         this.path = Utils.findPath(start, target, grid);
-        this.followPath(object)
+        this.followPath(object, level)
     }
 
-    followPath(object: LevelObject) {
+    followPath(object: LevelObject, level: Level) {
         if (!this.path) {
             return;
         }
@@ -187,19 +188,23 @@ export class Enemy extends LevelObject {
             if (deltaZ > 0) {
                 direction = "up"
             }
+            
             const distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
-            if(!this.willCollideWith(object, direction, distance)) {
-                const directionX = deltaX / distance;
-                const directionZ = deltaZ / distance;
-                this.center.x += directionX * speed;
-                this.center.z += directionZ * speed;
-            } else {
-                this.reachTarget(object)
+            if(!this.willCollideWith(level.elevator, direction, distance)) {
+                if(!this.willCollideWith(object, direction, distance)) {
+                    const directionX = deltaX / distance;
+                    const directionZ = deltaZ / distance;
+                    this.center.x += directionX * speed;
+                    this.center.z += directionZ * speed;
+                } else {
+                    this.doActionOnTarget(object)
+                }
             }
+
         }
     }
 
-    reachTarget(object: LevelObject) {
+    doActionOnTarget(object: LevelObject) {
         switch(object.type) {
             case LevelObjectType.ROBOT:
                 let robot: Robot = object as Robot;

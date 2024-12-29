@@ -1,4 +1,4 @@
-interface PathNode {
+export default interface PathNode {
     x: number;
     z: number;
     g: number; 

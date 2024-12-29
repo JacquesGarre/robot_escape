@@ -1,3 +1,5 @@
+import PathNode from "./interface/path_node";
+
 export default class Utils {
 
     static round(value: number): number {
