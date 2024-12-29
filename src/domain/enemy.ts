@@ -1,4 +1,5 @@
 import EnemyConfig from "./interface/enemy_config";
+import Level from "./level";
 import LevelObject from "./level_object";
 import LevelObjectType from "./level_object_type";
 import Robot from "./robot";
@@ -84,6 +85,26 @@ export class Enemy extends LevelObject {
         const thresholdCos = Math.cos(Utils.toRadians(angleThreshold));
         const isInEyeSightCone = dotProduct >= thresholdCos;
         return isInEyeSightCone;
+    }
+
+    canSee(robot: Robot, level: Level) {
+        const x1 = this.center.x;
+        const z1 = this.center.z;
+        const x2 = robot.center.x;
+        const z2 = robot.center.z;
+        const deltaX = x2 - x1;
+        const deltaZ = z2 - z1;
+        const currentDistance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+        const couldSee = currentDistance <= this.eyeSight && this.hasInEyeSightCone(robot)
+        if (couldSee) {
+            for (const box of level.boxes) {
+                if (Utils.isObstructed(x1, z1, x2, z2, box.center.x, box.center.y, box.width)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false
     }
 
 }

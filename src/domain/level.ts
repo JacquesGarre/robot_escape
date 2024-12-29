@@ -58,7 +58,7 @@ export default class Level {
             }
         }
         for(const enemy of this.enemies) {
-            if (enemy.hasInEyeSightCone(this.robot)) {
+            if (enemy.canSee(this.robot, this)) {
                 console.log(`Enemy ${enemy.index} can see me!`)
             }
         }
