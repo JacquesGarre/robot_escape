@@ -230,6 +230,10 @@ export default class WebBrowserScene extends THREE.Scene {
             currentAction.fadeOut(0.2);
             action.reset().fadeIn(0.2);
         }        
+        if (!robot.animationLoop) {
+            action.setLoop(THREE.LoopOnce, 1);
+            action.clampWhenFinished = true;
+        }
         action.play();
         mixer.update(delta);
         model.userData.currentAction = robot.animation;
@@ -270,6 +274,10 @@ export default class WebBrowserScene extends THREE.Scene {
             currentAction.fadeOut(0.2);
             action.reset().fadeIn(0.2);
         }        
+        if (!enemy.animationLoop) {
+            action.setLoop(THREE.LoopOnce, 1);
+            action.clampWhenFinished = true;
+        }
         action.play();
         mixer.update(delta);
         model.userData.currentAction = enemy.animation;

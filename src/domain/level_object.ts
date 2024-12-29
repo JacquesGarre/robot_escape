@@ -1,5 +1,8 @@
 import Boundaries from "./boundaries";
+import Box from "./box";
 import Coordinates from "./coordinates";
+import Elevator from "./elevator";
+import { Enemy } from "./enemy";
 import LevelObjectConfig from "./interface/level_object_config";
 import Level from "./level";
 import LevelObjectType from "./level_object_type";
@@ -59,7 +62,7 @@ export default class LevelObject {
         return true;
     }
     
-    willCollideWithLevelObject(direction: string | null, level: Level, distance: number): LevelObject | null {
+    willCollideWithLevelObject(direction: string | null, level: Level, distance: number): Box | Enemy | Elevator | null {
         if (!direction) {
             return null;
         }

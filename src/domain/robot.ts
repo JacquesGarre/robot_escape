@@ -1,6 +1,8 @@
 import Boundaries from "./boundaries";
+import Box from "./box";
 import Controls from "./controls";
 import Elevator from "./elevator";
+import { Enemy } from "./enemy";
 import RobotConfig from "./interface/robot_config";
 import Level from "./level";
 import LevelObject from "./level_object";
@@ -18,6 +20,7 @@ export default class Robot extends LevelObject {
     y: number;
     z: number;
     animation: string;
+    animationLoop: boolean;
 
     constructor(config: RobotConfig) {
         super({
@@ -50,9 +53,12 @@ export default class Robot extends LevelObject {
         }
     }
 
-    bumpInto(object: LevelObject) {
+    bumpInto(object: Box | Enemy | Elevator) {
         switch(object.type) {
             case LevelObjectType.ENEMY:
+                let enemy: Enemy = object as Enemy;
+                enemy.rotateTowards(this)
+                enemy.punchAnimation()
                 this.brokenAnimation()
             break;
             case LevelObjectType.BOX:
@@ -63,14 +69,20 @@ export default class Robot extends LevelObject {
 
     brokenAnimation() {
         this.animation = RobotState.DEATH
+        this.animationLoop = false;
     }
 
     idleAnimation() {
+        if (this.animation == RobotState.DEATH) {
+            return;
+        }
         this.animation = RobotState.IDLE
+        this.animationLoop = true;
     }
 
     runningAnimation() {
         this.animation = RobotState.RUNNING
+        this.animationLoop = true;
     }
 
     move(controls: Controls, level: Level, distance: number) {
