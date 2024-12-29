@@ -222,7 +222,6 @@ export class Enemy extends LevelObject {
             
             const distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
             if(!this.willCollideWith(level.elevator, direction, distance)) {
-                console.log("DOES NOT COLLIDE WITH ELEVATOR")
                 if(!this.willCollideWith(object, direction, distance)) {
                     const directionX = deltaX / distance;
                     const directionZ = deltaZ / distance;
@@ -243,7 +242,6 @@ export class Enemy extends LevelObject {
                 robot.bumpInto(this, level)
             break;
             case LevelObjectType.NOISE:
-                console.log("DOING ACTION")
                 this.danceAnimation();
             break;
         }
