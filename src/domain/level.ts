@@ -58,11 +58,19 @@ export default class Level {
             }
         }
         for(const enemy of this.enemies) {
-            if (enemy.canSee(this.robot, this)) {
-                console.log(`Enemy ${enemy.index} can see me!`)
-            }
+            enemy.animate(this)
         }
+    }
 
+    gridRepresentation() {
+        const levelGrid = Array.from({ length: this.size }, () =>
+            Array(this.size).fill(0)
+        );
+        this.boxes.forEach(box => {
+            levelGrid[box.x][box.z] = 1;
+        });
+        levelGrid[this.elevator.x][this.elevator.z] = 1;
+        return levelGrid
     }
 
 }

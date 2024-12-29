@@ -55,4 +55,73 @@ export default class Utils {
         return this.lineIntersectsAABB(x1, z1, x2, z2, xMin, xMax, zMin, zMax);
     }
 
+    static findPath(start: { x: number; z: number }, target: { x: number; z: number }, grid: number[][]): PathNode[] {
+        const openSet: PathNode[] = [];
+        const closedSet: PathNode[] = []; 
+        const cameFrom = new Map<string, PathNode>();
+        const startNode: PathNode = { x: start.x, z: start.z, g: 0, h: 0, f: 0 };
+        const targetNode: PathNode = { x: target.x, z: target.z, g: 0, h: 0, f: 0 };
+        openSet.push(startNode);
+        while (openSet.length > 0) {
+            openSet.sort((a, b) => a.f - b.f);
+            const current = openSet.shift()!;
+            if (current.x === targetNode.x && current.z === targetNode.z) {
+                const path: PathNode[] = [];
+                let temp: PathNode | undefined = current;
+                while (temp) {
+                    path.push(temp);
+                    temp = cameFrom.get(`${temp.x},${temp.z}`);
+                }
+                let computedPath = path.reverse();
+                computedPath.shift()
+                return computedPath;
+            }
+            closedSet.push(current);
+            const neighbors = Utils.getNeighbors(current, grid);
+            for (const neighbor of neighbors) {
+                if (closedSet.some(n => n.x === neighbor.x && n.z === neighbor.z)) {
+                    continue; 
+                }
+                const tentativeG = current.g + 1; // All moves cost 1
+                const existingNeighbor = openSet.find(n => n.x === neighbor.x && n.z === neighbor.z);
+                if (!existingNeighbor || tentativeG < (existingNeighbor?.g ?? Infinity)) {
+                    const updatedNeighbor: PathNode = {
+                        ...neighbor,
+                        g: tentativeG,
+                        h: Utils.heuristic(neighbor, targetNode),
+                        f: tentativeG + Utils.heuristic(neighbor, targetNode),
+                    };
+                    cameFrom.set(`${updatedNeighbor.x},${updatedNeighbor.z}`, current);
+                    if (!existingNeighbor) {
+                        openSet.push(updatedNeighbor);
+                    }
+                }
+            }
+        }
+        return [];
+    }
+
+    static getNeighbors(node: PathNode, grid: number[][]): PathNode[] {
+        const directions = [
+            { x: 0, z: 1 },
+            { x: 1, z: 0 },
+            { x: 0, z: -1 },
+            { x: -1, z: 0 }
+        ];
+        return directions
+            .map(d => ({ x: node.x + d.x, z: node.z + d.z, g: 0, h: 0, f: 0 }))
+            .filter(
+                n =>
+                    n.x >= 0 &&
+                    n.z >= 0 &&
+                    n.x < grid.length &&
+                    n.z < grid[0].length &&
+                    grid[n.x][n.z] === 0
+            );
+    }
+
+    static heuristic(node: PathNode, target: PathNode): number {
+        return Math.abs(node.x - target.x) + Math.abs(node.z - target.z); 
+    }
+    
 }
