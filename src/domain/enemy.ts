@@ -20,7 +20,7 @@ export class Enemy extends LevelObject {
     target: LevelObject | null;
     path: PathNode[] | null;
 
-    static SPEED = 2.5;
+    static SPEED = 3;
     static DEFAULT_EYESIGHT = 10;
     static DEFAULT_EYESIGHT_ANGLE = 60;
 
