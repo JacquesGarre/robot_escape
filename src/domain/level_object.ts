@@ -41,25 +41,40 @@ export default class LevelObject {
         };
     }
 
-    canMove(direction: "up" | "down" | "right" | "left", level: Level, distance: number): boolean {
+    canMove(direction: string | null, level: Level, distance: number): boolean {
+        if (!direction) {
+            return false;
+        }
         if (this.boundaries && this.willBeOutOfBounds(this.boundaries, direction, distance)) {
             return false;
         }
         if (this.willBeOutOfBounds(level.boundaries, direction, distance)) {
             return false;
         }
-        for (const box of level.boxes) {
-            if (this.willCollideWith(box, direction, distance)) {
-                return false;
-            }
-        }
-        if (this.willCollideWith(level.elevator, direction, distance)) {
+        if (this.willCollideWithLevelObject(direction, level, distance)) {
             return false;
         }
         return true;
     }
+    
+    willCollideWithLevelObject(direction: string, level: Level, distance: number): LevelObject | null {
+        for (const box of level.boxes) {
+            if (this.willCollideWith(box, direction, distance)) {
+                return box;
+            }
+        }
+        for (const enemy of level.enemies) {
+            if (this.willCollideWith(enemy, direction, distance)) {
+                return enemy;
+            }
+        }
+        if (this.willCollideWith(level.elevator, direction, distance)) {
+            return level.elevator;
+        }
+        return null;
+    }
 
-    private willBeOutOfBounds(boundaries: Boundaries, direction: string, distance: number): boolean {
+    willBeOutOfBounds(boundaries: Boundaries, direction: string, distance: number): boolean {
         const edges = this.edges();
         switch (direction) {
             case "up":

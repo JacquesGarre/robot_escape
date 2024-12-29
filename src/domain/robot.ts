@@ -35,7 +35,9 @@ export default class Robot extends LevelObject {
     animate(controls: Controls, level: Level) {
         this.rotate(controls)
         if (controls.arePressed()) {
-            this.move(controls, level)
+            let distance = Utils.round(0.1 * Robot.SPEED)
+            let direction = controls.direction()
+            this.move(controls, level, distance)
             this.runningAnimation()
         } else {
             this.idleAnimation()
@@ -50,8 +52,7 @@ export default class Robot extends LevelObject {
         this.animation = RobotState.RUNNING
     }
 
-    move(controls: Controls, level: Level) {
-        let distance = Utils.round(0.1 * Robot.SPEED)
+    move(controls: Controls, level: Level, distance: number) {
         if (controls.up && this.canMoveUp(level, distance)) {
             this.center.z += distance
         }   

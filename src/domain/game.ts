@@ -50,6 +50,7 @@ export default class Game {
         this.levels[nextLevelIndex].robot.center.x = this.currentLevel().robot.center.x;
         this.levels[nextLevelIndex].robot.center.z = this.currentLevel().robot.center.z;
         this.levels[nextLevelIndex].robot.rotation = this.currentLevel().robot.rotation;
+        this.levels[nextLevelIndex].camera = this.currentLevel().camera;
         this.currentLevelIndex = nextLevelIndex;
     }
 

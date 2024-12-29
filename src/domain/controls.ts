@@ -12,6 +12,22 @@ export default class Controls {
         this.right = false;
     }
 
+    direction(): string | null {
+        if (this.up) {
+            return "up";
+        }   
+        if (this.down) {
+            return "down";
+        }   
+        if (this.right) {
+            return "right";
+        }  
+        if (this.left) {
+            return "left";
+        }   
+        return null
+    }
+
     arePressed() {
         return this.up || this.down || this.left || this.right;
     }
