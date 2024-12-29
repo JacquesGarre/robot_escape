@@ -34,7 +34,8 @@ export class Enemy extends LevelObject {
         this.x = config.x;
         this.z = config.z;
         this.eyeSight = Enemy.DEFAULT_EYESIGHT;
-        this.animation = RobotState.IDLE
+        this.animation = RobotState.IDLE;
+        this.animationLoop = true;
     }
 
     rotateTowards(object: LevelObject) {
