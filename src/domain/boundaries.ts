@@ -1,7 +1,7 @@
 import BoundariesConfig from "./interface/boundaries_config";
 
 export default class Boundaries {
-    
+
     xMin: number;
     xMax: number;
     yMin: number;

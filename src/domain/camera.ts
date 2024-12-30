@@ -1,11 +1,11 @@
-import Coordinates from "./coordinates"
+import PhysicalCoordinates from "./physical_coordinates"
 import CameraConfig from "./interface/camera_config";
 import Robot from "./robot";
 
 export default class Camera {
 
-    position: Coordinates
-    direction: Coordinates
+    position: PhysicalCoordinates
+    direction: PhysicalCoordinates
 
     constructor(config: CameraConfig) {
         this.position = config.position;
@@ -13,8 +13,8 @@ export default class Camera {
     }
 
     static fromRobot(robot: Robot): Camera {
-        let position = new Coordinates(0, 0, 0);
-        let direction = new Coordinates(0, 0, 0);
+        let position = new PhysicalCoordinates(0, 0, 0);
+        let direction = new PhysicalCoordinates(0, 0, 0);
         let camera = new Camera({position, direction });
         camera.follow(robot);
         return camera;

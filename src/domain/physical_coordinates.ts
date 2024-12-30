@@ -1,4 +1,4 @@
-export default class Coordinates {
+export default class PhysicalCoordinates {
     
     x: number;
     y: number;

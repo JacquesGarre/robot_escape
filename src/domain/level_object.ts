@@ -1,6 +1,6 @@
 import Boundaries from "./boundaries";
 import Box from "./box";
-import Coordinates from "./coordinates";
+import PhysicalCoordinates from "./physical_coordinates";
 import Elevator from "./elevator";
 import { Enemy } from "./enemy";
 import LevelObjectConfig from "./interface/level_object_config";
@@ -10,7 +10,7 @@ import Utils from "./utils";
 
 export default class LevelObject {
 
-    center: Coordinates;
+    center: PhysicalCoordinates;
     width: number;
     height: number;
     depth: number;
@@ -22,17 +22,12 @@ export default class LevelObject {
         this.width = config.width;
         this.height = (config.height ?? config.width);
         this.depth = (config.depth ?? config.width);
-        this.center = new Coordinates(
+        this.center = new PhysicalCoordinates(
             Utils.round(config.x * Level.TILESIZE + (Level.TILESIZE / 2)),
             Utils.round(((config.y ?? 0) + (this.height / 2))),
             Utils.round(config.z * Level.TILESIZE + (Level.TILESIZE / 2))
         );
         this.rotation = config.rotation ?? 0;
-    }
-
-    setHeight(newHeight: number) {
-        this.center.y = newHeight / 2;
-        this.height = newHeight;
     }
 
     edges() {

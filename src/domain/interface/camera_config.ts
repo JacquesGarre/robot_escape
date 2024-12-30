@@ -1,6 +1,6 @@
-import Coordinates from "../coordinates";
+import PhysicalCoordinates from "../physical_coordinates";
 
 export default interface CameraConfig {
-    position: Coordinates;
-    direction: Coordinates;
+    position: PhysicalCoordinates;
+    direction: PhysicalCoordinates;
 }

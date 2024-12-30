@@ -32,6 +32,11 @@ export default class Elevator extends LevelObject {
         this.setHeight(this.height + Elevator.SPEED)
     }
 
+    setHeight(newHeight: number) {
+        this.center.y = newHeight / 2;
+        this.height = newHeight;
+    }
+
     hasReachedTop() {
         return this.height >= Elevator.MAX_HEIGHT;
     }
