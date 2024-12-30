@@ -1,6 +1,6 @@
 import Level from "../../domain/level";
 
-export const  level1 = new Level({
+export const level1 = new Level({
     index: 0,
     size: 4,
     boxes: [],
