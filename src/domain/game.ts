@@ -47,10 +47,7 @@ export default class Game {
 
     startNextLevel() {
         let nextLevelIndex = this.currentLevelIndex + 1;
-        this.levels[nextLevelIndex].robot.center.x = this.currentLevel().robot.center.x;
-        this.levels[nextLevelIndex].robot.center.z = this.currentLevel().robot.center.z;
-        this.levels[nextLevelIndex].robot.rotation = this.currentLevel().robot.rotation;
-        this.levels[nextLevelIndex].camera = this.currentLevel().camera;
+        this.levels[nextLevelIndex].synchronize(this.currentLevel());
         this.currentLevelIndex = nextLevelIndex;
     }
 

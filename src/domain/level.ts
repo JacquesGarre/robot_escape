@@ -73,4 +73,11 @@ export default class Level {
         return levelGrid
     }
 
+    synchronize(level: Level) {
+        this.robot.center.x = level.robot.center.x;
+        this.robot.center.z = level.robot.center.z;
+        this.robot.rotation = level.robot.rotation;
+        this.camera = level.camera;
+    }
+
 }
