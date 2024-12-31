@@ -9,8 +9,10 @@ export default class Elevator extends LevelObject {
 
     coordinates: GridCoordinates;
 
-    static SPEED = 0.2;
+    static SPEED = 0.65;
     static MAX_HEIGHT = 50;
+
+    playingSound: boolean = false;
 
     constructor(config: ElevatorConfig) {
         super({
@@ -27,6 +29,7 @@ export default class Elevator extends LevelObject {
         if (this.height >= Elevator.MAX_HEIGHT) {
             return;
         }
+        this.playSound();
         robot.center.y += Elevator.SPEED
         this.setHeight(this.height + Elevator.SPEED)
     }
@@ -38,5 +41,18 @@ export default class Elevator extends LevelObject {
 
     hasReachedTop() {
         return this.height >= Elevator.MAX_HEIGHT;
+    }
+
+    
+    playSound() {
+        if(this.playingSound) {
+            return;
+        }
+        this.playingSound = true;
+        const audio = new Audio('src/infrastructure/sounds/elevator.mp3');
+        audio.volume = 0.2;
+        audio.play().catch(error => {
+            console.error('Error playing sound:', error);
+        });
     }
 }
