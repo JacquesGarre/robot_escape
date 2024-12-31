@@ -3,7 +3,12 @@ import LevelConfig from "../../domain/interface/level_config";
 export const level1: LevelConfig = {
     index: 0,
     size: 4,
-    boxes: [],
+    boxes: [
+        {
+            x:1,
+            z:3
+        }
+    ],
     robot: {
         x: 0,
         z: 0,

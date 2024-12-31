@@ -22,6 +22,9 @@ export class Enemy extends LevelObject {
     path: PathNode[] | null;
     walkingSpeed: number;
     runningSpeed: number;
+    playingNothingFoundSound: boolean = false;
+    playingTargetAcquiredSound: boolean = false;
+    playingTargetNeutralizedSound: boolean = false;
 
     static DEFAULT_RUNNING_SPEED = 3;
     static DEFAULT_WALKING_SPEED = 1;
@@ -138,6 +141,7 @@ export class Enemy extends LevelObject {
     }
 
     setTarget(object: LevelObject, goingToTargetAnimation: RobotState) {
+        this.playTargetAcquiredSound();
         this.target = object;
         this.goingToTargetAnimation = goingToTargetAnimation;
     }
@@ -239,6 +243,7 @@ export class Enemy extends LevelObject {
         switch(object.type) {
             case LevelObjectType.ROBOT:
                 let robot: Robot = object as Robot;
+                this.playTargetNeutralizedSound();
                 robot.bumpInto(this, level)
             break;
             case LevelObjectType.NOISE:
@@ -248,8 +253,45 @@ export class Enemy extends LevelObject {
     }
 
     danceAnimation() {
+        this.playNothingFoundSound();
         this.animation = RobotState.DANCING;
         this.animationLoop = false;
+    }
+
+    playNothingFoundSound() {
+        if(this.playingNothingFoundSound) {
+            return;
+        }
+        this.playingNothingFoundSound = true;
+        const audio = new Audio('src/infrastructure/sounds/robot_nothing.wav');
+        audio.volume = 0.2;
+        audio.play().catch(error => {
+            console.error('Error playing sound:', error);
+        });
+    }
+
+    playTargetAcquiredSound() {
+        if(this.playingTargetAcquiredSound) {
+            return;
+        }
+        this.playingTargetAcquiredSound = true;
+        const audio = new Audio('src/infrastructure/sounds/robot_target_acquired.wav');
+        audio.volume = 0.2;
+        audio.play().catch(error => {
+            console.error('Error playing sound:', error);
+        });
+    }
+
+    playTargetNeutralizedSound() {
+        if(this.playingTargetNeutralizedSound) {
+            return;
+        }
+        this.playingTargetNeutralizedSound = true;
+        const audio = new Audio('src/infrastructure/sounds/robot_target_neutralized.wav');
+        audio.volume = 0.2;
+        audio.play().catch(error => {
+            console.error('Error playing sound:', error);
+        });
     }
 
 }

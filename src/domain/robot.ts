@@ -22,6 +22,7 @@ export default class Robot extends LevelObject {
     animation: string;
     animationLoop: boolean;
     isDead: boolean;
+    playingPunchSound: boolean = false;
 
     constructor(config: RobotConfig) {
         super({
@@ -95,12 +96,26 @@ export default class Robot extends LevelObject {
     }
 
     punchAnimation() {
+        this.playPunchSound();
         this.animation = RobotState.PUNCH
         this.animationLoop = false;
         setTimeout(() => {
+            this.playingPunchSound = false;
             this.animation = RobotState.IDLE
             this.animationLoop = true;
         }, 800)
+    }
+
+    playPunchSound() {
+        if(this.playingPunchSound) {
+            return;
+        }
+        this.playingPunchSound = true;
+        const audio = new Audio('src/infrastructure/sounds/robot_punch.mp3');
+        audio.volume = 0.2;
+        audio.play().catch(error => {
+            console.error('Error playing sound:', error);
+        });
     }
 
     idleAnimation() {
