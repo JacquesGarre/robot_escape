@@ -6,6 +6,7 @@ import Robot from '../domain/robot';
 import Game from '../domain/game';
 import Elevator from '../domain/elevator';
 import { Enemy } from '../domain/enemy';
+import LevelObjectType from '../domain/level_object_type';
 
 export default class WebBrowserScene extends THREE.Scene {
 
@@ -17,6 +18,7 @@ export default class WebBrowserScene extends THREE.Scene {
         game: Game, 
         robotModel: RobotModel | null, 
         enemyModels: {},
+        textures: {},
         delta: number
     ) {
         super();
@@ -28,7 +30,7 @@ export default class WebBrowserScene extends THREE.Scene {
         this.addLights();
         this.addMesh();
         this.addGrid();
-        this.addBoxes();
+        this.addBoxes(textures);
         this.addRobot(robotModel, delta);
         this.addElevator();
         this.addEnemies(enemyModels, delta);
@@ -38,9 +40,10 @@ export default class WebBrowserScene extends THREE.Scene {
         game: Game, 
         robotModel: RobotModel | null, 
         enemyModels: {}, 
+        textures: {},
         delta: number
     ): WebBrowserScene {
-        return new WebBrowserScene(game, robotModel, enemyModels, delta);
+        return new WebBrowserScene(game, robotModel, enemyModels, textures, delta);
     }
 
     addLights() {
@@ -155,30 +158,35 @@ export default class WebBrowserScene extends THREE.Scene {
 
     }
 
-    addBoxes() {
+    addBoxes(textures) {
         if(this.previousLevel) {
             for(const box of this.previousLevel.boxes) {
-                this.addLevelObject(-1, box, 0x808080, 1)
+                this.addLevelObject(-1, box, 0x808080, 1, textures[LevelObjectType.BOX])
             }
         }
         for(const box of this.level.boxes) {
-            this.addLevelObject(0, box, 0x808080, 1)
+            this.addLevelObject(0, box, 0x808080, 1, textures[LevelObjectType.BOX])
         }
         if(this.nextLevel) {
             for(const box of this.nextLevel.boxes) {
-                this.addLevelObject(1, box, 0x808080, 1)
+                this.addLevelObject(1, box, 0x808080, 1, textures[LevelObjectType.BOX])
             }
         }
 
     }
 
-    addLevelObject(levelIndex: number, object: LevelObject, color: number, opacity: number) {
+    addLevelObject(levelIndex: number, object: LevelObject, color: number, opacity: number, texture?: THREE.Texture) {
         const geometry = new THREE.BoxGeometry(object.width, object.height, object.depth);
-        const material = new THREE.MeshStandardMaterial({ 
+        let material = new THREE.MeshStandardMaterial({ 
             color: color,
             transparent: true, 
-            opacity: opacity
+            opacity: opacity,
         });
+        if(texture) {
+            material = new THREE.MeshStandardMaterial({ 
+                map: texture
+            });
+        }
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.x = -object.center.x
         mesh.position.y = object.center.y + levelIndex * Elevator.MAX_HEIGHT

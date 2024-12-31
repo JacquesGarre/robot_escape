@@ -6,6 +6,7 @@ import WebBrowserScene from './web_browser_scene';
 import WebBrowserCamera from './web_browser_camera';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import RobotModel from './robot_model';
+import LevelObjectType from '../domain/level_object_type';
 
 export default class WebBrowserGame {
 
@@ -15,6 +16,7 @@ export default class WebBrowserGame {
     clock: THREE.Clock;
     robotModel: RobotModel | null = null;
     enemyModels: {} = {}
+    textures: {} = {}
 
     private constructor(game: Game) {
         this.game = game;
@@ -36,8 +38,8 @@ export default class WebBrowserGame {
     }
 
     loadAssets() {
-        const loader = new GLTFLoader();
-        loader.load(
+        const gltfLoader = new GLTFLoader();
+        gltfLoader.load(
             RobotModel.MODEL_FILE, 
             (gltf) => {
                 this.robotModel = RobotModel.fromGltf(gltf);
@@ -49,7 +51,7 @@ export default class WebBrowserGame {
         );
         for(const level of this.game.levels) {
             for(const enemy of level.enemies) {
-                loader.load(
+                gltfLoader.load(
                     RobotModel.MODEL_FILE, 
                     (gltf) => {
                         let enemyModelIndex = `${level.index}-${enemy.index}`
@@ -63,6 +65,19 @@ export default class WebBrowserGame {
             }
         }
 
+        const textureLoader = new THREE.TextureLoader()
+        textureLoader.load(
+            'src/infrastructure/textures/box.gif',
+            (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                this.textures[LevelObjectType.BOX] = texture;
+                console.log(texture);
+            },
+            undefined,
+            (e) => {
+                console.error(e);
+            }
+        );
     }
 
     animate() {
@@ -71,6 +86,7 @@ export default class WebBrowserGame {
             this.game,
             this.robotModel,
             this.enemyModels,
+            this.textures,
             this.clock.getDelta()
         )
         let camera = WebBrowserCamera.fromCamera(this.game.currentLevel().camera)
