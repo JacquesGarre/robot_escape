@@ -1,3 +1,4 @@
+import GridCoordinates from "./grid_coordinates";
 import ElevatorConfig from "./interface/elevator_config";
 import Level from "./level";
 import LevelObject from "./level_object";
@@ -6,8 +7,7 @@ import Robot from "./robot";
 
 export default class Elevator extends LevelObject {
 
-    x: number;
-    z: number;
+    coordinates: GridCoordinates;
 
     static SPEED = 0.2;
     static MAX_HEIGHT = 50;
@@ -20,8 +20,7 @@ export default class Elevator extends LevelObject {
             height: 0
         })
         this.type = LevelObjectType.ELEVATOR
-        this.x = config.x;
-        this.z = config.z;
+        this.coordinates = new GridCoordinates(config.x, config.z);
     }
 
     goUp(robot: Robot) {
