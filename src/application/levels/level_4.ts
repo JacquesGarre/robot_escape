@@ -1,6 +1,6 @@
-import Level from "../../domain/level";
+import LevelConfig from "../../domain/interface/level_config";
 
-export const level4 = new Level({
+export const level4: LevelConfig = {
     index: 3,
     size: 8,
     boxes: [
@@ -94,4 +94,4 @@ export const level4 = new Level({
             earSight: 20
         }
     ]
-})
+}
