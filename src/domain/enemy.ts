@@ -1,3 +1,4 @@
+import GridCoordinates from "./grid_coordinates";
 import EnemyConfig from "./interface/enemy_config";
 import PathNode from "./interface/path_node";
 import Level from "./level";
@@ -11,9 +12,7 @@ import Utils from "./utils";
 export class Enemy extends LevelObject {
 
     index: number; 
-    x: number;
-    y: number;
-    z: number;
+    coordinates: GridCoordinates;
     animation: RobotState;
     animationLoop: boolean;
     eyeSight: number;
@@ -33,7 +32,6 @@ export class Enemy extends LevelObject {
     constructor(config: EnemyConfig) {
         super({
             x: config.x,
-            y: config.y,
             z: config.z,
             width: Robot.ROBOT_SIZE,
             height: Robot.ROBOT_HEIGHT,
@@ -41,8 +39,7 @@ export class Enemy extends LevelObject {
         })
         this.type = LevelObjectType.ENEMY
         this.index = config.index;
-        this.x = config.x;
-        this.z = config.z;
+        this.coordinates = new GridCoordinates(config.x, config.z);
         this.eyeSight = config.eyeSight ?? Enemy.DEFAULT_EYESIGHT;
         this.earSight = config.earSight ?? Enemy.DEFAULT_EARSIGHT;
         this.animation = RobotState.IDLE;
