@@ -4,9 +4,6 @@ import Robot from "./robot";
 
 export default class Noise extends LevelObject {
 
-    x: number;
-    z: number;
-
     constructor(x: number, z: number) {
         super({
             x: x,

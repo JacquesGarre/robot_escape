@@ -3,6 +3,7 @@ import Box from "./box";
 import Controls from "./controls";
 import Elevator from "./elevator";
 import { Enemy } from "./enemy";
+import GridCoordinates from "./grid_coordinates";
 import RobotConfig from "./interface/robot_config";
 import Level from "./level";
 import LevelObject from "./level_object";
@@ -17,9 +18,7 @@ export default class Robot extends LevelObject {
     static ROBOT_HEIGHT = 5;
     static SPEED = 2.5;
 
-    x: number;
-    y: number;
-    z: number;
+    coordinates: GridCoordinates;
     animation: string;
     animationLoop: boolean;
     isDead: boolean;
@@ -27,15 +26,13 @@ export default class Robot extends LevelObject {
     constructor(config: RobotConfig) {
         super({
             x: config.x,
-            y: config.y,
             z: config.z,
             width: Robot.ROBOT_SIZE,
             height: Robot.ROBOT_HEIGHT,
             rotation: config.rotation
         })
         this.type = LevelObjectType.ROBOT
-        this.x = config.x;
-        this.z = config.z;
+        this.coordinates = new GridCoordinates(config.x, config.z);
         this.idleAnimation()
         this.isDead = false;
     }
