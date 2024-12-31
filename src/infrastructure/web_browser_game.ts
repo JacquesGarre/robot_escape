@@ -17,6 +17,7 @@ export default class WebBrowserGame {
     robotModel: RobotModel | null = null;
     enemyModels: {} = {}
     textures: {} = {}
+    backgroundMusicPlaying: boolean = false;
 
     private constructor(game: Game) {
         this.game = game;
@@ -71,7 +72,6 @@ export default class WebBrowserGame {
             (texture) => {
                 texture.colorSpace = THREE.SRGBColorSpace;
                 this.textures[LevelObjectType.BOX] = texture;
-                console.log(texture);
             },
             undefined,
             (e) => {
@@ -83,7 +83,28 @@ export default class WebBrowserGame {
             (texture) => {
                 texture.colorSpace = THREE.SRGBColorSpace;
                 this.textures['Floor'] = texture;
-                console.log(texture);
+            },
+            undefined,
+            (e) => {
+                console.error(e);
+            }
+        );
+        textureLoader.load(
+            'src/infrastructure/textures/elevator.png',
+            (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                this.textures[LevelObjectType.ELEVATOR] = texture;
+            },
+            undefined,
+            (e) => {
+                console.error(e);
+            }
+        );
+        textureLoader.load(
+            'src/infrastructure/textures/background.jpg',
+            (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                this.textures['Background'] = texture;
             },
             undefined,
             (e) => {
@@ -107,6 +128,10 @@ export default class WebBrowserGame {
     }
 
     onKeyDown(event: KeyboardEvent) {
+        if(!this.backgroundMusicPlaying) {
+            this.backgroundMusicPlaying = true;
+            this.playBackgroundSound()
+        }
         switch(event.code) {
             case "ArrowUp":
                 this.game.controls.pressUp();
@@ -138,6 +163,15 @@ export default class WebBrowserGame {
                 this.game.controls.releaseRight();
             break;
         }
+    }
+
+    playBackgroundSound() {
+        const audio = new Audio('src/infrastructure/sounds/background.ogg');
+        audio.loop = true;
+        audio.volume = 0.5;
+        audio.play().catch(error => {
+            console.error('Error playing sound:', error);
+        });
     }
 
 }

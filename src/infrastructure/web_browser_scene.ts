@@ -28,10 +28,10 @@ export default class WebBrowserScene extends THREE.Scene {
         this.previousLevel = game.previousLevel();
         this.level = game.currentLevel();
         this.nextLevel = game.nextLevel();
-        this.background = new THREE.Color(0xe0e0e0);
+        this.background = this.textures['Background'];
         this.fog = new THREE.Fog(0xe0e0e0, 20, 0);
         this.addLights();
-        this.addMesh();
+        this.addFloor();
         //this.addGrid();
         this.addBoxes();
         this.addRobot(robotModel, delta);
@@ -53,18 +53,29 @@ export default class WebBrowserScene extends THREE.Scene {
         const hemiLight = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 2);
         hemiLight.position.set(0, 20, 0);
         this.add(hemiLight);
-        const dirLight = new THREE.DirectionalLight(0xffffff, 3);
-        dirLight.position.set(0, 20, 10);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 4);
+        dirLight.position.set(30, 20, -10);
+        dirLight.castShadow = true;
+        dirLight.shadow.camera.top = 2000;
+        dirLight.shadow.camera.bottom = - 2000;
+        dirLight.shadow.camera.left = - 2000;
+        dirLight.shadow.camera.right = 2000;
+        dirLight.shadow.camera.near = 1200;
+        dirLight.shadow.camera.far = 2500;
+        dirLight.shadow.bias = 0.0001;
+        dirLight.shadow.mapSize.width = 1024;
+        dirLight.shadow.mapSize.height = 1024;
         this.add(dirLight);
     }
 
-    addMesh() {
+    addFloor() {
 
         if(this.previousLevel) {
             const secondLevelMesh = new THREE.Mesh(
-                new THREE.PlaneGeometry(
+                new THREE.BoxGeometry(
                     this.previousLevel.size * Level.TILESIZE, 
                     this.previousLevel.size * Level.TILESIZE, 
+                    1
                 ), 
                 new THREE.MeshStandardMaterial({ 
                     map: this.textures['Floor']
@@ -74,39 +85,44 @@ export default class WebBrowserScene extends THREE.Scene {
             secondLevelMesh.position.x = -(this.previousLevel.size/2) * Level.TILESIZE;
             secondLevelMesh.position.y = -1 * Elevator.MAX_HEIGHT;
             secondLevelMesh.position.z = this.previousLevel.size/2 * Level.TILESIZE;
+            secondLevelMesh.receiveShadow = true;
             this.add(secondLevelMesh);
         }
 
         const mesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(
+            new THREE.BoxGeometry(
                 this.level.size * Level.TILESIZE, 
                 this.level.size * Level.TILESIZE, 
-            ), 
+                1
+            ),
             new THREE.MeshStandardMaterial({ 
                 map: this.textures['Floor']
             })
         );
         mesh.rotation.x = - Math.PI / 2;
         mesh.position.x = -(this.level.size/2) * Level.TILESIZE;
-        mesh.position.y = 0 * Elevator.MAX_HEIGHT;
+        mesh.position.y = -0.55;
         mesh.position.z = this.level.size/2 * Level.TILESIZE;
+        mesh.receiveShadow = true;
         this.add(mesh);
 
         if(this.nextLevel) {
-            const secondLevelMesh = new THREE.Mesh(
-                new THREE.PlaneGeometry(
+            const thirdLevelMesh = new THREE.Mesh(
+                new THREE.BoxGeometry(
                     this.nextLevel.size * Level.TILESIZE, 
                     this.nextLevel.size * Level.TILESIZE, 
+                    1
                 ), 
                 new THREE.MeshStandardMaterial({ 
                     map: this.textures['Floor']
                 })
             );
-            secondLevelMesh.rotation.x = - Math.PI / 2;
-            secondLevelMesh.position.x = -(this.nextLevel.size/2) * Level.TILESIZE;
-            secondLevelMesh.position.y = 1 * Elevator.MAX_HEIGHT;
-            secondLevelMesh.position.z = this.nextLevel.size/2 * Level.TILESIZE;
-            this.add(secondLevelMesh);
+            thirdLevelMesh.rotation.x = - Math.PI / 2;
+            thirdLevelMesh.position.x = -(this.nextLevel.size/2) * Level.TILESIZE;
+            thirdLevelMesh.position.y = 1 * Elevator.MAX_HEIGHT;
+            thirdLevelMesh.position.z = this.nextLevel.size/2 * Level.TILESIZE;
+            thirdLevelMesh.receiveShadow = true;
+            this.add(thirdLevelMesh);
         }
 
     }
@@ -193,6 +209,7 @@ export default class WebBrowserScene extends THREE.Scene {
         mesh.position.z = object.center.z
         mesh.rotation.y = object.rotation * (Math.PI / 180);
         mesh.castShadow = true;
+        mesh.receiveShadow = true;
         this.add(mesh);
     }
 

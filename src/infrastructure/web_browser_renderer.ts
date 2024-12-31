@@ -7,6 +7,7 @@ export default class WebBrowserRenderer extends THREE.WebGLRenderer {
         this.setPixelRatio(window.devicePixelRatio);
         this.setSize(window.innerWidth, window.innerHeight);
         this.shadowMap.enabled = true;
+        this.shadowMap.type = THREE.PCFSoftShadowMap;
         this.setAnimationLoop(callback);
         this.onWindowResize = this.onWindowResize.bind(this);
         window.addEventListener('resize', this.onWindowResize);
