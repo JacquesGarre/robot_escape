@@ -65,7 +65,7 @@ export default class Robot extends LevelObject {
                 this.deathAnimation()
             break;
             case LevelObjectType.BOX:
-                this.brokenAnimation()
+                this.punchAnimation()
                 let noise = this.makeNoise();
                 for(const enemy of level.enemies) {
                     if (enemy.canHear(noise)) {
@@ -92,6 +92,15 @@ export default class Robot extends LevelObject {
     brokenAnimation() {
         this.animation = RobotState.DEATH
         this.animationLoop = false;
+    }
+
+    punchAnimation() {
+        this.animation = RobotState.PUNCH
+        this.animationLoop = false;
+        setTimeout(() => {
+            this.animation = RobotState.IDLE
+            this.animationLoop = true;
+        }, 800)
     }
 
     idleAnimation() {
