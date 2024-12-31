@@ -53,11 +53,11 @@ export class Enemy extends LevelObject {
         this.runningSpeed = config.runningSpeed ?? Enemy.DEFAULT_RUNNING_SPEED;
     }
 
-    rotateTowards(object: LevelObject) {
+    rotateTowards(x: number, z: number) {
         const x1 = this.center.x;
         const z1 = this.center.z;
-        const x2 = object.center.x;
-        const z2 = object.center.z;
+        const x2 = x;
+        const z2 = z;
         const deltaX = x2 - x1;
         const deltaZ = z2 - z1;
         let angleRadians = Math.atan2(deltaX, deltaZ);
@@ -157,7 +157,6 @@ export class Enemy extends LevelObject {
 
     goToTarget(object: LevelObject, level: Level) {
         this.goToTargetAnimation();
-        this.rotateTowards(object)
         let grid = level.gridRepresentation()
         const start = {
             x: Math.floor(this.center.x / Level.TILESIZE),
@@ -193,6 +192,7 @@ export class Enemy extends LevelObject {
             const target = this.path[0];
             const targetX = Utils.round(target.x * Level.TILESIZE + (Level.TILESIZE / 2))
             const targetZ = Utils.round(target.z * Level.TILESIZE + (Level.TILESIZE / 2))
+            this.rotateTowards(targetX, targetZ)
             const deltaX = targetX - this.center.x;
             const deltaZ = targetZ - this.center.z;
             const distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
@@ -243,8 +243,8 @@ export class Enemy extends LevelObject {
         switch(object.type) {
             case LevelObjectType.ROBOT:
                 let robot: Robot = object as Robot;
+                robot.bumpInto(this, level);
                 this.playTargetNeutralizedSound();
-                robot.bumpInto(this, level)
             break;
             case LevelObjectType.NOISE:
                 this.danceAnimation();
@@ -264,7 +264,7 @@ export class Enemy extends LevelObject {
         }
         this.playingNothingFoundSound = true;
         const audio = new Audio('src/infrastructure/sounds/robot_nothing.wav');
-        audio.volume = 0.2;
+        audio.volume = 0.3;
         audio.play().catch(error => {
             console.error('Error playing sound:', error);
         });
@@ -276,7 +276,7 @@ export class Enemy extends LevelObject {
         }
         this.playingTargetAcquiredSound = true;
         const audio = new Audio('src/infrastructure/sounds/robot_target_acquired.wav');
-        audio.volume = 0.2;
+        audio.volume = 0.3;
         audio.play().catch(error => {
             console.error('Error playing sound:', error);
         });
@@ -288,7 +288,7 @@ export class Enemy extends LevelObject {
         }
         this.playingTargetNeutralizedSound = true;
         const audio = new Audio('src/infrastructure/sounds/robot_target_neutralized.wav');
-        audio.volume = 0.2;
+        audio.volume = 0.3;
         audio.play().catch(error => {
             console.error('Error playing sound:', error);
         });

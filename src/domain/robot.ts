@@ -61,7 +61,7 @@ export default class Robot extends LevelObject {
         switch(object.type) {
             case LevelObjectType.ENEMY:
                 let enemy: Enemy = object as Enemy;
-                enemy.rotateTowards(this)
+                enemy.rotateTowards(this.center.x, this.center.z)
                 enemy.punchAnimation()
                 this.deathAnimation()
             break;
