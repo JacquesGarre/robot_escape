@@ -7,12 +7,14 @@ import Game from '../domain/game';
 import Elevator from '../domain/elevator';
 import { Enemy } from '../domain/enemy';
 import LevelObjectType from '../domain/level_object_type';
+import { texture } from 'three/tsl';
 
 export default class WebBrowserScene extends THREE.Scene {
 
     previousLevel: Level | undefined;
     level: Level;
     nextLevel: Level | undefined;
+    textures: {}
 
     private constructor(
         game: Game, 
@@ -22,6 +24,7 @@ export default class WebBrowserScene extends THREE.Scene {
         delta: number
     ) {
         super();
+        this.textures = textures;
         this.previousLevel = game.previousLevel();
         this.level = game.currentLevel();
         this.nextLevel = game.nextLevel();
@@ -29,8 +32,8 @@ export default class WebBrowserScene extends THREE.Scene {
         this.fog = new THREE.Fog(0xe0e0e0, 20, 0);
         this.addLights();
         this.addMesh();
-        this.addGrid();
-        this.addBoxes(textures);
+        //this.addGrid();
+        this.addBoxes();
         this.addRobot(robotModel, delta);
         this.addElevator();
         this.addEnemies(enemyModels, delta);
@@ -64,8 +67,7 @@ export default class WebBrowserScene extends THREE.Scene {
                     this.previousLevel.size * Level.TILESIZE, 
                 ), 
                 new THREE.MeshStandardMaterial({ 
-                    color: 0xcbcbcb, 
-                    depthWrite: false 
+                    map: this.textures['Floor']
                 })
             );
             secondLevelMesh.rotation.x = - Math.PI / 2;
@@ -81,8 +83,7 @@ export default class WebBrowserScene extends THREE.Scene {
                 this.level.size * Level.TILESIZE, 
             ), 
             new THREE.MeshStandardMaterial({ 
-                color: 0xcbcbcb, 
-                depthWrite: false 
+                map: this.textures['Floor']
             })
         );
         mesh.rotation.x = - Math.PI / 2;
@@ -98,8 +99,7 @@ export default class WebBrowserScene extends THREE.Scene {
                     this.nextLevel.size * Level.TILESIZE, 
                 ), 
                 new THREE.MeshStandardMaterial({ 
-                    color: 0xcbcbcb, 
-                    depthWrite: false 
+                    map: this.textures['Floor']
                 })
             );
             secondLevelMesh.rotation.x = - Math.PI / 2;
@@ -158,18 +158,18 @@ export default class WebBrowserScene extends THREE.Scene {
 
     }
 
-    addBoxes(textures) {
+    addBoxes() {
         if(this.previousLevel) {
             for(const box of this.previousLevel.boxes) {
-                this.addLevelObject(-1, box, 0x808080, 1, textures[LevelObjectType.BOX])
+                this.addLevelObject(-1, box, 0x808080, 1, this.textures[LevelObjectType.BOX])
             }
         }
         for(const box of this.level.boxes) {
-            this.addLevelObject(0, box, 0x808080, 1, textures[LevelObjectType.BOX])
+            this.addLevelObject(0, box, 0x808080, 1, this.textures[LevelObjectType.BOX])
         }
         if(this.nextLevel) {
             for(const box of this.nextLevel.boxes) {
-                this.addLevelObject(1, box, 0x808080, 1, textures[LevelObjectType.BOX])
+                this.addLevelObject(1, box, 0x808080, 1, this.textures[LevelObjectType.BOX])
             }
         }
 

@@ -78,6 +78,18 @@ export default class WebBrowserGame {
                 console.error(e);
             }
         );
+        textureLoader.load(
+            'src/infrastructure/textures/floor.jpg',
+            (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                this.textures['Floor'] = texture;
+                console.log(texture);
+            },
+            undefined,
+            (e) => {
+                console.error(e);
+            }
+        );
     }
 
     animate() {
