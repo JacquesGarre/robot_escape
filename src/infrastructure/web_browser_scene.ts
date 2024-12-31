@@ -7,7 +7,6 @@ import Game from '../domain/game';
 import Elevator from '../domain/elevator';
 import { Enemy } from '../domain/enemy';
 import LevelObjectType from '../domain/level_object_type';
-import { texture } from 'three/tsl';
 
 export default class WebBrowserScene extends THREE.Scene {
 
@@ -28,7 +27,6 @@ export default class WebBrowserScene extends THREE.Scene {
         this.previousLevel = game.previousLevel();
         this.level = game.currentLevel();
         this.nextLevel = game.nextLevel();
-        this.background = this.textures['Background'];
         this.fog = new THREE.Fog(0xe0e0e0, 20, 0);
         this.addLights();
         this.addFloor();
@@ -227,11 +225,11 @@ export default class WebBrowserScene extends THREE.Scene {
     addElevator() {
         if (this.previousLevel) {
             this.previousLevel.elevator.setHeight(Elevator.MAX_HEIGHT)
-            this.addLevelObject(-1, this.previousLevel.elevator, 0x000000, 1)
+            this.addLevelObject(-1, this.previousLevel.elevator, 0xe0e0e0, 1)
         }
-        this.addLevelObject(0, this.level.elevator, 0x000000, 1);
+        this.addLevelObject(0, this.level.elevator, 0xe0e0e0, 1);
         if (this.nextLevel) {
-            this.addLevelObject(1, this.nextLevel.elevator, 0x000000, 1)
+            this.addLevelObject(1, this.nextLevel.elevator, 0xe0e0e0, 1)
         }
     }
 
