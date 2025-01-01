@@ -26,7 +26,7 @@ export default class Elevator extends LevelObject {
     }
 
     goUp(robot: Robot) {
-        if (this.height >= Elevator.MAX_HEIGHT) {
+        if (this.hasReachedTop()) {
             return;
         }
         this.playSound();
