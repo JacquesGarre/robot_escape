@@ -2,8 +2,8 @@ import LevelConfig from "../../domain/interface/level_config";
 
 export const level6: LevelConfig = {
     index: 5,
-    name: "Corridors",
-    description: "Noisy stealth",
+    name: "The maze",
+    description: "Be very stealth",
     size: 12,
     boxes: [
         {
