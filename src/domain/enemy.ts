@@ -296,7 +296,7 @@ export class Enemy extends LevelObject {
             return;
         }
         this.playingNothingFoundSound = true;
-        const audio = new Audio('src/infrastructure/sounds/robot_nothing.wav');
+        const audio = new Audio('/assets/sounds/robot_nothing.wav');
         audio.volume = 0.3;
         audio.play().catch(error => {
             console.error('Error playing sound:', error);
@@ -308,7 +308,7 @@ export class Enemy extends LevelObject {
             return;
         }
         this.playingTargetAcquiredSound = true;
-        const audio = new Audio('src/infrastructure/sounds/robot_target_acquired.wav');
+        const audio = new Audio('/assets/sounds/robot_target_acquired.wav');
         audio.volume = 0.3;
         audio.play().catch(error => {
             console.error('Error playing sound:', error);
@@ -320,7 +320,7 @@ export class Enemy extends LevelObject {
             return;
         }
         this.playingTargetNeutralizedSound = true;
-        const audio = new Audio('src/infrastructure/sounds/robot_target_neutralized.wav');
+        const audio = new Audio('/assets/sounds/robot_target_neutralized.wav');
         audio.volume = 0.3;
         audio.play().catch(error => {
             console.error('Error playing sound:', error);

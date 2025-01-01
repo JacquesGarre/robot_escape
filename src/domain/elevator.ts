@@ -49,7 +49,7 @@ export default class Elevator extends LevelObject {
             return;
         }
         this.playingSound = true;
-        const audio = new Audio('src/infrastructure/sounds/elevator.mp3');
+        const audio = new Audio('/assets/sounds/elevator.mp3');
         audio.volume = 0.1;
         audio.play().catch(error => {
             console.error('Error playing sound:', error);
