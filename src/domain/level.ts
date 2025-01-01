@@ -12,6 +12,8 @@ export default class Level {
     static TILESIZE = 5;
 
     index: number;
+    name: string;
+    description: string;
     size: number;
     camera: Camera;
     boxes: Box[] = [];
@@ -23,6 +25,8 @@ export default class Level {
 
     constructor(config: LevelConfig) {  
         this.index = config.index;      
+        this.name = config.name;
+        this.description = config.description;
         this.size = config.size;
         let boxesConfig = config.boxes ?? [];
         for(const boxConfig of boxesConfig) {

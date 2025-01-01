@@ -7,6 +7,7 @@ import Game from '../domain/game';
 import Elevator from '../domain/elevator';
 import { Enemy } from '../domain/enemy';
 import LevelObjectType from '../domain/level_object_type';
+import { Font, TextGeometry } from 'three/examples/jsm/Addons.js';
 
 export default class WebBrowserScene extends THREE.Scene {
 
@@ -14,10 +15,11 @@ export default class WebBrowserScene extends THREE.Scene {
     level: Level;
     nextLevel: Level | undefined;
     textures: {}
+    levelName: THREE.Mesh | null;
 
     private constructor(
-        game: Game, 
-        robotModel: RobotModel | null, 
+        game: Game,
+        robotModel: RobotModel | null,
         enemyModels: {},
         textures: {},
         delta: number
@@ -31,6 +33,7 @@ export default class WebBrowserScene extends THREE.Scene {
         this.addLights();
         this.addFloor();
         //this.addGrid();
+        this.addTexts();
         this.addBoxes();
         this.addRobot(robotModel, delta);
         this.addElevator();
@@ -38,9 +41,9 @@ export default class WebBrowserScene extends THREE.Scene {
     }
 
     static fromGame(
-        game: Game, 
-        robotModel: RobotModel | null, 
-        enemyModels: {}, 
+        game: Game,
+        robotModel: RobotModel | null,
+        enemyModels: {},
         textures: {},
         delta: number
     ): WebBrowserScene {
@@ -68,57 +71,57 @@ export default class WebBrowserScene extends THREE.Scene {
 
     addFloor() {
 
-        if(this.previousLevel) {
+        if (this.previousLevel) {
             const secondLevelMesh = new THREE.Mesh(
                 new THREE.BoxGeometry(
-                    this.previousLevel.size * Level.TILESIZE, 
-                    this.previousLevel.size * Level.TILESIZE, 
+                    this.previousLevel.size * Level.TILESIZE,
+                    this.previousLevel.size * Level.TILESIZE,
                     1
-                ), 
-                new THREE.MeshStandardMaterial({ 
+                ),
+                new THREE.MeshStandardMaterial({
                     map: this.textures['Floor']
                 })
             );
             secondLevelMesh.rotation.x = - Math.PI / 2;
-            secondLevelMesh.position.x = -(this.previousLevel.size/2) * Level.TILESIZE;
+            secondLevelMesh.position.x = -(this.previousLevel.size / 2) * Level.TILESIZE;
             secondLevelMesh.position.y = -1 * Elevator.MAX_HEIGHT;
-            secondLevelMesh.position.z = this.previousLevel.size/2 * Level.TILESIZE;
+            secondLevelMesh.position.z = this.previousLevel.size / 2 * Level.TILESIZE;
             secondLevelMesh.receiveShadow = true;
             this.add(secondLevelMesh);
         }
 
         const mesh = new THREE.Mesh(
             new THREE.BoxGeometry(
-                this.level.size * Level.TILESIZE, 
-                this.level.size * Level.TILESIZE, 
+                this.level.size * Level.TILESIZE,
+                this.level.size * Level.TILESIZE,
                 1
             ),
-            new THREE.MeshStandardMaterial({ 
+            new THREE.MeshStandardMaterial({
                 map: this.textures['Floor']
             })
         );
         mesh.rotation.x = - Math.PI / 2;
-        mesh.position.x = -(this.level.size/2) * Level.TILESIZE;
+        mesh.position.x = -(this.level.size / 2) * Level.TILESIZE;
         mesh.position.y = -0.55;
-        mesh.position.z = this.level.size/2 * Level.TILESIZE;
+        mesh.position.z = this.level.size / 2 * Level.TILESIZE;
         mesh.receiveShadow = true;
         this.add(mesh);
 
-        if(this.nextLevel) {
+        if (this.nextLevel) {
             const thirdLevelMesh = new THREE.Mesh(
                 new THREE.BoxGeometry(
-                    this.nextLevel.size * Level.TILESIZE, 
-                    this.nextLevel.size * Level.TILESIZE, 
+                    this.nextLevel.size * Level.TILESIZE,
+                    this.nextLevel.size * Level.TILESIZE,
                     1
-                ), 
-                new THREE.MeshStandardMaterial({ 
+                ),
+                new THREE.MeshStandardMaterial({
                     map: this.textures['Floor']
                 })
             );
             thirdLevelMesh.rotation.x = - Math.PI / 2;
-            thirdLevelMesh.position.x = -(this.nextLevel.size/2) * Level.TILESIZE;
+            thirdLevelMesh.position.x = -(this.nextLevel.size / 2) * Level.TILESIZE;
             thirdLevelMesh.position.y = 1 * Elevator.MAX_HEIGHT;
-            thirdLevelMesh.position.z = this.nextLevel.size/2 * Level.TILESIZE;
+            thirdLevelMesh.position.z = this.nextLevel.size / 2 * Level.TILESIZE;
             thirdLevelMesh.receiveShadow = true;
             this.add(thirdLevelMesh);
         }
@@ -127,62 +130,62 @@ export default class WebBrowserScene extends THREE.Scene {
 
     addGrid() {
 
-        if(this.previousLevel) {
+        if (this.previousLevel) {
             const previousLevelGrid = new THREE.GridHelper(
-                this.previousLevel.size * Level.TILESIZE, 
-                this.previousLevel.size,  
-                0x000000, 
+                this.previousLevel.size * Level.TILESIZE,
+                this.previousLevel.size,
+                0x000000,
                 0x000000,
             );
             previousLevelGrid.material.opacity = 0.2;
             previousLevelGrid.material.transparent = true;
-            previousLevelGrid.position.x = -(this.previousLevel.size/2) * Level.TILESIZE;
+            previousLevelGrid.position.x = -(this.previousLevel.size / 2) * Level.TILESIZE;
             previousLevelGrid.position.y = -1 * Elevator.MAX_HEIGHT;
-            previousLevelGrid.position.z = this.previousLevel.size/2 * Level.TILESIZE;
+            previousLevelGrid.position.z = this.previousLevel.size / 2 * Level.TILESIZE;
             this.add(previousLevelGrid);
         }
 
         const grid = new THREE.GridHelper(
-            this.level.size * Level.TILESIZE, 
-            this.level.size,  
-            0x000000, 
+            this.level.size * Level.TILESIZE,
+            this.level.size,
+            0x000000,
             0x000000,
         );
         grid.material.opacity = 0.2;
         grid.material.transparent = true;
-        grid.position.x = -(this.level.size/2) * Level.TILESIZE;
+        grid.position.x = -(this.level.size / 2) * Level.TILESIZE;
         grid.position.y = 0 * Elevator.MAX_HEIGHT;
-        grid.position.z = this.level.size/2 * Level.TILESIZE;
+        grid.position.z = this.level.size / 2 * Level.TILESIZE;
         this.add(grid);
 
-        if(this.nextLevel) {
+        if (this.nextLevel) {
             const nextLevelGrid = new THREE.GridHelper(
-                this.nextLevel.size * Level.TILESIZE, 
-                this.nextLevel.size,  
-                0x000000, 
+                this.nextLevel.size * Level.TILESIZE,
+                this.nextLevel.size,
+                0x000000,
                 0x000000,
             );
             nextLevelGrid.material.opacity = 0.2;
             nextLevelGrid.material.transparent = true;
-            nextLevelGrid.position.x = -(this.nextLevel.size/2) * Level.TILESIZE;
+            nextLevelGrid.position.x = -(this.nextLevel.size / 2) * Level.TILESIZE;
             nextLevelGrid.position.y = 1 * Elevator.MAX_HEIGHT;
-            nextLevelGrid.position.z = this.nextLevel.size/2 * Level.TILESIZE;
+            nextLevelGrid.position.z = this.nextLevel.size / 2 * Level.TILESIZE;
             this.add(nextLevelGrid);
         }
 
     }
 
     addBoxes() {
-        if(this.previousLevel) {
-            for(const box of this.previousLevel.boxes) {
+        if (this.previousLevel) {
+            for (const box of this.previousLevel.boxes) {
                 this.addLevelObject(-1, box, 0x808080, 1, this.textures[LevelObjectType.BOX])
             }
         }
-        for(const box of this.level.boxes) {
+        for (const box of this.level.boxes) {
             this.addLevelObject(0, box, 0x808080, 1, this.textures[LevelObjectType.BOX])
         }
-        if(this.nextLevel) {
-            for(const box of this.nextLevel.boxes) {
+        if (this.nextLevel) {
+            for (const box of this.nextLevel.boxes) {
                 this.addLevelObject(1, box, 0x808080, 1, this.textures[LevelObjectType.BOX])
             }
         }
@@ -191,13 +194,13 @@ export default class WebBrowserScene extends THREE.Scene {
 
     addLevelObject(levelIndex: number, object: LevelObject, color: number, opacity: number, texture?: THREE.Texture) {
         const geometry = new THREE.BoxGeometry(object.width, object.height, object.depth);
-        let material = new THREE.MeshStandardMaterial({ 
+        let material = new THREE.MeshStandardMaterial({
             color: color,
-            transparent: true, 
+            transparent: true,
             opacity: opacity,
         });
-        if(texture) {
-            material = new THREE.MeshStandardMaterial({ 
+        if (texture) {
+            material = new THREE.MeshStandardMaterial({
                 map: texture
             });
         }
@@ -212,7 +215,7 @@ export default class WebBrowserScene extends THREE.Scene {
     }
 
     addRobot(
-        robotModel: RobotModel | null, 
+        robotModel: RobotModel | null,
         delta: number
     ) {
         if (robotModel) {
@@ -234,8 +237,8 @@ export default class WebBrowserScene extends THREE.Scene {
     }
 
     addRobotModel(
-        robot: Robot, 
-        robotModel: RobotModel, 
+        robot: Robot,
+        robotModel: RobotModel,
         delta: number
     ) {
         const mixer = robotModel.model.userData.mixer;
@@ -243,7 +246,7 @@ export default class WebBrowserScene extends THREE.Scene {
         const actions = model.userData.actions;
         model.position.set(
             -robot.center.x,
-            robot.center.y - robot.height/2,
+            robot.center.y - robot.height / 2,
             robot.center.z
         );
         model.rotation.y = robot.rotation * (Math.PI / 180);
@@ -252,7 +255,7 @@ export default class WebBrowserScene extends THREE.Scene {
             const currentAction = actions[model.userData.currentAction]
             currentAction.fadeOut(0.2);
             action.reset().fadeIn(0.2);
-        }        
+        }
         if (!robot.animationLoop) {
             action.setLoop(THREE.LoopOnce, 1);
             action.clampWhenFinished = true;
@@ -264,10 +267,10 @@ export default class WebBrowserScene extends THREE.Scene {
     }
 
     addEnemies(
-        enemyModels: {}, 
+        enemyModels: {},
         delta: number
     ) {
-        for(const enemy of this.level.enemies) {
+        for (const enemy of this.level.enemies) {
             let key = `${this.level.index}-${enemy.index}`
             let enemyModel = enemyModels[key]
             if (!enemyModel) {
@@ -278,8 +281,8 @@ export default class WebBrowserScene extends THREE.Scene {
     }
 
     addEnemyModel(
-        enemy: Enemy, 
-        robotModel: RobotModel, 
+        enemy: Enemy,
+        robotModel: RobotModel,
         delta: number
     ) {
         const mixer = robotModel.model.userData.mixer;
@@ -287,7 +290,7 @@ export default class WebBrowserScene extends THREE.Scene {
         const actions = model.userData.actions;
         model.position.set(
             -enemy.center.x,
-            enemy.center.y - enemy.height/2,
+            enemy.center.y - enemy.height / 2,
             enemy.center.z
         );
         model.rotation.y = enemy.rotation * (Math.PI / 180);
@@ -296,7 +299,7 @@ export default class WebBrowserScene extends THREE.Scene {
             const currentAction = actions[model.userData.currentAction]
             currentAction.fadeOut(0.2);
             action.reset().fadeIn(0.2);
-        }        
+        }
         if (!enemy.animationLoop) {
             action.setLoop(THREE.LoopOnce, 1);
             action.clampWhenFinished = true;
@@ -305,6 +308,38 @@ export default class WebBrowserScene extends THREE.Scene {
         mixer.update(delta);
         model.userData.currentAction = enemy.animation;
         this.add(model);
+    }
+
+    addTexts() {
+        this.addText(`LEVEL ${this.level.index+1}`, 100, 18);
+        this.addText(this.level.name, 100, 15);
+        this.addText(this.level.description, 50, 13);
+    }
+
+    addText(text: string, fontSize: number, y: number) {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d') as CanvasRenderingContext2D;
+        canvas.width = 1024;
+        canvas.height = 128;
+        context.font = `bold ${fontSize}px Arial`;
+        context.fillStyle = '#e0e0e0';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillText(text, canvas.width / 2, canvas.height / 2);
+        const texture = new THREE.CanvasTexture(canvas);
+        const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+        const aspect = canvas.width / canvas.height;
+        const geometry = new THREE.PlaneGeometry(
+            aspect * 2, 2
+        );
+        const textMesh = new THREE.Mesh(geometry, material);
+        textMesh.position.set(
+            (-this.level.size / 2 * Level.TILESIZE),
+            y,
+            this.level.size * Level.TILESIZE
+        );
+        textMesh.rotateY(180 * (Math.PI / 180));
+        this.add(textMesh);
     }
 
 }   

@@ -2,6 +2,8 @@ import LevelConfig from "../../domain/interface/level_config";
 
 export const level2: LevelConfig = {
     index: 1,
+    name: "The friend",
+    description: "Silence is golden",
     size: 6,
     boxes: [
         {
@@ -43,7 +45,6 @@ export const level2: LevelConfig = {
     ],
     robot: {
         x: 3,
-        y: 0,
         z: 3,
     },
     elevator: {
@@ -57,6 +58,7 @@ export const level2: LevelConfig = {
             z: 5,
             runningSpeed: 2,
             walkingSpeed: 1,
+            earSight: 60,
         }
     ]
 }

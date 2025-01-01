@@ -2,6 +2,8 @@ import LevelConfig from "../../domain/interface/level_config";
 
 export const level6: LevelConfig = {
     index: 5,
+    name: "Corridors",
+    description: "Noisy stealth",
     size: 12,
     boxes: [
         {
@@ -244,7 +246,7 @@ export const level6: LevelConfig = {
             rotation: 0,
             eyeSight: 15,
             earSight: 50,
-            runningSpeed: 2
+            runningSpeed: 3
         },
         {
             index: 7,
@@ -252,8 +254,8 @@ export const level6: LevelConfig = {
             z: 7,
             rotation: 180,
             eyeSight: 15,
-            earSight: 30,
-            runningSpeed: 2
+            earSight: 10,
+            runningSpeed: 3
         },
         {
             index: 8,
@@ -261,8 +263,8 @@ export const level6: LevelConfig = {
             z: 9,
             rotation: 270,
             eyeSight: 15,
-            earSight: 30,
-            runningSpeed: 2
+            earSight: 10,
+            runningSpeed: 3
         }
     ]
 }

@@ -7,6 +7,7 @@ import WebBrowserCamera from './web_browser_camera';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import RobotModel from './robot_model';
 import LevelObjectType from '../domain/level_object_type';
+import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 
 export default class WebBrowserGame {
 

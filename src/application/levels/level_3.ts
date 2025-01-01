@@ -3,6 +3,8 @@ import LevelConfig from "../../domain/interface/level_config";
 export const level3: LevelConfig = {
     index: 2,
     size: 5,
+    name: "Artificially intelligent",
+    description: "Silence is not golden",
     boxes: [
         {
             x: 3,
@@ -23,7 +25,6 @@ export const level3: LevelConfig = {
     ],
     robot: {
         x: 0,
-        y: 0,
         z: 0,
     },
     elevator: {

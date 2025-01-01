@@ -3,6 +3,8 @@ import LevelConfig from "../../domain/interface/level_config";
 export const level4: LevelConfig = {
     index: 3,
     size: 8,
+    name: "The twins",
+    description: "Outsmarting combo",
     boxes: [
         {
             x: 0,
@@ -67,7 +69,6 @@ export const level4: LevelConfig = {
     ],
     robot: {
         x: 4,
-        y: 0,
         z: 4,
     },
     elevator: {

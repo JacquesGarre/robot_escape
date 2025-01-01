@@ -5,6 +5,8 @@ import RobotConfig from "./robot_config";
 
 export default interface LevelConfig {
     index: number;
+    name: string;
+    description: string;
     size: number;
     boxes?: BoxConfig[] | undefined;
     robot: RobotConfig;
