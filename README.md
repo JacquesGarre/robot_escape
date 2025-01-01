@@ -26,7 +26,9 @@ Please, feel free to contribute, give ideas, improve the code, add features, add
 - can run in all directions
 - can follow a given "looping path"
 - can hear a noise until a certain distance (earSight)
+- when hearing a noise, they will go to its location to inspect it
 - can see until a certain distance (eyeSight + 60º field of view)
+- when spotting the main character, they will chase it
 
 ## Requirements
 - node v20
