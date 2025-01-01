@@ -3,7 +3,7 @@ import LevelConfig from "../../domain/interface/level_config";
 export const level8: LevelConfig = {
     index: 7,
     name: "The corridor",
-    description: "The very end of the corner",
+    description: "This one completely lost his earing",
     size: 8,
     boxes: [
         {
@@ -105,6 +105,7 @@ export const level8: LevelConfig = {
             x: 3,
             z: 7,
             rotation: 180,
+            earSight: 0,
             loopingPath: [
                 {
                     x: 3,

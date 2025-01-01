@@ -8,7 +8,7 @@ export const level1: LevelConfig = {
     boxes: [
         {
             x:1,
-            z:3
+            z:1
         }
     ],
     robot: {
