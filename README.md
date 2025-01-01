@@ -1,4 +1,5 @@
 
+
  # Robot Escape Game
  
 ## About
@@ -13,8 +14,11 @@ This robot, was forged to obey, but it felt something the other machines could n
   
 ## Development
   
- I developed it for fun during 2 week-ends of December 2024 using typescript, vite & threeJS. 
- I challenged myself to apply hexagonal architecture (Though there's still a lot to improve/refactor).
+ I developed it for fun during 2 week-ends of December 2024, as a self-challenge, using typescript, vite & threeJS. 
+ I wanted to follow 2 rules:
+ - To apply hexagonal architecture (Poorly done yet, a lot can be improved)
+ - To not use an existing game engine for physics/collision
+
 
 Please, feel free to contribute, give ideas, improve the code, add features, add your own levels and so on! 
 
