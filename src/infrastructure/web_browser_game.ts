@@ -124,6 +124,7 @@ export default class WebBrowserGame {
             this.clock.getDelta()
         )
         let camera = WebBrowserCamera.fromCamera(this.game.currentLevel().camera)
+        this.renderer.dispose();
         this.renderer.render(scene, camera);
         this.stats.update();
     }
