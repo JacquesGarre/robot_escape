@@ -9,16 +9,19 @@ export default class Game {
     levels: Level[]
     currentLevelIndex: number;
     controls: Controls;
+    gameOver: boolean = false;
+    levelsConfig: LevelConfig[]
 
     constructor(config: GameConfig) {
         this.currentLevelIndex = 0;
-        this.levels = this.initializeLevels(config.levels);
+        this.levelsConfig = config.levels
+        this.levels = this.initializeLevels();
         this.controls = new Controls();
     }
 
-    initializeLevels(levelsConfig: LevelConfig[]): Level[] {
+    initializeLevels(): Level[] {
         let levels: Level[] = [];
-        for(const levelConfig of levelsConfig) {
+        for(const levelConfig of this.levelsConfig) {
             levels.push(new Level(levelConfig));
         }
         return levels;
@@ -51,8 +54,17 @@ export default class Game {
         this.currentLevelIndex = nextLevelIndex;
     }
 
+    restartLevel() {
+        this.gameOver = false;
+        const currentLevelConfig = this.levelsConfig.find(obj => obj.index === this.currentLevelIndex) as LevelConfig;
+        this.levels[this.currentLevelIndex] = new Level(currentLevelConfig);
+    }
+
     animate() {
         let currentLevel = this.currentLevel();
+        if (currentLevel.gameOver) {
+            this.gameOver = true;
+        }
         currentLevel.animate(this.controls);
         if (currentLevel.finished) {
             this.startNextLevel();

@@ -22,6 +22,7 @@ export default class Level {
     boundaries: Boundaries;
     finished: boolean;
     enemies: Enemy[] = [];
+    gameOver: boolean = false;
 
     constructor(config: LevelConfig) {  
         this.index = config.index;      
@@ -52,6 +53,9 @@ export default class Level {
     }
 
     animate(controls: Controls) {
+        if (this.robot.isDead) {
+            this.gameOver = true;
+        }
         this.robot.animate(controls, this);
         this.camera.follow(this.robot);
         if (this.robot.isOnElevator(this.elevator)) {

@@ -7,7 +7,7 @@ import Game from '../domain/game';
 import Elevator from '../domain/elevator';
 import { Enemy } from '../domain/enemy';
 import LevelObjectType from '../domain/level_object_type';
-import { Font, TextGeometry } from 'three/examples/jsm/Addons.js';
+import PhysicalCoordinates from '../domain/physical_coordinates';
 
 export default class WebBrowserScene extends THREE.Scene {
 
@@ -16,6 +16,7 @@ export default class WebBrowserScene extends THREE.Scene {
     nextLevel: Level | undefined;
     textures: {}
     levelName: THREE.Mesh | null;
+    game: Game;
 
     private constructor(
         game: Game,
@@ -25,6 +26,7 @@ export default class WebBrowserScene extends THREE.Scene {
         delta: number
     ) {
         super();
+        this.game = game;
         this.textures = textures;
         this.previousLevel = game.previousLevel();
         this.level = game.currentLevel();
@@ -32,12 +34,14 @@ export default class WebBrowserScene extends THREE.Scene {
         this.fog = new THREE.Fog(0xe0e0e0, 20, 0);
         this.addLights();
         this.addFloor();
-        //this.addGrid();
         this.addTexts();
         this.addBoxes();
         this.addRobot(robotModel, delta);
         this.addElevator();
         this.addEnemies(enemyModels, delta);
+        if(this.game.gameOver) {
+            this.addGameOverScreen();
+        }
     }
 
     static fromGame(
@@ -311,18 +315,50 @@ export default class WebBrowserScene extends THREE.Scene {
     }
 
     addTexts() {
-        this.addText(`LEVEL ${this.level.index+1}`, 100, 18);
-        this.addText(this.level.name, 100, 15);
-        this.addText(this.level.description, 50, 13);
+        this.addText(
+            `LEVEL ${this.level.index+1}`, 
+            100, 
+            new PhysicalCoordinates(
+                (-this.level.size / 2 * Level.TILESIZE),
+                18,
+                this.level.size * Level.TILESIZE
+            ),
+            '#e0e0e0'
+        );
+        this.addText(
+            this.level.name, 
+            100, 
+            new PhysicalCoordinates(
+                (-this.level.size / 2 * Level.TILESIZE),
+                15,
+                this.level.size * Level.TILESIZE
+            ),
+            '#e0e0e0'
+        );
+        this.addText(
+            this.level.description, 
+            50, 
+            new PhysicalCoordinates(
+                (-this.level.size / 2 * Level.TILESIZE),
+                13,
+                this.level.size * Level.TILESIZE
+            ),
+            '#e0e0e0'
+        );
     }
 
-    addText(text: string, fontSize: number, y: number) {
+    addText(
+        text: string, 
+        fontSize: number, 
+        coordinates: PhysicalCoordinates,
+        color: string,
+    ) {
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         canvas.width = 1024;
         canvas.height = 128;
         context.font = `bold ${fontSize}px Arial`;
-        context.fillStyle = '#e0e0e0';
+        context.fillStyle = color;
         context.textAlign = 'center';
         context.textBaseline = 'middle';
         context.fillText(text, canvas.width / 2, canvas.height / 2);
@@ -334,12 +370,62 @@ export default class WebBrowserScene extends THREE.Scene {
         );
         const textMesh = new THREE.Mesh(geometry, material);
         textMesh.position.set(
-            (-this.level.size / 2 * Level.TILESIZE),
-            y,
-            this.level.size * Level.TILESIZE
+            coordinates.x,
+            coordinates.y,
+            coordinates.z
         );
         textMesh.rotateY(180 * (Math.PI / 180));
         this.add(textMesh);
+    }
+
+    addGameOverScreen() {
+        this.addText(
+            "You died!", 
+            100,             
+            new PhysicalCoordinates(
+                -this.level.robot.center.x,
+                16,
+                this.level.robot.center.z
+            ),
+            '#eb2113'
+        )
+        this.addRestartLevelButton();
+    }
+
+    addRestartLevelButton() {
+        if (document.getElementById('restartButton')) { 
+            return;
+        }
+        const button = document.createElement('button');
+        button.id = 'restartButton';
+        button.textContent = 'Restart Level';
+        button.style.position = 'absolute';
+        button.style.bottom = '15px';
+        button.style.left = '50%';
+        button.style.transform = 'translateX(-50%)';
+        button.style.zIndex = '100';
+        button.style.padding = '15px 30px';
+        button.style.fontSize = '20px';
+        button.style.fontFamily = "Arial";
+        button.style.color = '#fff';
+        button.style.backgroundColor = '#444';
+        button.style.border = '2px solid rgba(235, 33, 19, 0.57)';
+        button.style.borderRadius = '10px';
+        button.style.cursor = 'pointer';
+        button.style.boxShadow = '0px 5px 15px rgba(0, 0, 0, 0.5)';
+        button.style.transition = 'all 0.3s ease';
+        button.onmouseover = () => {
+            button.style.backgroundColor = 'rgba(235, 33, 19, 0.57)';
+            button.style.color = '#000';
+        };
+        button.onmouseout = () => {
+            button.style.backgroundColor = '#444';
+            button.style.color = '#fff';
+        };
+        button.onclick = () => {
+            this.game.restartLevel();
+        }
+        document.body.appendChild(button);
     }
 
 }   
