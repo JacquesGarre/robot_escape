@@ -13,7 +13,7 @@ export default class Game {
     levelsConfig: LevelConfig[]
 
     constructor(config: GameConfig) {
-        this.currentLevelIndex = 12;
+        this.currentLevelIndex = 0;
         this.levelsConfig = config.levels
         this.levels = this.initializeLevels();
         this.controls = new Controls();
