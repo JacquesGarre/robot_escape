@@ -112,6 +112,17 @@ export default class WebBrowserGame {
                 console.error(e);
             }
         );
+        textureLoader.load(
+            'src/infrastructure/textures/movable_box.jpg',
+            (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                this.textures[LevelObjectType.MOVABLE_BOX] = texture;
+            },
+            undefined,
+            (e) => {
+                console.error(e);
+            }
+        );
     }
 
     animate() {

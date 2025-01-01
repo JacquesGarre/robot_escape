@@ -3,7 +3,7 @@ import LevelConfig from "../../domain/interface/level_config";
 export const level6: LevelConfig = {
     index: 5,
     name: "The maze",
-    description: "Be very stealth",
+    description: "Hearing loss",
     size: 12,
     boxes: [
         {
@@ -245,7 +245,7 @@ export const level6: LevelConfig = {
             z: 9,
             rotation: 0,
             eyeSight: 15,
-            earSight: 50,
+            earSight: 60,
             runningSpeed: 3
         },
         {
@@ -254,7 +254,7 @@ export const level6: LevelConfig = {
             z: 7,
             rotation: 180,
             eyeSight: 15,
-            earSight: 10,
+            earSight: 12,
             runningSpeed: 3
         },
         {
@@ -263,7 +263,7 @@ export const level6: LevelConfig = {
             z: 9,
             rotation: 270,
             eyeSight: 15,
-            earSight: 10,
+            earSight: 12,
             runningSpeed: 3
         }
     ]

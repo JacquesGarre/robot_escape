@@ -6,6 +6,9 @@ import {level3} from "./src/application/levels/level_3";
 import {level4} from "./src/application/levels/level_4";
 import {level5} from "./src/application/levels/level_5";
 import {level6} from "./src/application/levels/level_6";
+import {level7} from "./src/application/levels/level_7";
+import {level8} from "./src/application/levels/level_8";
+import {level9} from "./src/application/levels/level_9";
 
 const game = new Game({
     levels: [
@@ -15,6 +18,9 @@ const game = new Game({
         level4,
         level5,
         level6,
+        level7,
+        level8,
+        level9,
     ]
 });
 WebBrowserGame.start(game);

@@ -65,7 +65,7 @@ export default class Utils {
         const targetNode: PathNode = { x: target.x, z: target.z, g: 0, h: 0, f: 0 };
         openSet.push(startNode);
         while (openSet.length > 0) {
-            openSet.sort((a, b) => a.f - b.f);
+            openSet.sort((a: PathNode, b: PathNode) => a.f - b.f);
             const current = openSet.shift()!;
             if (current.x === targetNode.x && current.z === targetNode.z) {
                 const path: PathNode[] = [];

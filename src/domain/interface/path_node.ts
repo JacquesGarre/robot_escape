@@ -1,7 +1,7 @@
 export default interface PathNode {
     x: number;
     z: number;
-    g: number; 
-    h: number; 
-    f: number; 
+    g?: number | undefined; 
+    h?: number | undefined; 
+    f?: number | undefined; 
 }

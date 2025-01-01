@@ -75,7 +75,8 @@ export default class Level {
             Array(this.size).fill(0)
         );
         this.boxes.forEach(box => {
-            levelGrid[box.coordinates.x][box.coordinates.z] = 1;
+            let coordinates = box.getGridCoordinates()
+            levelGrid[coordinates.x][coordinates.z] = 1;
         });
         levelGrid[this.elevator.coordinates.x][this.elevator.coordinates.z] = 1;
         return levelGrid

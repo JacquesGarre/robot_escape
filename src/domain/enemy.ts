@@ -20,6 +20,7 @@ export class Enemy extends LevelObject {
     target: LevelObject | null;
     goingToTargetAnimation: RobotState = RobotState.RUNNING;
     path: PathNode[] | null;
+    loopingPath: PathNode[] | undefined;
     walkingSpeed: number;
     runningSpeed: number;
     playingNothingFoundSound: boolean = false;
@@ -49,6 +50,7 @@ export class Enemy extends LevelObject {
         this.animationLoop = true;
         this.target = null;
         this.path = null;
+        this.loopingPath = config.loopingPath;
         this.walkingSpeed = config.walkingSpeed ?? Enemy.DEFAULT_WALKING_SPEED;
         this.runningSpeed = config.runningSpeed ?? Enemy.DEFAULT_RUNNING_SPEED;
     }
@@ -85,6 +87,11 @@ export class Enemy extends LevelObject {
 
     runningAnimation() {
         this.animation = RobotState.RUNNING
+        this.animationLoop = true;
+    }
+
+    walkingAnimation() {
+        this.animation = RobotState.WALKING
         this.animationLoop = true;
     }
 
@@ -153,6 +160,20 @@ export class Enemy extends LevelObject {
         if (this.canSee(level.robot, level)) {
             this.setTarget(level.robot, RobotState.RUNNING)
         }
+        if (this.loopingPath && !this.target) {
+            this.loopPath()
+        }
+    }
+
+    loopPath() {
+        if (!this.loopingPath) {
+            return;
+        }
+        if (!this.path || this.path?.length == 0) {
+            this.path = [...this.loopingPath];
+        }
+        this.walkingAnimation()
+        this.followPath(this.path, Utils.round(0.1 * this.walkingSpeed))
     }
 
     goToTarget(object: LevelObject, level: Level) {
@@ -166,8 +187,14 @@ export class Enemy extends LevelObject {
             x: Math.floor(object.center.x / Level.TILESIZE),
             z: Math.floor(object.center.z / Level.TILESIZE),
         };
+        let previousPath = this.path;
         this.path = Utils.findPath(start, target, grid);
-        this.followPath(object, level)
+        if (this.path.length == 0 && !previousPath) {
+            this.path = null;
+            this.target = null;
+            return;
+        }
+        this.followObject(object, level)
     }
 
     goToTargetAnimation() {
@@ -183,28 +210,34 @@ export class Enemy extends LevelObject {
         return Utils.round(0.1 * speed)
     }
 
-    followPath(object: LevelObject, level: Level) {
+    followPath(path: PathNode[] | null, speed: number) {
+        if (!path || path.length == 0) {
+            return;
+        }
+        const target = path[0];
+        const targetX = Utils.round(target.x * Level.TILESIZE + (Level.TILESIZE / 2))
+        const targetZ = Utils.round(target.z * Level.TILESIZE + (Level.TILESIZE / 2))
+        this.rotateTowards(targetX, targetZ)
+        const deltaX = targetX - this.center.x;
+        const deltaZ = targetZ - this.center.z;
+        const distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+        if (distance < 0.1) { 
+            path.shift();
+            return;
+        }
+        const directionX = deltaX / distance;
+        const directionZ = deltaZ / distance;
+        this.center.x += directionX * speed;
+        this.center.z += directionZ * speed;
+    }
+
+    followObject(object: LevelObject, level: Level) {
         if (!this.path) {
             return;
         }
         const speed = this.goToTargetSpeed()
         if (this.path.length > 0) {
-            const target = this.path[0];
-            const targetX = Utils.round(target.x * Level.TILESIZE + (Level.TILESIZE / 2))
-            const targetZ = Utils.round(target.z * Level.TILESIZE + (Level.TILESIZE / 2))
-            this.rotateTowards(targetX, targetZ)
-            const deltaX = targetX - this.center.x;
-            const deltaZ = targetZ - this.center.z;
-            const distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
-            if (distance < 0.1) { 
-                this.path.shift();
-                return;
-            }
-            const directionX = deltaX / distance;
-            const directionZ = deltaZ / distance;
-            
-            this.center.x += directionX * speed;
-            this.center.z += directionZ * speed;
+            this.followPath(this.path, speed);
         } else {
             const targetX = object.center.x
             const targetZ =  object.center.z

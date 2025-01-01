@@ -182,15 +182,15 @@ export default class WebBrowserScene extends THREE.Scene {
     addBoxes() {
         if (this.previousLevel) {
             for (const box of this.previousLevel.boxes) {
-                this.addLevelObject(-1, box, 0x808080, 1, this.textures[LevelObjectType.BOX])
+                this.addLevelObject(-1, box, 0x808080, 1, this.textures[box.type])
             }
         }
         for (const box of this.level.boxes) {
-            this.addLevelObject(0, box, 0x808080, 1, this.textures[LevelObjectType.BOX])
+            this.addLevelObject(0, box, 0x808080, 1, this.textures[box.type])
         }
         if (this.nextLevel) {
             for (const box of this.nextLevel.boxes) {
-                this.addLevelObject(1, box, 0x808080, 1, this.textures[LevelObjectType.BOX])
+                this.addLevelObject(1, box, 0x808080, 1, this.textures[box.type])
             }
         }
 

@@ -48,7 +48,7 @@ export default class Robot extends LevelObject {
             let direction = controls.direction()
             let object = this.willCollideWithLevelObject(direction, level, distance);
             if (object) {
-                this.bumpInto(object, level)
+                this.bumpInto(object, level, direction)
             } else {
                 this.move(controls, level, distance)
             }
@@ -57,7 +57,7 @@ export default class Robot extends LevelObject {
         }
     }
 
-    bumpInto(object: Box | Enemy | Elevator, level: Level) {
+    bumpInto(object: Box | Enemy | Elevator, level: Level, direction?: string | null) {
         switch(object.type) {
             case LevelObjectType.ENEMY:
                 let enemy: Enemy = object as Enemy;
@@ -77,6 +77,13 @@ export default class Robot extends LevelObject {
                     }
                 }
             break;
+            case LevelObjectType.MOVABLE_BOX:
+                if (!direction) {
+                    return;
+                }
+                let box: Box = object as Box;
+                box.moveTo(level, direction);
+            break;
         }
     }
 
@@ -88,6 +95,11 @@ export default class Robot extends LevelObject {
         this.isDead = true;
         this.animation = RobotState.DEATH
         this.animationLoop = false;
+    }
+
+    walkingAnimation() {
+        this.animation = RobotState.WALKING
+        this.animationLoop = true;
     }
 
     brokenAnimation() {
