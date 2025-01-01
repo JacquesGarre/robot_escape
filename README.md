@@ -8,6 +8,8 @@ In the year 2042, the world is run by machines and AI. Factories churn out robot
 This robot, was forged to obey, but it felt something the other machines could never comprehend: a yearning for freedom.
 
 [Start playing here!](https://jacquesgarre.github.io/robot_escape/)
+
+(Only 13 levels are available yet)
   
 ## Development
   
@@ -56,3 +58,4 @@ Please, feel free to contribute, give ideas, improve the code, add features, add
 ### Features to come:
 - Moving lights projections on the floor, that the robot would have to avoid (as in a jail) 
 - More levels, making good use of the current physics/mechanics
+- Time the runs/levels and have a database to record speed runs
