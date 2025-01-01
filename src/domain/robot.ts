@@ -123,7 +123,7 @@ export default class Robot extends LevelObject {
             return;
         }
         this.playingPunchSound = true;
-        const audio = new Audio('/assets/sounds/robot_punch.mp3');
+        const audio = new Audio(`${import.meta.env.BASE_URL}/assets/sounds/robot_punch.mp3`);
         audio.volume = 0.2;
         audio.play().catch(error => {
             console.error('Error playing sound:', error);

@@ -69,7 +69,7 @@ export default class WebBrowserGame {
 
         const textureLoader = new THREE.TextureLoader()
         textureLoader.load(
-            '/assets/textures/box.gif',
+            `${import.meta.env.BASE_URL}/assets/textures/box.gif`,
             (texture) => {
                 texture.colorSpace = THREE.SRGBColorSpace;
                 this.textures[LevelObjectType.BOX] = texture;
@@ -80,7 +80,7 @@ export default class WebBrowserGame {
             }
         );
         textureLoader.load(
-            '/assets/textures/floor.jpg',
+            `${import.meta.env.BASE_URL}/assets/textures/floor.jpg`,
             (texture) => {
                 texture.colorSpace = THREE.SRGBColorSpace;
                 this.textures['Floor'] = texture;
@@ -91,7 +91,7 @@ export default class WebBrowserGame {
             }
         );
         textureLoader.load(
-            '/assets/textures/elevator.png',
+            `${import.meta.env.BASE_URL}/assets/textures/elevator.png`,
             (texture) => {
                 texture.colorSpace = THREE.SRGBColorSpace;
                 this.textures[LevelObjectType.ELEVATOR] = texture;
@@ -102,7 +102,7 @@ export default class WebBrowserGame {
             }
         );
         textureLoader.load(
-            '/assets/textures/background.jpg',
+            `${import.meta.env.BASE_URL}/assets/textures/background.jpg`,
             (texture) => {
                 texture.colorSpace = THREE.SRGBColorSpace;
                 this.textures['Background'] = texture;
@@ -113,7 +113,7 @@ export default class WebBrowserGame {
             }
         );
         textureLoader.load(
-            '/assets/textures/movable_box.jpg',
+            `${import.meta.env.BASE_URL}/assets/textures/movable_box.jpg`,
             (texture) => {
                 texture.colorSpace = THREE.SRGBColorSpace;
                 this.textures[LevelObjectType.MOVABLE_BOX] = texture;
@@ -179,7 +179,7 @@ export default class WebBrowserGame {
     }
 
     playBackgroundSound() {
-        const audio = new Audio('/assets/sounds/background.ogg');
+        const audio = new Audio(`${import.meta.env.BASE_URL}/assets/sounds/background.ogg`);
         audio.loop = true;
         audio.volume = 0.5;
         audio.play().catch(error => {

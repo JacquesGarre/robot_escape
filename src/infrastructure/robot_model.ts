@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 export default class RobotModel {
 
-    static MODEL_FILE = '/assets/models/Robot.glb';
+    static MODEL_FILE = `${import.meta.env.BASE_URL}/assets/models/Robot.glb`;
 
     model: THREE.Group<THREE.Object3DEventMap>;
     
