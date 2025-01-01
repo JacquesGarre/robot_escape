@@ -423,6 +423,10 @@ export default class WebBrowserScene extends THREE.Scene {
             button.style.color = '#fff';
         };
         button.onclick = () => {
+            const btn = document.getElementById('restartButton');
+            if  (btn) {
+                btn.remove();
+            }
             this.game.restartLevel();
         }
         document.body.appendChild(button);
