@@ -122,7 +122,7 @@ export const level13: LevelConfig = {
             index: 22,
             x: 0,
             z: 8,
-            earSight: 0,
+            earSight: 15,
             eyeSight: 0,
             walkingSpeed: 1.5,
             loopingPath: [
@@ -184,7 +184,7 @@ export const level13: LevelConfig = {
             index: 23,
             x: 4,
             z: 8,
-            earSight: 0,
+            earSight: 15,
             eyeSight: 0,
             walkingSpeed: 1.5,
             loopingPath: [
@@ -242,7 +242,7 @@ export const level13: LevelConfig = {
             index: 24,
             x: 7,
             z: 5,
-            earSight: 0,
+            earSight: 15,
             eyeSight: 0,
             walkingSpeed: 1.5,
             loopingPath: [
@@ -300,7 +300,7 @@ export const level13: LevelConfig = {
             index: 25,
             x: 1,
             z: 5,
-            earSight: 0,
+            earSight: 15,
             eyeSight: 0,
             walkingSpeed: 1.5,
             loopingPath: [
@@ -358,7 +358,7 @@ export const level13: LevelConfig = {
             index: 26,
             x: 3,
             z: 0,
-            earSight: 0,
+            earSight: 15,
             eyeSight: 0,
             walkingSpeed: 1.5,
             loopingPath: [
@@ -408,7 +408,7 @@ export const level13: LevelConfig = {
             index: 27,
             x: 6,
             z: 1,
-            earSight: 0,
+            earSight: 15,
             eyeSight: 0,
             walkingSpeed: 1.5,
             loopingPath: [
@@ -458,7 +458,7 @@ export const level13: LevelConfig = {
             index: 28,
             x: 9,
             z: 1,
-            earSight: 0,
+            earSight: 15,
             eyeSight: 0,
             walkingSpeed: 1.5,
             loopingPath: [
