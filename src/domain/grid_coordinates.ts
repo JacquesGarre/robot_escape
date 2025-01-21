@@ -1,6 +1,6 @@
 export default class GridCoordinates {
 
-    x: number;
+    x: number; // TODO: those number have rules, go for value objects
     z: number;
 
     constructor(x: number, z: number) {
