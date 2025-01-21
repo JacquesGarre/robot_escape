@@ -12,7 +12,7 @@ export default class Elevator extends LevelObject {
     static SPEED = 0.65;
     static MAX_HEIGHT = 50;
 
-    playingSound: boolean = false;
+    playingSound: boolean = false; // TODO: Nothing to do here, have a state "moving" or not, then play the sound in infrastructure
 
     constructor(config: ElevatorConfig) {
         super({
@@ -29,9 +29,9 @@ export default class Elevator extends LevelObject {
         if (this.hasReachedTop()) {
             return;
         }
-        this.playSound();
+        this.playSound(); // TODO : Nothing to do here, should be in infra layer
         robot.center.y += Elevator.SPEED
-        this.setHeight(this.height + Elevator.SPEED)
+        this.setHeight(this.height + Elevator.SPEED) // TODO: Fix this ugly thing
     }
 
     setHeight(newHeight: number) {
@@ -44,7 +44,7 @@ export default class Elevator extends LevelObject {
     }
 
     
-    playSound() {
+    playSound() { // TODO: Move that to infra 
         if(this.playingSound) {
             return;
         }
