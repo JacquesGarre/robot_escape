@@ -9,7 +9,7 @@ export default class Boundaries {
     zMin: number;
     zMax: number;
 
-    constructor(config: BoundariesConfig) { // TODO: Make private and have a fromConfig factory method?
+    constructor(config: BoundariesConfig) {
         this.xMin = config.xMin;
         this.xMax = config.xMax;
         this.yMin = config.yMin;
