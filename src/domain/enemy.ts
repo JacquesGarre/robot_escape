@@ -11,21 +11,21 @@ import Utils from "./utils";
 
 export class Enemy extends LevelObject {
 
-    index: number; 
+    index: number; // TODO: Value object here, that number is not random, it's an int, etc...
     coordinates: GridCoordinates;
-    animation: RobotState;
-    animationLoop: boolean;
-    eyeSight: number;
-    earSight: number;
+    animation: RobotState; // TODO: Rename "animation" to State then?!
+    animationLoop: boolean; // TODO: Should actually be in infra layer
+    eyeSight: number; // TODO: Value object here, that number is not random, it has rules
+    earSight: number;  // TODO: Value object here, that number is not random, it has rules
     target: LevelObject | null;
-    goingToTargetAnimation: RobotState = RobotState.RUNNING;
-    path: PathNode[] | null;
-    loopingPath: PathNode[] | undefined;
-    walkingSpeed: number;
-    runningSpeed: number;
-    playingNothingFoundSound: boolean = false;
-    playingTargetAcquiredSound: boolean = false;
-    playingTargetNeutralizedSound: boolean = false;
+    goingToTargetAnimation: RobotState = RobotState.RUNNING; // TODO: Remove this ugly thing.
+    path: PathNode[] | null; // TODO: Have a Path value object, and maybe rename it to current path?
+    loopingPath: PathNode[] | undefined; // TODO: An enemy can only have one path?! the in-loop could be part of path value object
+    walkingSpeed: number; // TODO: value object, has rules
+    runningSpeed: number; // TODO: value object, has rules
+    playingNothingFoundSound: boolean = false; // TODO: Move to infra
+    playingTargetAcquiredSound: boolean = false; // TODO: Move to infra
+    playingTargetNeutralizedSound: boolean = false; // TODO: Move to infra
 
     static DEFAULT_RUNNING_SPEED = 3;
     static DEFAULT_WALKING_SPEED = 1;
@@ -67,8 +67,17 @@ export class Enemy extends LevelObject {
         this.rotation = -angleDegrees
     }
 
-    jumpAnimation() {
-        this.animation = RobotState.JUMP
+    jumpAnimation() { // TODO: Should be just "jump()"
+        this.animation = RobotState.JUMP // TODO: this.state = RobotState.JUMP...
+        this.animationLoop = false; // TODO: remove this, should be in infra
+        setTimeout(() => {  // TODO : Remove this, should be in infra
+            this.animation = RobotState.IDLE
+            this.animationLoop = true;
+        }, 800)
+    }
+
+    punchAnimation() { // TODO: Should be just "punch()"
+        this.animation = RobotState.PUNCH // TODO: cf jumpAnimation() method...
         this.animationLoop = false;
         setTimeout(() => {
             this.animation = RobotState.IDLE
@@ -76,26 +85,17 @@ export class Enemy extends LevelObject {
         }, 800)
     }
 
-    punchAnimation() {
-        this.animation = RobotState.PUNCH
-        this.animationLoop = false;
-        setTimeout(() => {
-            this.animation = RobotState.IDLE
-            this.animationLoop = true;
-        }, 800)
-    }
-
-    runningAnimation() {
+    runningAnimation() { // TODO: cf jumpAnimation() method...
         this.animation = RobotState.RUNNING
         this.animationLoop = true;
     }
 
-    walkingAnimation() {
+    walkingAnimation() { // TODO: cf jumpAnimation() method...
         this.animation = RobotState.WALKING
         this.animationLoop = true;
     }
 
-    hasInEyeSightCone(robot: Robot) {
+    hasInEyeSightCone(robot: Robot) { // TODO: Better naming?!
         const x1 = this.center.x;
         const z1 = this.center.z;
         const x2 = robot.center.x;
@@ -126,7 +126,7 @@ export class Enemy extends LevelObject {
         const couldSee = currentDistance <= this.eyeSight && this.hasInEyeSightCone(robot)
         if (couldSee) {
             for (const box of level.boxes) {
-                if (Utils.isObstructed(x1, z1, x2, z2, box.center.x, box.center.z, box.width)) {
+                if (Utils.isObstructed(x1, z1, x2, z2, box.center.x, box.center.z, box.width)) { // TODO: sthg like box.isObstructingView(enemy, robot) ?! 
                     return false;
                 }
             }
@@ -147,14 +147,14 @@ export class Enemy extends LevelObject {
         return canHear
     }
 
-    setTarget(object: LevelObject, goingToTargetAnimation: RobotState) {
-        this.playTargetAcquiredSound();
+    setTarget(object: LevelObject, goingToTargetAnimation: RobotState) { // TODO: refacto this, does not make sense to have goingToTargetAnimation
+        this.playTargetAcquiredSound(); // TODO: infra layer
         this.target = object;
         this.goingToTargetAnimation = goingToTargetAnimation;
     }
 
-    animate(level: Level) {
-        if (this.target) {
+    animate(level: Level) { // TODO: Apply state pattern here no ifs needed
+        if (this.target) {  
             this.goToTarget(this.target, level);
         }
         if (this.canSee(level.robot, level)) {
@@ -165,7 +165,7 @@ export class Enemy extends LevelObject {
         }
     }
 
-    loopPath() {
+    loopPath() { // TODO: Review that ugly method, what does it mean?! "walk that path in repeat?!"
         if (!this.loopingPath) {
             return;
         }
@@ -173,10 +173,10 @@ export class Enemy extends LevelObject {
             this.path = [...this.loopingPath];
         }
         this.walkingAnimation()
-        this.followPath(this.path, Utils.round(0.1 * this.walkingSpeed))
+        this.followPath(this.path, Utils.round(0.1 * this.walkingSpeed)) 
     }
 
-    goToTarget(object: LevelObject, level: Level) {
+    goToTarget(object: LevelObject, level: Level) { // TODO: State pattern
         this.goToTargetAnimation();
         let grid = level.gridRepresentation()
         const start = {
@@ -197,12 +197,12 @@ export class Enemy extends LevelObject {
         this.followObject(object, level)
     }
 
-    goToTargetAnimation() {
+    goToTargetAnimation() { // TODO: Cf jumpAnimation()
         this.animation = this.goingToTargetAnimation;
         this.animationLoop = true;
     }
 
-    goToTargetSpeed() {
+    goToTargetSpeed() {  // TODO: State pattern
         const speed = this.goingToTargetAnimation == RobotState.RUNNING 
             ? this.runningSpeed
             : this.walkingSpeed;
@@ -231,7 +231,7 @@ export class Enemy extends LevelObject {
         this.center.z += directionZ * speed;
     }
 
-    followObject(object: LevelObject, level: Level) {
+    followObject(object: LevelObject, level: Level) { // TODO: Refacto this whole thing
         if (!this.path) {
             return;
         }
@@ -239,13 +239,13 @@ export class Enemy extends LevelObject {
         if (this.path.length > 0) {
             this.followPath(this.path, speed);
         } else {
-            const targetX = object.center.x
-            const targetZ =  object.center.z
-            const deltaX = targetX - this.center.x;
-            const deltaZ = targetZ - this.center.z;
+            const targetX = object.center.x  // TODO: that whole block can be in a method, maybe using the enum that should exist : direction.betweenObjectAndTarget(this, object) { .... return direction.left } ?!!
+            const targetZ =  object.center.z  
+            const deltaX = targetX - this.center.x;  
+            const deltaZ = targetZ - this.center.z;  
             let direction = ""
             if (deltaX < 0) {
-                direction = "left"
+                direction = "left" 
             }
             if (deltaX > 0) {
                 direction = "right"
@@ -257,22 +257,22 @@ export class Enemy extends LevelObject {
                 direction = "up"
             }
             
-            const distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
-            if(!this.willCollideWith(level.elevator, direction, distance)) {
+            const distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ); // TODO: Utils ? distance.betweenObjectAndTarget(this, object) 
+            if(!this.willCollideWith(level.elevator, direction, distance)) { // TODO: Who still writes nested ifs in 2024 seriously...
                 if(!this.willCollideWith(object, direction, distance)) {
                     const directionX = deltaX / distance;
                     const directionZ = deltaZ / distance;
-                    this.center.x += directionX * speed;
+                    this.center.x += directionX * speed; // TODO: refacto..., if only center was a value object....!
                     this.center.z += directionZ * speed;
                 } else {
-                    this.doActionOnTarget(object, level)
+                    this.doActionOnTarget(object, level) // TODO : naming is getting worse and worse
                 }
             }
 
         }
     }
 
-    doActionOnTarget(object: LevelObject, level: Level) {
+    doActionOnTarget(object: LevelObject, level: Level) { // TODO : State pattern can handle this "BumpedIntoRobotState" or "HeardNoiseState" or whatever... <- better naming ofc
         switch(object.type) {
             case LevelObjectType.ROBOT:
                 let robot: Robot = object as Robot;
@@ -285,13 +285,13 @@ export class Enemy extends LevelObject {
         }
     }
 
-    danceAnimation() {
+    danceAnimation() { // cf jumpAnimation() comments
         this.playNothingFoundSound();
         this.animation = RobotState.DANCING;
         this.animationLoop = false;
     }
 
-    playNothingFoundSound() {
+    playNothingFoundSound() { // move to infra
         if(this.playingNothingFoundSound) {
             return;
         }
@@ -303,7 +303,7 @@ export class Enemy extends LevelObject {
         });
     }
 
-    playTargetAcquiredSound() {
+    playTargetAcquiredSound() { // move to infra
         if(this.playingTargetAcquiredSound) {
             return;
         }
@@ -315,7 +315,7 @@ export class Enemy extends LevelObject {
         });
     }
 
-    playTargetNeutralizedSound() {
+    playTargetNeutralizedSound() { // move to infra
         if(this.playingTargetNeutralizedSound) {
             return;
         }
