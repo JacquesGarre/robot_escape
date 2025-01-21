@@ -2,7 +2,7 @@ import PhysicalCoordinates from "./physical_coordinates"
 import CameraConfig from "./interface/camera_config";
 import Robot from "./robot";
 
-export default class Camera {
+export default class Camera { // TODO: Should move to infrastructure, does not make sense in the game domain?
 
     position: PhysicalCoordinates
     direction: PhysicalCoordinates
