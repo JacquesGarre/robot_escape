@@ -2,7 +2,7 @@ import BoundariesConfig from "./interface/boundaries_config";
 
 export default class Boundaries {
 
-    xMin: number; // TODO: Use value objects here, those numbers are not random and have limites
+    xMin: number; // TODO: Use value objects here, those numbers are not random and have limits
     xMax: number;
     yMin: number;
     yMax: number;
