@@ -285,13 +285,13 @@ export class Enemy extends LevelObject {
         }
     }
 
-    danceAnimation() { // cf jumpAnimation() comments
+    danceAnimation() { // TODO : cf jumpAnimation() comments
         this.playNothingFoundSound();
         this.animation = RobotState.DANCING;
         this.animationLoop = false;
     }
 
-    playNothingFoundSound() { // move to infra
+    playNothingFoundSound() { // TODO : move to infra
         if(this.playingNothingFoundSound) {
             return;
         }
@@ -303,7 +303,7 @@ export class Enemy extends LevelObject {
         });
     }
 
-    playTargetAcquiredSound() { // move to infra
+    playTargetAcquiredSound() { // TODO : move to infra
         if(this.playingTargetAcquiredSound) {
             return;
         }
@@ -315,7 +315,7 @@ export class Enemy extends LevelObject {
         });
     }
 
-    playTargetNeutralizedSound() { // move to infra
+    playTargetNeutralizedSound() { // TODO : move to infra
         if(this.playingTargetNeutralizedSound) {
             return;
         }
