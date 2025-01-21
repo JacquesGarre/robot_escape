@@ -13,8 +13,8 @@ export default class Controls {
     }
 
     direction(): string | null {
-        if (this.up) {
-            return "up";
+        if (this.up) { 
+            return "up";  // TODO: Use a Direction enum here
         }   
         if (this.down) {
             return "down";
