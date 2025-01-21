@@ -17,12 +17,12 @@ export default class Box extends LevelObject {
             z: config.z,
             width: Level.TILESIZE
         })
-        this.type = config.movable ? LevelObjectType.MOVABLE_BOX : LevelObjectType.BOX; 
+        this.type = config.movable ? LevelObjectType.MOVABLE_BOX : LevelObjectType.BOX; // TODO : Split into 2 different classes instead of this
         this.coordinates = new GridCoordinates(config.x, config.z)
-        this.movable = config.movable ?? false;
+        this.movable = config.movable ?? false; // TODO : Does not make sense
     }
 
-    moveTo(level: Level, direction: string) {
+    moveTo(level: Level, direction: string) { // TODO : Wrong function naming here + Does not make sense > split into 2 differents classes
         let distance = 0.5;
         if (direction == "up" && this.canMoveUp(level, distance)) {
             this.center.z += distance
@@ -38,7 +38,7 @@ export default class Box extends LevelObject {
         }  
     }
 
-    getGridCoordinates(): GridCoordinates {
+    getGridCoordinates(): GridCoordinates { // TODO : Better have GridCoordinates.fromBox() instead of this method here... 
         let x = Math.round((this.center.x - (Level.TILESIZE / 2)) / Level.TILESIZE)
         let z = Math.round((this.center.z - (Level.TILESIZE / 2)) / Level.TILESIZE)
         return new GridCoordinates(
