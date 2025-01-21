@@ -12,14 +12,14 @@ import Noise from "./noise";
 import RobotState from "./robot_state";
 import Utils from "./utils";
 
-export default class Robot extends LevelObject {
+export default class Robot extends LevelObject { // TODO: Check enemy class for a lot of TODOS to apply here
 
     static ROBOT_SIZE = 2.5;
     static ROBOT_HEIGHT = 5;
     static SPEED = 2.5;
 
     coordinates: GridCoordinates;
-    animation: string;
+    animation: string; 
     animationLoop: boolean;
     isDead: boolean;
     playingPunchSound: boolean = false;
@@ -38,7 +38,7 @@ export default class Robot extends LevelObject {
         this.isDead = false;
     }
 
-    animate(controls: Controls, level: Level) {
+    animate(controls: Controls, level: Level) { 
         if (this.isDead) {
             return;
         }
@@ -159,7 +159,7 @@ export default class Robot extends LevelObject {
         this.runningAnimation()
     }
 
-    rotate(controls: Controls) {
+    rotate(controls: Controls) { // TODO: Rotation value object -> rotation.fromControls(controls) .....
         if (controls.up) {
             this.rotation = 0
             if (controls.right) {
@@ -198,7 +198,7 @@ export default class Robot extends LevelObject {
         }  
     }
 
-    isOnElevator(elevator: Elevator): boolean {
+    isOnElevator(elevator: Elevator): boolean { // TODO: boundaries can have that logic
         const edges = this.edges()
         const boundaries = elevator.edges();
         return edges.xMin >= boundaries.xMin
@@ -207,7 +207,7 @@ export default class Robot extends LevelObject {
             && edges.zMax <= boundaries.zMax;
     }
 
-    setBoundaries(boundaries: Boundaries) {
+    setBoundaries(boundaries: Boundaries) { // TODO: Uh? -> State pattern
         this.boundaries = boundaries
     }
 
