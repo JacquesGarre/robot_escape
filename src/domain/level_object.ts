@@ -8,7 +8,7 @@ import Level from "./level";
 import LevelObjectType from "./level_object_type";
 import Utils from "./utils";
 
-export default class LevelObject {
+export default class LevelObject { // TODO : Refacto this mess
 
     center: PhysicalCoordinates;
     width: number;
@@ -30,7 +30,7 @@ export default class LevelObject {
         this.rotation = config.rotation ?? 0;
     }
 
-    edges() {
+    edges() {   // TODO : Seems like the boundaries class
         return {
             xMin: Utils.round(this.center.x - this.width / 2),
             xMax: Utils.round(this.center.x + this.width / 2),
@@ -41,7 +41,7 @@ export default class LevelObject {
         };
     }
 
-    canMove(direction: string | null, level: Level, distance: number): boolean {
+    canMove(direction: string | null, level: Level, distance: number): boolean { // TODO : There is a smarter way
         if (!direction) {
             return false;
         }
@@ -57,7 +57,7 @@ export default class LevelObject {
         return true;
     }
     
-    willCollideWithLevelObject(direction: string | null, level: Level, distance: number): Box | Enemy | Elevator | null {
+    willCollideWithLevelObject(direction: string | null, level: Level, distance: number): Box | Enemy | Elevator | null {  // TODO : There is a smarter way
         if (!direction) {
             return null;
         }
@@ -77,9 +77,9 @@ export default class LevelObject {
         return null;
     }
 
-    willBeOutOfBounds(boundaries: Boundaries, direction: string, distance: number): boolean {
-        const edges = this.edges();
-        switch (direction) {
+    willBeOutOfBounds(boundaries: Boundaries, direction: string, distance: number): boolean { // TODO : boundaries class should have that logic 
+        const edges = this.edges(); 
+        switch (direction) { // TODO : Direction enum
             case "up":
                 if ((edges.zMax + distance) > boundaries.zMax) return true;
                 break;
@@ -96,7 +96,7 @@ export default class LevelObject {
         return false;
     }
 
-    willCollideWith(
+    willCollideWith( // TODO : boundaries class should have that logic 
         otherObject: LevelObject,
         direction: string,
         distance: number
@@ -118,7 +118,7 @@ export default class LevelObject {
         return false;
     }
 
-    canMoveUp(level: Level, distance: number): boolean {
+    canMoveUp(level: Level, distance: number): boolean { // TODO : Is it really useful to have 4 different methods here to save 1 param? use the direction enum
         return this.canMove("up", level, distance);
     }
 
