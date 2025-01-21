@@ -4,7 +4,7 @@ enum LevelObjectType {
     ROBOT = 'Robot',
     ENEMY = 'Enemy',
     ELEVATOR = 'Elevator',
-    NOISE = 'Noise',
+    NOISE = 'Noise', // TODO: I don't think a noise is an item, is it?!!
 }
 
 export default LevelObjectType;
