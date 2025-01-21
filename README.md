@@ -27,9 +27,8 @@ I developed it for fun during 2 week-ends of December 2024, as a self-challenge,
 
 I wanted to follow 2 rules:
 
-- To apply hexagonal architecture (Poorly done yet, a lot can be improved)
-
-- To not use an existing game engine for physics/collision
+- To apply hexagonal architecture (Very poorly done yet -> see all the todos in the code, a crazy lot can be improved)
+- To not use an existing game engine for physics/collision (was not a good idea from the start, but that was interesting to try to redo) 
 
 
 Please, feel free to contribute, give ideas, improve the code, add features, add your own levels and so on!
@@ -81,6 +80,8 @@ Please, feel free to contribute, give ideas, improve the code, add features, add
 
 ## Todo
 
+- First of all, all the "// TODO" in the code...! (I should not rush things...! it ends up ugly as hell) 
+
 ### Bug fixes:
 
 - Fix sounds playing simultaneously (Target acquired/Target neutralized...)
@@ -92,22 +93,6 @@ Please, feel free to contribute, give ideas, improve the code, add features, add
 - Smoothen the transition between levels
 
 - others?!
-
-### Refactors:
-
-- Move sound playing to infrastructure
-
-- Use enum for direction
-
-- Refactor enemy class
-
-- Add units tests for the domain
-
-- Split WebBrowserScene class
-
-- Split assets loading from WebBrowserGame class
-
-- ...
 
   
 
